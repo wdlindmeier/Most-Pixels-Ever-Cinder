@@ -1,0 +1,59 @@
+//
+//  TCPClient.h
+//  MPEClient
+//
+//  Created by William Lindmeier on 6/12/13.
+//
+//
+
+#pragma once
+
+#include <cstdlib>
+#include <deque>
+#include <iostream>
+#include <boost/bind.hpp>
+#include <boost/asio.hpp>
+#include <boost/thread/thread.hpp>
+#include "TCPMessage.h"
+
+using namespace std;
+using namespace mpe;
+using boost::asio::ip::tcp;
+
+namespace mpe {
+
+    typedef std::deque<string> message_queue;
+    
+    class TCPClient
+    {
+    public:
+        
+        TCPClient(boost::asio::io_service& io_service,
+                  tcp::resolver::iterator endpoint_iterator);
+        //void writeString(const string& string);
+        //void write(const TCPMessage& msg);
+        void write(string msg);
+        void close();
+        bool isConnected(){ return mIsConnected; }
+        
+    private:
+        
+        void handle_connect(const boost::system::error_code& error);
+        void handle_read_header(const boost::system::error_code& error);
+        void handle_read_body(const boost::system::error_code& error);
+        //void do_write(TCPMessage msg);
+        void do_write(string msg);
+        void handle_write(const boost::system::error_code& error);
+        void do_close();
+        
+    private:
+        
+        boost::asio::io_service& mIOService;
+        tcp::socket mSocket;
+        TCPMessage mReadMsg;
+        message_queue mWriteMsgs;
+        bool mIsConnected;
+        
+    };
+        
+}
