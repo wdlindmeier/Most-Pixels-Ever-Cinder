@@ -1,6 +1,5 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
-#include "TCPMessage.h"
 #include "TCPClient.h"
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
@@ -40,8 +39,8 @@ void MPEClientApp::setup()
     try
     {
         std::string hostname = "localhost";
-        std::string port = "9002"; // Java server
-        //std::string port = "7777"; // Python server
+        //std::string port = "9002"; // Java server
+        std::string port = "7777"; // Python server
 
         tcp::resolver resolver(mIOservice);
         tcp::resolver::query query(hostname, port);

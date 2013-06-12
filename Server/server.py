@@ -15,13 +15,14 @@ class MPEServer(Protocol):
  
     def dataReceived(self, data):        
         print "Received message: " + data;
+        self.broadcastMessage(("RCVD: " + data + "\nXXXXXXXXXX")[:10]);
     
     def sendMessage(self, message):        
         self.transport.write(message)
           
-    def broadcaseMessage(self, message):         
+    def broadcastMessage(self, message):         
         for c in self.factory.clients:
-            c.message(message)  
+            c.sendMessage(message)  
                     
                  
 factory = Factory()
