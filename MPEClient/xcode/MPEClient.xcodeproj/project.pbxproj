@@ -17,6 +17,8 @@
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A94C184817690AB000F56801 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94C184617690AB000F56801 /* MPEClient.cpp */; };
+		A94C184C176912F600F56801 /* settings.xml in Resources */ = {isa = PBXBuildFile; fileRef = A94C184B176912F600F56801 /* settings.xml */; };
 		A9655FC61768A6B600DD1085 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9655FC41768A6B600DD1085 /* TCPClient.cpp */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +37,9 @@
 		6DCEBB27E38943B1875239E6 /* MPEClientApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClientApp.cpp; path = ../src/MPEClientApp.cpp; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MPEClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93CA6FEBBE224B6C9759C538 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		A94C184617690AB000F56801 /* MPEClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEClient.cpp; path = ../src/MPEClient.cpp; sourceTree = "<group>"; };
+		A94C184917690AFD00F56801 /* MPEClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../include/MPEClient.h; sourceTree = "<group>"; };
+		A94C184B176912F600F56801 /* settings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.xml; sourceTree = "<group>"; };
 		A9655FC41768A6B600DD1085 /* TCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPClient.cpp; path = ../src/TCPClient.cpp; sourceTree = "<group>"; };
 		A9655FC71768A6CE00DD1085 /* TCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../include/TCPClient.h; sourceTree = "<group>"; };
 		B1D71D4254444E788DE3D95C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,6 +75,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				A94C184617690AB000F56801 /* MPEClient.cpp */,
 				6DCEBB27E38943B1875239E6 /* MPEClientApp.cpp */,
 				A9655FC41768A6B600DD1085 /* TCPClient.cpp */,
 			);
@@ -111,6 +117,7 @@
 		29B97314FDCFA39411CA2CEA /* MPEClient */ = {
 			isa = PBXGroup;
 			children = (
+				A94C184A176912F600F56801 /* assets */,
 				01B97315FEAEA392516A2CEA /* Blocks */,
 				29B97315FDCFA39411CA2CEA /* Headers */,
 				080E96DDFE201D6D7F000001 /* Source */,
@@ -124,6 +131,7 @@
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				A94C184917690AFD00F56801 /* MPEClient.h */,
 				D02E465518744D3A967C743D /* MPEClient_Prefix.pch */,
 				93CA6FEBBE224B6C9759C538 /* Resources.h */,
 				A9655FC71768A6CE00DD1085 /* TCPClient.h */,
@@ -147,6 +155,15 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A94C184A176912F600F56801 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				A94C184B176912F600F56801 /* settings.xml */,
+			);
+			name = assets;
+			path = ../assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03FA722B3EC84917AA0BF407 /* CinderApp.icns in Resources */,
+				A94C184C176912F600F56801 /* settings.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +230,7 @@
 			files = (
 				10DD0A41832F490D996C3504 /* MPEClientApp.cpp in Sources */,
 				A9655FC61768A6B600DD1085 /* TCPClient.cpp in Sources */,
+				A94C184817690AB000F56801 /* MPEClient.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

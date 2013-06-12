@@ -1,9 +1,6 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
-#include "TCPClient.h"
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
-#include <boost/thread/thread.hpp>
+#include "MPEClient.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -24,48 +21,49 @@ class MPEClientApp : public AppNative {
     void shutdown();
     void mouseDown( MouseEvent event );
     void update();
+    void resize();
     void draw();
+    void prepareSettings( Settings *settings );
 
     private:
     
-    TCPClient *mClient;
-    boost::asio::io_service mIOservice;
-    std::thread mClientThread;
-
+    MPEClient *mClient;
+    
 };
+
+void MPEClientApp::prepareSettings( Settings *settings )
+{
+    // NOTE: Initially making the window small to prove that
+    // the settings.xml forces a resize.
+    settings->setWindowSize( 100, 100 );
+}
 
 void MPEClientApp::setup()
 {
-    try
-    {
-        std::string hostname = "localhost";
-        //std::string port = "9002"; // Java server
-        std::string port = "7777"; // Python server
-
-        tcp::resolver resolver(mIOservice);
-        tcp::resolver::query query(hostname, port);
-        tcp::resolver::iterator iterator = resolver.resolve(query);
-        mClient = new TCPClient(mIOservice, iterator);
-        mClientThread = std::thread(boost::bind(&boost::asio::io_service::run, &mIOservice));
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << "Exception: " << e.what() << "\n";
-    }
+    mClient = new MPEClient("settings.xml");
+    mClient->start();
 }
 
 void MPEClientApp::shutdown()
 {
-    mClientThread.join();
     if(mClient){
+        mClient->stop();
         delete(mClient);
         mClient = NULL;
     }
-    mIOservice.stop();
 }
 
 void MPEClientApp::mouseDown( MouseEvent event )
 {
+
+}
+
+void MPEClientApp::resize()
+{
+    Vec2i size = getWindowSize();
+    Vec2i pos = getWindowPos();
+    // Send this data to the server
+    
 }
 
 void MPEClientApp::update()
@@ -74,11 +72,11 @@ void MPEClientApp::update()
     
     if(mClient->isConnected()){
         if(frameCount % 60 == 0){
-            // Send over the heartbeat
-            std::string heartbeat = std::to_string(frameCount);
-            console() << "Sending heartbeat: " << heartbeat << "\n";
-            mClient->write(heartbeat);
+            mClient->ping();
         }
+    }else{
+        // Try starting up again if we're not
+        mClient->start();
     }
 }
 

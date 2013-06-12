@@ -14,7 +14,7 @@ using namespace ci;
 namespace mpe {
     
     TCPClient::TCPClient(boost::asio::io_service& io_service,
-              tcp::resolver::iterator endpoint_iterator) :
+                         tcp::resolver::iterator endpoint_iterator) :
     mIOService(io_service),
     mSocket(io_service),
     mIsConnected(false)
@@ -23,7 +23,7 @@ namespace mpe {
                                    boost::bind(&TCPClient::handle_connect, this,
                                                boost::asio::placeholders::error));
     }
-        
+     
     void TCPClient::write(string msg)
     {
         mIOService.post(boost::bind(&TCPClient::do_write, this, msg));
