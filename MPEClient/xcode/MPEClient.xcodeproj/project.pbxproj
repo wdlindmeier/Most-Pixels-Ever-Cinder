@@ -37,6 +37,8 @@
 		6DCEBB27E38943B1875239E6 /* MPEClientApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClientApp.cpp; path = ../src/MPEClientApp.cpp; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MPEClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93CA6FEBBE224B6C9759C538 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		A91AACBB176E443E002F5DF0 /* MPEProtocolClassic.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocolClassic.hpp; path = ../include/MPEProtocolClassic.hpp; sourceTree = "<group>"; };
+		A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocol.hpp; path = ../include/MPEProtocol.hpp; sourceTree = "<group>"; };
 		A94C184617690AB000F56801 /* MPEClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEClient.cpp; path = ../src/MPEClient.cpp; sourceTree = "<group>"; };
 		A94C184917690AFD00F56801 /* MPEClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../include/MPEClient.h; sourceTree = "<group>"; };
 		A94C184B176912F600F56801 /* settings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.xml; sourceTree = "<group>"; };
@@ -135,6 +137,8 @@
 				D02E465518744D3A967C743D /* MPEClient_Prefix.pch */,
 				93CA6FEBBE224B6C9759C538 /* Resources.h */,
 				A9655FC71768A6CE00DD1085 /* TCPClient.h */,
+				A91AACBB176E443E002F5DF0 /* MPEProtocolClassic.hpp */,
+				A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */,
 			);
 			name = Headers;
 			sourceTree = "<group>";

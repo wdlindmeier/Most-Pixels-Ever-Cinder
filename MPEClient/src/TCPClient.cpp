@@ -13,43 +13,68 @@ using namespace ci;
 
 namespace mpe {
     
-    TCPClient::TCPClient(boost::asio::io_service& io_service,
-                         tcp::resolver::iterator endpoint_iterator) :
-    mIOService(io_service),
-    mSocket(io_service),
+    TCPClient::TCPClient() :
+    mIOService(),
+    mSocket(mIOService),
     mIsConnected(false)
     {
-        boost::asio::async_connect(mSocket, endpoint_iterator,
-                                   boost::bind(&TCPClient::handle_connect, this,
-                                               boost::asio::placeholders::error));
     }
-     
+    
+    void TCPClient::open(const std::string & hostname,
+                         const int port,
+                         const OpenedCallback &callback)                        
+    {
+        tcp::resolver resolver(mIOService);
+        tcp::resolver::query query(hostname, std::to_string(port));
+        tcp::resolver::iterator iterator = resolver.resolve(query);
+        
+        mOpenedCallback = callback;
+        boost::asio::async_connect(mSocket, iterator,
+                                   boost::bind(&TCPClient::handleConnect, this,
+                                               boost::asio::placeholders::error));
+        
+        mClientThread = std::thread(boost::bind(&boost::asio::io_service::run,
+                                                &mIOService));
+        
+
+    }
+    
     void TCPClient::write(string msg)
     {
-        mIOService.post(boost::bind(&TCPClient::do_write, this, msg));
+        ci::app::console() << "Write: " << msg << "\n";
+        mIOService.post(boost::bind(&TCPClient::doWrite, this, msg));
     }
     
     void TCPClient::close()
     {
-        mIOService.post(boost::bind(&TCPClient::do_close, this));
+        //mIOService.post(boost::bind(&TCPClient::doClose, this));
+        doClose();
+        mClientThread.join();
     }
 
-    void TCPClient::handle_connect(const boost::system::error_code& error)
+    void TCPClient::handleConnect(const boost::system::error_code& error)
     {
         if (!error){
+            
             ci::app::console() << "Connected\n";
             mIsConnected = true;
             boost::asio::async_read(mSocket,
                                     boost::asio::buffer(mReadBuffer, PACKET_SIZE),
-                                    boost::bind(&TCPClient::handle_read, this,
+                                    boost::bind(&TCPClient::handleRead, this,
                                                 boost::asio::placeholders::error));
+            
+            
         }else{
             mIsConnected = false;
             ci::app::console() << "Connection error: " << error.message() << "\n";
         }
+        
+        mOpenedCallback(mIsConnected, error);
+        
+        
     }
         
-    void TCPClient::handle_read(const boost::system::error_code& error)
+    void TCPClient::handleRead(const boost::system::error_code& error)
     {
         if (!error)
         {
@@ -62,18 +87,18 @@ namespace mpe {
             // Keep reading brah.
             boost::asio::async_read(mSocket,
                                     boost::asio::buffer(mReadBuffer, PACKET_SIZE),
-                                    boost::bind(&TCPClient::handle_read, this,
+                                    boost::bind(&TCPClient::handleRead, this,
                                                 boost::asio::placeholders::error));
 
         }
         else
         {
             ci::app::console() << "ERROR: " << error.message() << "\n";
-            do_close();
+            doClose();
         }
     }
 
-    void TCPClient::do_write(string msg)
+    void TCPClient::doWrite(string msg)
     {
         bool write_in_progress = !mWriteMsgs.empty();
         mWriteMsgs.push_back(msg);
@@ -82,12 +107,12 @@ namespace mpe {
             boost::asio::async_write(mSocket,
                                      boost::asio::buffer(mWriteMsgs.front(),
                                                          mWriteMsgs.front().length()),
-                                     boost::bind(&TCPClient::handle_write, this,
+                                     boost::bind(&TCPClient::handleWrite, this,
                                                  boost::asio::placeholders::error));
         }
     }
 
-    void TCPClient::handle_write(const boost::system::error_code& error)
+    void TCPClient::handleWrite(const boost::system::error_code& error)
     {
         if (!error)
         {
@@ -97,22 +122,23 @@ namespace mpe {
                 boost::asio::async_write(mSocket,
                                          boost::asio::buffer(mWriteMsgs.front(),
                                                              mWriteMsgs.front().length()),
-                                         boost::bind(&TCPClient::handle_write, this,
+                                         boost::bind(&TCPClient::handleWrite, this,
                                                      boost::asio::placeholders::error));
             }
         }
         else
         {
             ci::app::console() << "ERROR: " << error.message() << "\n";
-            do_close();
+            doClose();
         }
     }
 
-    void TCPClient::do_close()
+    void TCPClient::doClose()
     {
         mIsConnected = false;
         ci::app::console() << "Closing socket\n";
         mSocket.close();
+        mIOService.stop();
     }
     
 }

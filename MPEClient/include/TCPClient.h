@@ -23,33 +23,39 @@ namespace mpe {
 
     const static int PACKET_SIZE = 10;
     typedef std::deque<string> message_queue;
+    typedef boost::function<void (bool didConnect, const boost::system::error_code& error)> OpenedCallback;
     
     class TCPClient
     {
     public:
         
-        TCPClient(boost::asio::io_service& io_service,
-                  tcp::resolver::iterator endpoint_iterator);
-        void write(string msg);
+        TCPClient();
+        void open(const std::string & hostname,
+                  const int port,
+                  const OpenedCallback &callback);
         void close();
         bool isConnected(){ return mIsConnected; }
+        void write(string msg);
+
+    protected:
+        
+        boost::asio::io_service mIOService;
         
     private:
         
-        void handle_connect(const boost::system::error_code& error);
-        void handle_read(const boost::system::error_code& error);
-        void do_write(string msg);
-        void handle_write(const boost::system::error_code& error);
-        void do_close();
-        
-    private:
-        
-        boost::asio::io_service& mIOService;
+        void handleConnect(const boost::system::error_code& error);
+        void handleRead(const boost::system::error_code& error);
+        void doWrite(string msg);
+        void handleWrite(const boost::system::error_code& error);
+        void doClose();
+
         tcp::socket mSocket;
         char mReadBuffer[PACKET_SIZE];
         message_queue mWriteMsgs;
         bool mIsConnected;
-        
+        OpenedCallback mOpenedCallback;    
+        std::thread mClientThread;
+
     };
         
 }

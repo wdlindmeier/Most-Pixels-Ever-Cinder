@@ -11,6 +11,7 @@
 #include "cinder/Xml.h"
 #include "cinder/Vector.h"
 #include <boost/bind.hpp>
+#include <boost/lambda/lambda.hpp>
 
 using namespace std;
 using namespace ci;
@@ -24,6 +25,76 @@ mIsStarted(false)
     loadSettings(settingsFilename, shouldResize);
 }
 
+MPEClient::~MPEClient()
+{
+    if(mIsStarted){
+        stop();
+    }
+}
+
+#pragma mark - Connection
+
+void MPEClient::start()
+{
+    if(mIsStarted){
+        stop();
+    }
+    
+    mIsStarted = true;
+    
+    mTCPClient = new TCPClient();
+    
+    OpenedCallback callback = boost::bind(&MPEClient::handleTCPConnect,
+                                          this,
+                                          boost::lambda::_1,
+                                          boost::lambda::_2);
+    mTCPClient->open(mHostname, mPort, callback);
+
+}
+
+void MPEClient::handleTCPConnect(bool didConnect, const boost::system::error_code& error)
+{
+    if(didConnect){
+        console() << "TCP Client Connected\n";
+        sendClientID();
+    }else{
+        stop();
+        console() << "Error connecting: " << error.message() << "\n";
+    }
+}
+
+void MPEClient::stop()
+{    
+    mIsStarted = false;
+    if(mTCPClient){
+        mTCPClient->close();
+        delete mTCPClient;
+        mTCPClient = NULL;
+    }    
+}
+
+#pragma mark - Server Com
+
+void MPEClient::sendLocalScreenRect(ci::Rectf localRect)
+{
+    std::string sendMsg = mProtocol.setLocalViewRect(localRect);
+    mTCPClient->write(sendMsg);
+}
+
+void MPEClient::sendClientID()
+{
+    std::string sendMsg = mProtocol.setClientID(mClientID);
+    mTCPClient->write(sendMsg);
+}
+
+void MPEClient::sendPing()
+{
+    int randNum = arc4random() % 1000;
+    mTCPClient->write(std::to_string(randNum));
+}
+
+#pragma mark - Settings
+
 void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
 {
     XmlTree settingsDoc( loadAsset( settingsFilename ) );
@@ -32,7 +103,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         XmlTree debugNode = settingsDoc.getChild( "settings/debug" );
         int isDebug = debugNode.getValue<int>();
         if(isDebug != 0){
-            app::console() << "settingsDoc: " << settingsDoc << "\n";
+            // app::console() << "settingsDoc: " << settingsDoc << "\n";
         }
     } catch (XmlTree::ExcChildNotFound e) {
     }
@@ -44,7 +115,14 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     } catch (XmlTree::ExcChildNotFound e) {
         console() << "ERROR: Could not find server and port settings\n";
     }
-
+    
+    try {
+        XmlTree ipNode = settingsDoc.getChild( "settings/client_id" );
+        mClientID = ipNode.getValue<int>();
+    } catch (XmlTree::ExcChildNotFound e) {
+        console() << "ERROR: Could not find client ID\n";
+    }
+    
     try {
         XmlTree widthNode = settingsDoc.getChild( "settings/local_dimensions/width" );
         XmlTree heightNode = settingsDoc.getChild( "settings/local_dimensions/height" );
@@ -55,47 +133,9 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         if( shouldResize ){
             ci::app::setWindowSize(width, height);
         }
-
+        
     } catch (XmlTree::ExcChildNotFound e) {
         console() << "ERROR: Could not find local dimensions settings\n";
     }
-
-}
-
-void MPEClient::start()
-{
-    if(mIsStarted){
-        stop();
-    }    
-    mIsStarted = true;
-    tcp::resolver resolver(mIOservice);
-    tcp::resolver::query query(mHostname, std::to_string(mPort));
-    tcp::resolver::iterator iterator = resolver.resolve(query);
     
-    mTCPClient = new TCPClient(mIOservice, iterator);
-    mClientThread = std::thread(boost::bind(&boost::asio::io_service::run, &mIOservice));
-}
-
-void MPEClient::stop()
-{    
-    mIsStarted = false;
-    mClientThread.join();
-    if(mTCPClient){
-        delete mTCPClient;
-        mTCPClient = NULL;
-    }
-    mIOservice.stop();
-}
-
-void MPEClient::ping()
-{
-    int randNum = arc4random() % 1000;
-    mTCPClient->write(std::to_string(randNum));
-}
-
-MPEClient::~MPEClient()
-{
-    if(mIsStarted){
-        stop();
-    }
 }
