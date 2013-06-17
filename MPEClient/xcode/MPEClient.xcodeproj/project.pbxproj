@@ -17,6 +17,7 @@
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A91AACC6176EC4B3002F5DF0 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91AACC5176EC4B3002F5DF0 /* GLUT.framework */; };
 		A94C184817690AB000F56801 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94C184617690AB000F56801 /* MPEClient.cpp */; };
 		A94C184C176912F600F56801 /* settings.xml in Resources */ = {isa = PBXBuildFile; fileRef = A94C184B176912F600F56801 /* settings.xml */; };
 		A9655FC61768A6B600DD1085 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9655FC41768A6B600DD1085 /* TCPClient.cpp */; };
@@ -36,9 +37,8 @@
 		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		6DCEBB27E38943B1875239E6 /* MPEClientApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClientApp.cpp; path = ../src/MPEClientApp.cpp; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MPEClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		93CA6FEBBE224B6C9759C538 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
-		A91AACBB176E443E002F5DF0 /* MPEProtocolClassic.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocolClassic.hpp; path = ../include/MPEProtocolClassic.hpp; sourceTree = "<group>"; };
 		A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocol.hpp; path = ../include/MPEProtocol.hpp; sourceTree = "<group>"; };
+		A91AACC5176EC4B3002F5DF0 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		A94C184617690AB000F56801 /* MPEClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEClient.cpp; path = ../src/MPEClient.cpp; sourceTree = "<group>"; };
 		A94C184917690AFD00F56801 /* MPEClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../include/MPEClient.h; sourceTree = "<group>"; };
 		A94C184B176912F600F56801 /* settings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.xml; sourceTree = "<group>"; };
@@ -53,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A91AACC6176EC4B3002F5DF0 /* GLUT.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
 				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
@@ -87,6 +88,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A91AACC5176EC4B3002F5DF0 /* GLUT.framework */,
 				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
 				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
 				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
@@ -135,10 +137,8 @@
 			children = (
 				A94C184917690AFD00F56801 /* MPEClient.h */,
 				D02E465518744D3A967C743D /* MPEClient_Prefix.pch */,
-				93CA6FEBBE224B6C9759C538 /* Resources.h */,
-				A9655FC71768A6CE00DD1085 /* TCPClient.h */,
-				A91AACBB176E443E002F5DF0 /* MPEProtocolClassic.hpp */,
 				A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */,
+				A9655FC71768A6CE00DD1085 /* TCPClient.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";

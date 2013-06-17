@@ -18,43 +18,48 @@
 using namespace std;
 using boost::asio::ip::tcp;
 
-
 namespace mpe {
 
     const static int PACKET_SIZE = 10;
-    typedef std::deque<string> message_queue;
-    typedef boost::function<void (bool didConnect, const boost::system::error_code& error)> OpenedCallback;
+    typedef std::deque<string> MessageQueue;
+    typedef boost::function<void ( bool didConnect, const boost::system::error_code& error )> OpenedCallback;
+    typedef boost::function<void ( const std::string & serverMessage )> ServerMessageCallback;
     
     class TCPClient
     {
     public:
         
         TCPClient();
-        void open(const std::string & hostname,
-                  const int port,
-                  const OpenedCallback &callback);
-        void close();
-        bool isConnected(){ return mIsConnected; }
-        void write(string msg);
+        void                        open(const std::string & hostname,
+                                         const int port,
+                                         const OpenedCallback &callback);
+        void                        close();
+        bool                        isConnected(){ return mIsConnected; }
+        void                        write(string msg);
+        void                        setIncomingMessageCallback( ServerMessageCallback callback )
+                                    {
+                                        mReadCallback = callback;
+                                    };
 
     protected:
         
-        boost::asio::io_service mIOService;
+        boost::asio::io_service     mIOService;
         
     private:
         
-        void handleConnect(const boost::system::error_code& error);
-        void handleRead(const boost::system::error_code& error);
-        void doWrite(string msg);
-        void handleWrite(const boost::system::error_code& error);
-        void doClose();
+        void                        handleConnect( const boost::system::error_code& error );
+        void                        handleRead( const boost::system::error_code& error );
+        void                        doWrite( string msg );
+        void                        handleWrite( const boost::system::error_code& error );
+        void                        doClose();
 
-        tcp::socket mSocket;
-        char mReadBuffer[PACKET_SIZE];
-        message_queue mWriteMsgs;
-        bool mIsConnected;
-        OpenedCallback mOpenedCallback;    
-        std::thread mClientThread;
+        tcp::socket                 mSocket;
+        char                        mReadBuffer[PACKET_SIZE];
+        MessageQueue                mWriteMsgs;
+        bool                        mIsConnected;
+        OpenedCallback              mOpenedCallback;
+        ServerMessageCallback       mReadCallback;
+        std::thread                 mClientThread;
 
     };
         

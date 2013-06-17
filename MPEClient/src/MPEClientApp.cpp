@@ -17,22 +17,24 @@ class MPEClientApp : public AppNative {
   
     public:
     
-    void setup();
-    void shutdown();
-    void mouseDown( MouseEvent event );
-    void update();
-    //void resize();
-    void draw();
-    void prepareSettings( Settings *settings );
+    void        setup();
+    void        shutdown();
+    void        mouseDown( MouseEvent event );
+    void        mouseDrag( MouseEvent event );
+    void        sendMousePosition();
+    void        update();
+    void        draw();
+    void        frameEvent();
+    void        prepareSettings( Settings *settings );
 
     private:
     
-    MPEClient *mClient;
+    MPEClient   mClient;
     // For demonstration purposes:
     // Drag the window around the screen to change the
     // position of the client.
-    Vec2i      mScreenSize;
-    Vec2i      mScreenPos;
+    Vec2i       mScreenSize;
+    Vec2i       mScreenPos;
 
     
 };
@@ -46,57 +48,76 @@ void MPEClientApp::prepareSettings( Settings *settings )
 
 void MPEClientApp::setup()
 {
-    mClient = new MPEClient("settings.xml");
-    mClient->start();
+    mClient = MPEClient("settings.xml");
+    mClient.start( boost::bind(&MPEClientApp::frameEvent, this) );
 }
 
 void MPEClientApp::shutdown()
 {
-    if(mClient){
-        mClient->stop();
-        delete(mClient);
-        mClient = NULL;
-    }
+    mClient.stop();
 }
 
 void MPEClientApp::mouseDown( MouseEvent event )
 {
+    sendMousePosition();
+}
 
+void MPEClientApp::mouseDrag( MouseEvent event )
+{
+    sendMousePosition();
+}
+
+void MPEClientApp::sendMousePosition()
+{
+    if( mClient.isConnected() ){
+        Vec2i pos = getMousePos();
+        mClient.broadcast(std::to_string(pos.x) + "," + std::to_string(pos.y));
+    }
 }
 
 void MPEClientApp::update()
 {
+    int frameCount = getElapsedFrames();
 
-    if(mClient->isConnected()){
+    if(mClient.isConnected()){
         
         Vec2i size = getWindowSize();
         Vec2i pos = getWindowPos();
 
         if( mScreenSize != size || mScreenPos != pos){
             // The position has changed.
-            // Inform the server.
-            mClient->sendLocalScreenRect(ci::Rectf(pos.x, pos.y, size.x, size.y));
+            // Update the renderable area.
+            mClient.setVisibleRect(ci::Rectf(pos.x, pos.y, pos.x + size.x, pos.y + size.y));
             mScreenSize = size;
             mScreenPos = pos;
         }
         
         /*
-        int frameCount = getElapsedFrames();         
         if(frameCount % 60 == 0){
             mClient->sendPing();
         }
         */
         
     }else{
-        // Try starting up again if we're not
-        mClient->start();
+        
+        // Try starting up each 60 frames
+        if(frameCount % 60 == 0){
+            mClient.start( boost::bind(&MPEClientApp::frameEvent, this) );
+        }
+        
     }
+}
+
+void MPEClientApp::frameEvent()
+{
+    gl::clear( Color( 1, 0, 0 ) );
+    gl::color(0,0,0);
+    gl::drawString(std::to_string(getElapsedFrames()), Vec2f(10, 10));
 }
 
 void MPEClientApp::draw()
 {
-	// clear out the window with black
-	gl::clear( Color( 1, 0, 0 ) );
+    // Do nothing
 }
 
 CINDER_APP_NATIVE( MPEClientApp, RendererGl )
