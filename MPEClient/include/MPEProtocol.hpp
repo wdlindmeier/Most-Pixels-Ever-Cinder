@@ -59,8 +59,8 @@ namespace mpe {
                  istream_iterator<string>(),
                  back_inserter<vector<string> >(info));
             
-            ci::app::console() << "serverMessage: " << serverMessage << "\n";
-            ci::app::console() << "frameMessages:\n";
+            //ci::app::console() << "serverMessage: " << serverMessage << "\n";
+            //ci::app::console() << "frameMessages:\n";
             for( int i=0; i<frameMessage.size(); i++ ){
                 ci::app::console() << frameMessage[i] << "\n";
             }

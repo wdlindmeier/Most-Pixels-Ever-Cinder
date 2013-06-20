@@ -31,22 +31,22 @@ namespace mpe {
         ~MPEClient();
         
         // Handle Connection
-        void                start( FrameEventCallback renderFrameHandler );
+        void                start(FrameEventCallback renderFrameHandler);
         void                stop();
         bool                isConnected(){ return mTCPClient->isConnected(); };
-        void                handleTCPConnect( bool didConnect, const boost::system::error_code& error );
+        void                handleTCPConnect(bool didConnect, const boost::system::error_code& error);
         
         // Server Com
-        void                broadcast( const std::string & message );
+        void                broadcast(const std::string & message);
         void                sendPing();
         void                sendClientID();
         
         // Accessors
         ci::Rectf           getVisibleRect(){ return mLocalViewportRect; };
-        void                setVisibleRect(const Rectf & rect ){ mLocalViewportRect = rect; }
+        void                setVisibleRect(const Rectf & rect){ mLocalViewportRect = rect; }
         ci::Vec2i           getMasterSize(){ return mMasterSize; };        
         bool                getIsRendering3D(){ return mIsRendering3D; };
-        void                setIsRendering3D( bool is3D ){ mIsRendering3D = is3D; };
+        void                setIsRendering3D(bool is3D){ mIsRendering3D = is3D; };
         
         protected:
         
@@ -54,12 +54,12 @@ namespace mpe {
         void                positionViewport();
         void                positionViewport3D();
         void                positionViewport2D();
-        void                handleServerMessage( const std::string & serverMessage );
+        void                handleServerMessage(const std::string & serverMessage);
         
         private:
         
         void                doneRendering();
-        void                loadSettings( string settingsFilename, bool shouldResize );
+        void                loadSettings(string settingsFilename, bool shouldResize);
         
         // A connection to the server.
         TCPClient           *mTCPClient;
@@ -81,8 +81,6 @@ namespace mpe {
         bool                mIsStarted;
         ci::Rectf           mLocalViewportRect;
         ci::Vec2i           mMasterSize;
-        int                 mClientID;
-        
+        int                 mClientID;        
     };
-
 }

@@ -21,7 +21,7 @@ using namespace ci;
 using namespace ci::app;
 using namespace mpe;
 
-MPEClient::MPEClient(string settingsFilename, bool shouldResize ) :
+MPEClient::MPEClient(string settingsFilename, bool shouldResize) :
 mHostname(""),
 mPort(0),
 mIsStarted(false),
@@ -33,7 +33,7 @@ mClientID(-1)
 
 MPEClient::~MPEClient()
 {
-    if(mIsStarted){
+    if (mIsStarted){
         stop();
     }
 }
@@ -42,7 +42,8 @@ MPEClient::~MPEClient()
 
 void MPEClient::start( FrameEventCallback renderFrameHandler )
 {
-    if(mIsStarted){
+    if (mIsStarted)
+    {
         stop();
     }
  
@@ -52,24 +53,27 @@ void MPEClient::start( FrameEventCallback renderFrameHandler )
     
     mTCPClient = new TCPClient();
     
-    ServerMessageCallback readCallback = boost::bind( &MPEClient::handleServerMessage,
+    ServerMessageCallback readCallback = boost::bind(&MPEClient::handleServerMessage,
                                                      this,
-                                                     boost::lambda::_1 );
-    mTCPClient->setIncomingMessageCallback( readCallback );
+                                                     boost::lambda::_1);
+    
+    mTCPClient->setIncomingMessageCallback(readCallback);
     
     OpenedCallback connectCallback = boost::bind(&MPEClient::handleTCPConnect,
                                                  this,
                                                  boost::lambda::_1,
                                                  boost::lambda::_2);
     mTCPClient->open(mHostname, mPort, connectCallback);
-
 }
 
 void MPEClient::handleTCPConnect(bool didConnect, const boost::system::error_code& error)
 {
-    if(didConnect){
+    if (didConnect)
+    {
         sendClientID();
-    }else{
+    }
+    else
+    {
         mIsStarted = false;
     }
 }
@@ -88,12 +92,14 @@ void MPEClient::stop()
 
 void MPEClient::draw()
 {
+    // TODO: Actually draw
+/*
     // Only show the area of the view we're interested in.
     positionViewport();
 
     // Tell the app to draw.
     mRenderFrameCallback();
-    
+*/
     // Tell the server we're ready for the next.
     doneRendering();
 }
@@ -132,8 +138,7 @@ void MPEClient::positionViewport3D()
     
     gluLookAt(mWidth/2.f, mHeight/2.f, cameraZ,
               mWidth/2.f, mHeight/2.f, 0,
-              0, 1, 0);
-    
+              0, 1, 0);    
     
     // The frustum defines the 3D clipping plane for each Client window!
     float mod = .1f;
@@ -150,30 +155,24 @@ void MPEClient::positionViewport3D()
 
 #pragma mark - Server Com
 
-void MPEClient::broadcast( const std::string & message )
+void MPEClient::broadcast(const std::string & message)
 {
     mTCPClient->write( mProtocol.broadcast(message) );
 }
 
 void MPEClient::sendClientID()
 {
-    mTCPClient->write( mProtocol.setClientID(mClientID) );
+    mTCPClient->write(mProtocol.setClientID(mClientID));
 }
 
 void MPEClient::doneRendering()
 {
-    console() << "Sending doneRendering\n";
-    mTCPClient->write( mProtocol.renderIsComplete() );
+    mTCPClient->write(mProtocol.renderIsComplete());
 }
 
-void MPEClient::handleServerMessage( const std::string & serverMessage )
+void MPEClient::handleServerMessage(const std::string & serverMessage)
 {
-    mProtocol.parse( serverMessage );
-    // TMP
-    // Let's pretend every server message is a draw frame event.
-    
-    // TODO:
-    // This must happen on the main thread.
+    mProtocol.parse(serverMessage);
     draw();
 }
 
@@ -193,31 +192,41 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
 {
     XmlTree settingsDoc( loadAsset( settingsFilename ) );
     
-    try {
+    try
+    {
         XmlTree debugNode = settingsDoc.getChild( "settings/debug" );
         int isDebug = debugNode.getValue<int>();
         if(isDebug != 0){
             // app::console() << "settingsDoc: " << settingsDoc << "\n";
         }
-    } catch (XmlTree::ExcChildNotFound e) {
+    }
+    catch (XmlTree::ExcChildNotFound e)
+    {
     }
     
-    try {
+    try
+    {
         XmlTree ipNode = settingsDoc.getChild( "settings/server/ip" );
         mHostname = ipNode.getValue<string>();
         mPort = settingsDoc.getChild( "settings/server/port" ).getValue<int>();
-    } catch (XmlTree::ExcChildNotFound e) {
+    }
+    catch (XmlTree::ExcChildNotFound e)
+    {
         console() << "ERROR: Could not find server and port settings\n";
     }
     
-    try {
+    try
+    {
         XmlTree ipNode = settingsDoc.getChild( "settings/client_id" );
         mClientID = ipNode.getValue<int>();
-    } catch (XmlTree::ExcChildNotFound e) {
+    }
+    catch (XmlTree::ExcChildNotFound e)
+    {
         console() << "ERROR: Could not find client ID\n";
     }
     
-    try {
+    try
+    {
         XmlTree widthNode = settingsDoc.getChild( "settings/local_dimensions/width" );
         XmlTree heightNode = settingsDoc.getChild( "settings/local_dimensions/height" );
         XmlTree xNode = settingsDoc.getChild( "settings/local_location/x" );
@@ -232,18 +241,22 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         if( shouldResize ){
             ci::app::setWindowSize(width, height);
         }
-    } catch (XmlTree::ExcChildNotFound e) {
+    }
+    catch (XmlTree::ExcChildNotFound e)
+    {
         console() << "ERROR: Could not find local dimensions settings\n";
     }
 
-    try {
+    try
+    {
         XmlTree widthNode = settingsDoc.getChild( "settings/master_dimensions/width" );
         XmlTree heightNode = settingsDoc.getChild( "settings/master_dimensions/height" );
         int width = widthNode.getValue<int>();
         int height = heightNode.getValue<int>();
         mMasterSize = Vec2i(width, height);
-    } catch (XmlTree::ExcChildNotFound e) {
+    }
+    catch (XmlTree::ExcChildNotFound e)
+    {
         console() << "ERROR: Could not find master dimensions settings\n";
     }
-
 }

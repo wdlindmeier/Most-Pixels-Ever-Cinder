@@ -34,13 +34,11 @@ void TCPClient::open(const std::string & hostname,
     
     mClientThread = std::thread(boost::bind(&boost::asio::io_service::run,
                                             &mIOService));
-    
-
 }
 
 void TCPClient::write(string msg)
 {
-    ci::app::console() << "Write: " << msg << "\n";
+    //ci::app::console() << "Write: " << msg << "\n";
     mIOService.post(boost::bind(&TCPClient::doWrite, this, msg));
 }
 
@@ -53,39 +51,37 @@ void TCPClient::close()
 
 void TCPClient::handleConnect(const boost::system::error_code& error)
 {
-    if (!error){
-        
+    if (!error)
+    {
         ci::app::console() << "Connected\n";
         mIsConnected = true;
         boost::asio::async_read(mSocket,
                                 boost::asio::buffer(mReadBuffer, PACKET_SIZE),
                                 boost::bind(&TCPClient::handleRead, this,
                                             boost::asio::placeholders::error));
-        
-        
-    }else{
+    }
+    else
+    {
         mIsConnected = false;
         ci::app::console() << "Connection error: " << error.message() << "\n";
     }
     
     mOpenedCallback(mIsConnected, error);
-    
-    
 }
     
 void TCPClient::handleRead(const boost::system::error_code& error)
 {
     if (!error)
     {
-        string message( mReadBuffer );
-        ci::app::console() << "TCP message: " << message << "\n";
+        string message(mReadBuffer);
+        //ci::app::console() << "TCP message: " << message << "\n";
         
         int breakPos = message.find( "\n" );
         if( breakPos < 0 ) breakPos = PACKET_SIZE;
         message.resize( breakPos );
         
         if( mReadCallback ){
-            mReadCallback( message );
+            mReadCallback(message);
         }
         
         // Keep reading brah.
@@ -93,7 +89,6 @@ void TCPClient::handleRead(const boost::system::error_code& error)
                                 boost::asio::buffer(mReadBuffer, PACKET_SIZE),
                                 boost::bind(&TCPClient::handleRead, this,
                                             boost::asio::placeholders::error));
-
     }
     else
     {

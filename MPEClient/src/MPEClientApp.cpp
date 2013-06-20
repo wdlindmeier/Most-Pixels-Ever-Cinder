@@ -117,7 +117,7 @@ void MPEClientApp::frameEvent()
 
 void MPEClientApp::draw()
 {
-    // Do nothing
+    // Do nothing here. Drawing should be done in frameEvent.
 }
 
 CINDER_APP_NATIVE( MPEClientApp, RendererGl )
