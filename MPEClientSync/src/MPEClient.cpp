@@ -40,83 +40,98 @@ MPEClient::~MPEClient()
 
 #pragma mark - Connection
 
-void MPEClient::start( FrameEventCallback renderFrameHandler )
+void MPEClient::start()
 {
     if (mIsStarted)
     {
         stop();
     }
  
-    mRenderFrameCallback = renderFrameHandler;
-    
     mIsStarted = true;
-    
     mTCPClient = new TCPClient();
-    
-    ServerMessageCallback readCallback = boost::bind(&MPEClient::handleServerMessage,
-                                                     this,
-                                                     boost::lambda::_1);
-    
-    mTCPClient->setIncomingMessageCallback(readCallback);
-    
-    OpenedCallback connectCallback = boost::bind(&MPEClient::handleTCPConnect,
-                                                 this,
-                                                 boost::lambda::_1,
-                                                 boost::lambda::_2);
-    mTCPClient->open(mHostname, mPort, connectCallback);
-}
 
-void MPEClient::handleTCPConnect(bool didConnect, const boost::system::error_code& error)
-{
-    if (didConnect)
+    // Open the client
+    if (mTCPClient->open(mHostname, mPort))
     {
-        sendClientID();
+        tcpConnected();
     }
     else
     {
-        mIsStarted = false;
+        stop();
     }
+}
+
+void MPEClient::tcpConnected()
+{
+    ci::app::console() << "Connected.\n";
+    sendClientID();
 }
 
 void MPEClient::stop()
 {    
     mIsStarted = false;
-    if(mTCPClient){
+    if (mTCPClient)
+    {
         mTCPClient->close();
         delete mTCPClient;
         mTCPClient = NULL;
     }    
 }
 
+void MPEClient::update()
+{
+    // This will just stall the loop until we get
+    // a message from the server.    
+    if (mIsStarted && mTCPClient && mTCPClient->isConnected())
+    {
+        bool done = false;
+        while (!done)
+        {
+            string incomingMessage = mTCPClient->read();
+            handleServerMessage(incomingMessage);
+            // Stop reading once we get a newline
+            done = incomingMessage.find("\n") != string::npos;
+        }
+    }
+}
+
 #pragma mark - Drawing
 
-void MPEClient::draw()
+void MPEClient::draw(FrameEventCallback renderFrameHandler)
 {
-    // TODO: Actually draw
-/*
+    glPushMatrix();
+    
     // Only show the area of the view we're interested in.
     positionViewport();
 
     // Tell the app to draw.
-    mRenderFrameCallback();
-*/
+    renderFrameHandler();
+
+    glPopMatrix();
+    
     // Tell the server we're ready for the next.
     doneRendering();
 }
 
 void MPEClient::positionViewport()
 {
-    if(mRepositionCallback){
+    if (mRepositionCallback)
+    {
         mRepositionCallback( mLocalViewportRect, mIsRendering3D );
-    }else if( mIsRendering3D ){
+    }
+    else if (mIsRendering3D)
+    {
         positionViewport3D();
-    }else{
+    }
+    else
+    {
         positionViewport2D();
     }
 }
 
 void MPEClient::positionViewport2D()
 {
+//    console() << "mLocalViewportRect: " << mLocalViewportRect << "\n";
     glTranslatef(mLocalViewportRect.getX1() * -1,
                  mLocalViewportRect.getY1() * -1,
                  0);
@@ -157,7 +172,7 @@ void MPEClient::positionViewport3D()
 
 void MPEClient::broadcast(const std::string & message)
 {
-    mTCPClient->write( mProtocol.broadcast(message) );
+    mTCPClient->write(mProtocol.broadcast(message));
 }
 
 void MPEClient::sendClientID()
@@ -172,8 +187,9 @@ void MPEClient::doneRendering()
 
 void MPEClient::handleServerMessage(const std::string & serverMessage)
 {
+    // TODO: Do something with the server data
     mProtocol.parse(serverMessage);
-    draw();
+    // TMP: Treating every response like a draw command
 }
 
 /*
@@ -236,6 +252,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         int x = xNode.getValue<int>();
         int y = yNode.getValue<int>();
         mLocalViewportRect = Rectf( x, y, x+width, y+height );
+        console() << "mLocalViewportRect: " << mLocalViewportRect << "\n";
 
         // Force the window size based on the settings XML.
         if( shouldResize ){

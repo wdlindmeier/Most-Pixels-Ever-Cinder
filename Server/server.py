@@ -10,7 +10,7 @@ import sys
 
 # TODO: Replace with argparse
 num_clients = 2
-if len(sys.argv) > 0:
+if len(sys.argv) > 1:
     num_clients = int(sys.argv[1])
 
 # Commands

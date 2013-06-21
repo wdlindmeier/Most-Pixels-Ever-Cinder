@@ -17,6 +17,7 @@ class MPEClientApp : public AppNative {
   
     public:
     
+    void        prepareSettings( Settings *settings );
     void        setup();
     void        shutdown();
     void        mouseDown( MouseEvent event );
@@ -24,8 +25,9 @@ class MPEClientApp : public AppNative {
     void        sendMousePosition();
     void        update();
     void        draw();
-    void        frameEvent();
-    void        prepareSettings( Settings *settings );
+    void        drawViewport();
+    void        clientUpdate();
+    void        clientDraw();
 
     private:
     
@@ -35,8 +37,6 @@ class MPEClientApp : public AppNative {
     // position of the client.
     Vec2i       mScreenSize;
     Vec2i       mScreenPos;
-
-    
 };
 
 void MPEClientApp::prepareSettings( Settings *settings )
@@ -49,7 +49,7 @@ void MPEClientApp::prepareSettings( Settings *settings )
 void MPEClientApp::setup()
 {
     mClient = MPEClient("settings.xml");
-    mClient.start( boost::bind(&MPEClientApp::frameEvent, this) );
+    mClient.start();
 }
 
 void MPEClientApp::shutdown()
@@ -75,49 +75,50 @@ void MPEClientApp::sendMousePosition()
     }
 }
 
+#pragma mark - Loop
+
 void MPEClientApp::update()
 {
     int frameCount = getElapsedFrames();
-
-    if(mClient.isConnected()){
+    
+    if (mClient.isConnected())
+    {
+        // It will just stall until it's ready to draw
+        mClient.update();
         
         Vec2i size = getWindowSize();
         Vec2i pos = getWindowPos();
-
+        
         if( mScreenSize != size || mScreenPos != pos){
             // The position has changed.
             // Update the renderable area.
             mClient.setVisibleRect(ci::Rectf(pos.x, pos.y, pos.x + size.x, pos.y + size.y));
+            console() << "Visible Rect: " << mClient.getVisibleRect() << "\n";
             mScreenSize = size;
             mScreenPos = pos;
         }
-        
-        /*
-        if(frameCount % 60 == 0){
-            mClient->sendPing();
-        }
-        */
-        
-    }else{
-        
-        // Try starting up each 60 frames
-        if(frameCount % 60 == 0){
-            mClient.start( boost::bind(&MPEClientApp::frameEvent, this) );
-        }
-        
     }
-}
-
-void MPEClientApp::frameEvent()
-{
-    gl::clear( Color( 1, 0, 0 ) );
-    gl::color(0,0,0);
-    gl::drawString(std::to_string(getElapsedFrames()), Vec2f(10, 10));
+    else
+    {
+        // Attempt to reconnect every 60 frames
+        if (frameCount % 60 == 0)
+        {
+            mClient.start();
+        }
+    }
 }
 
 void MPEClientApp::draw()
 {
-    // Do nothing here. Drawing should be done in frameEvent.
+    // App drawing should be done in frameEvent.
+    mClient.draw(boost::bind(&MPEClientApp::drawViewport, this));
+}
+
+void MPEClientApp::drawViewport()
+{
+    gl::clear( Color( 1, 0, 0 ) );
+    gl::color(0,0,0);
+    gl::drawString(std::to_string(getElapsedFrames()), Vec2f(100, 100));
 }
 
 CINDER_APP_NATIVE( MPEClientApp, RendererGl )

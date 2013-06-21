@@ -18,50 +18,28 @@
 using namespace std;
 using boost::asio::ip::tcp;
 
-namespace mpe {
-
+namespace mpe
+{
     const static int PACKET_SIZE = 10;
-    typedef std::deque<string> MessageQueue;
-    typedef boost::function<void ( bool didConnect, const boost::system::error_code& error )> OpenedCallback;
-    typedef boost::function<void ( const std::string & serverMessage )> ServerMessageCallback;
-    
+
     class TCPClient
     {
     public:
         
         TCPClient();
-        void                        open(const std::string & hostname,
-                                         const int port,
-                                         const OpenedCallback &callback);
+        bool                        open(const std::string & hostname,
+                                         const int por);
         void                        close();
         bool                        isConnected(){ return mIsConnected; }
         void                        write(string msg);
-        void                        setIncomingMessageCallback( ServerMessageCallback callback )
-                                    {
-                                        mReadCallback = callback;
-                                    };
+        std::string                 read();
 
-    protected:
-        
-        boost::asio::io_service     mIOService;
-        
     private:
         
-        void                        readLoop();
-        //void                        handleConnect( const boost::system::error_code& error );
-        //void                        handleRead( const boost::system::error_code& error );
-        void                        doWrite( string msg );
-        //void                        handleWrite( const boost::system::error_code& error );
-        //void                        doClose();
-
+        boost::asio::io_service     mIOService;
         tcp::socket                 mSocket;
         char                        mReadBuffer[PACKET_SIZE];
-        MessageQueue                mWriteMsgs;
         bool                        mIsConnected;
-        //OpenedCallback              mOpenedCallback;
-        ServerMessageCallback       mReadCallback;
-        //std::thread                 mClientThread;
 
-    };
-        
+    };        
 }

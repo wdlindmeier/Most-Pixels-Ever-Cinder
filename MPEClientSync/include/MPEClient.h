@@ -17,8 +17,8 @@ using namespace std;
 using namespace ci;
 using namespace mpe;
 
-namespace mpe {
-    
+namespace mpe
+{
     typedef boost::function<void()> FrameEventCallback;
     typedef boost::function<void( const Rectf & renderRect, bool is3D )> RepositionCallback;
 
@@ -31,11 +31,14 @@ namespace mpe {
         ~MPEClient();
         
         // Handle Connection
-        void                start(FrameEventCallback renderFrameHandler);
+        void                start();
         void                stop();
         bool                isConnected(){ return mTCPClient->isConnected(); };
-        void                handleTCPConnect(bool didConnect, const boost::system::error_code& error);
         
+        // Loop
+        void                update();
+        void                draw(FrameEventCallback renderFrameHandler);
+
         // Server Com
         void                broadcast(const std::string & message);
         void                sendPing();
@@ -50,7 +53,6 @@ namespace mpe {
         
         protected:
         
-        void                draw();
         void                positionViewport();
         void                positionViewport3D();
         void                positionViewport2D();
@@ -58,6 +60,7 @@ namespace mpe {
         
         private:
         
+        void                tcpConnected();
         void                doneRendering();
         void                loadSettings(string settingsFilename, bool shouldResize);
         
@@ -66,10 +69,7 @@ namespace mpe {
 
         // A protocol to convert a given command into a transport string.
         MPEProtocol         mProtocol;
-        
-        // The frame render callback. This is a member of the Cinder App.
-        FrameEventCallback  mRenderFrameCallback;
-        
+
         // A reposition callback to let the App override the repositioning GL calls.
         RepositionCallback  mRepositionCallback;
         
