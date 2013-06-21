@@ -49,39 +49,28 @@ bool TCPClient::open(const std::string & hostname,
 }
 
 string TCPClient::read()
-{
+{    
     boost::system::error_code error;
-    size_t len = mSocket.read_some(boost::asio::buffer(mReadBuffer), error);
-    
+    boost::asio::streambuf buffer;
+    boost::asio::read_until(mSocket, buffer, "\n", error);
+
     // When the server closes the connection, the ip::tcp::socket::read_some()
     // function will exit with the boost::asio::error::eof error,
-    // which is how we know to exit the loop.
-    
+    // which is how we know to exit the loop.    
     if (error == boost::asio::error::eof)
     {
         close();
-        return "\n";
+        return "";
     }
     else if (error)
     {
         ci::app::console() << "ERROR: " << error.message() << "\n";
         throw boost::system::system_error(error); // Some other error.
     }
-    
-    // Do something with this data.
-    string message(mReadBuffer);
 
-    int breakPos = message.find("\n");
-    if (breakPos == string::npos)
-    {
-        breakPos = PACKET_SIZE;
-    }
-    else
-    {
-        // We want to pass along the newline
-        breakPos += 1;
-    }
-    message.resize( breakPos );
+    std::istream str(&buffer);
+    std::string message;
+    std::getline(str, message);
     
     return message;
 }
@@ -89,11 +78,11 @@ string TCPClient::read()
 void TCPClient::write(string msg)
 {
     boost::system::error_code error;
-//    ci::app::console() << "Write " << msg << "\n";
+    ci::app::console() << "Write " << msg << "\n";
     size_t len = mSocket.write_some(boost::asio::buffer(msg), error);
     if (error)
     {
-        ci::app::console() << "--ERROR: Couldn't write. " << error.message() << "\n";
+        ci::app::console() << "ERROR: Couldn't write. " << error.message() << "\n";
     }
     else if (len == 0)
     {

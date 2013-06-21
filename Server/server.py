@@ -20,7 +20,8 @@ CMD_BROADCAST = "T"
 
 # Keep the padding as long as MAX_PACKET_LENGTH
 MAX_PACKET_LENGTH = 10 
-PACKET_PADDING = "\nXXXXXXXXXX"
+#PACKET_PADDING = "\nXXXXXXXXXX"
+PACKET_PADDING = "\n          "
  
 class MPEServer(Protocol):
     

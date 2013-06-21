@@ -7,6 +7,8 @@
 //
 
 #include "cinder/Rect.h"
+#include "cinder/Utilities.h"
+#include "MPEMessageHandler.hpp"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -23,7 +25,9 @@
  
 */
 
-using namespace std;
+using std::string;
+using std::vector;
+using namespace boost;
 
 namespace mpe {
     
@@ -32,75 +36,73 @@ namespace mpe {
         
     public:
         
-        virtual std::string setClientID( const int clientID )
+        virtual string setClientID( const int clientID )
         {
             return "S" + std::to_string(clientID) + "\n";
         };
         
-        virtual std::string broadcast( const std::string & msg )
+        virtual string broadcast( const string & msg )
         {
             return "T" + msg + "\n";
         };
         
-        virtual std::string renderIsComplete()
+        virtual string renderIsComplete(int clientID, long frameNum)
         {
-            return "D";
+            return "D," + std::to_string(clientID) + "," + std::to_string(frameNum) + "\n";
         };
         
-        // TODO:
-        // Read incoming messages        
-        virtual void parse( const std::string & serverMessage )
-        {
-            vector<string> info;
-            vector<string> frameMessage;
-
-            istringstream iss(serverMessage);
-            copy(istream_iterator<string>(iss),
-                 istream_iterator<string>(),
-                 back_inserter<vector<string> >(info));
+        virtual void parse(const string & serverMessage, MPEMessageHandler *handler)
+        {            
+            ci::app::console() << "Incoming message: " << serverMessage << "\n";
             
-            //ci::app::console() << "serverMessage: " << serverMessage << "\n";
-            //ci::app::console() << "frameMessages:\n";
-            for( int i=0; i<frameMessage.size(); i++ ){
-                ci::app::console() << frameMessage[i] << "\n";
+            // Example server messages
+            // e.g. IG,19919:blahblahblah
+            // e.g. G,7
+            
+            vector<string> messages = ci::split(serverMessage, ":");
+            string frame = messages[0];
+            string payload;
+            
+            // Get the frame details
+            vector<string> frameInfo = ci::split(frame, ",");
+            string frameCommand = frameInfo[0];
+            string frameNum = frameInfo[1];
+            
+            // Get any additional message that was passed along
+            bool hasPayload = messages.size() > 1;
+            if (hasPayload)
+            {
+                payload = messages[1];
             }
             
-            /*
-
-            int fc = atoi(frameMessage[0].c_str());
-            
-            if (info.size() > 1) {
-                // there is a message here with the frame event
-                info.erase(info.begin());
-                dataMessage.clear();
-                dataMessage = info;
-                bMessageAvailable = true;
-            } else {
-                bMessageAvailable = false;
+            if (frameCommand == "G")
+            {
+                // Just sending frame num
+                // Nothing else to do here.
             }
-            
-            // assume no arrays are available
-            bIntsAvailable  = false;
-            bBytesAvailable = false;
-            
-            if (fc == frameCount) {
-                rendering = true;
-                frameCount++;
-                
-                // calculate new framerate
-                float ms = ofGetElapsedTimeMillis() - lastMs;
-                fps = 1000.f / ms;
-                lastMs = ofGetElapsedTimeMillis();
-                
-                if (!autoMode) {
-                    parent->frameEvent();
+            else if (frameCommand == "IG")
+            {
+                if (hasPayload)
+                {
+                    handler->receivedIntData(payload);
                 }
             }
-             
-            */
-            
-        }
-        
-    };
+            else if (frameCommand == "BG")
+            {
+                if (hasPayload)
+                {
+                    handler->receivedByteData(payload);
+                }
+            }
+            else
+            {
+                ci::app::console() << "ALERT: Don't know what to do with server message:\n";
+                ci::app::console() << serverMessage << "\n";
+                return;
+            }
 
+            handler->setRenderFrameNum(stoi(frameNum));
+            handler->setFrameIsReady(true);
+        }
+    };
 }

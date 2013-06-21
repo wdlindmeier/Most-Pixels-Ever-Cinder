@@ -38,7 +38,7 @@ namespace mpe
         
         boost::asio::io_service     mIOService;
         tcp::socket                 mSocket;
-        char                        mReadBuffer[PACKET_SIZE];
+        //char                        mReadBuffer[PACKET_SIZE];
         bool                        mIsConnected;
 
     };        

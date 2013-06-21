@@ -12,6 +12,7 @@
 #include <boost/asio.hpp>
 #include "cinder/Rect.h"
 #include "MPEProtocol.hpp"
+#include "MPEMessageHandler.hpp"
 
 using namespace std;
 using namespace ci;
@@ -22,7 +23,7 @@ namespace mpe
     typedef boost::function<void()> FrameEventCallback;
     typedef boost::function<void( const Rectf & renderRect, bool is3D )> RepositionCallback;
 
-    class MPEClient {
+    class MPEClient : public MPEMessageHandler {
         
         public:
         
@@ -81,6 +82,7 @@ namespace mpe
         bool                mIsStarted;
         ci::Rectf           mLocalViewportRect;
         ci::Vec2i           mMasterSize;
-        int                 mClientID;        
+        int                 mClientID;
+        
     };
 }

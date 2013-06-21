@@ -22,6 +22,7 @@ using namespace ci::app;
 using namespace mpe;
 
 MPEClient::MPEClient(string settingsFilename, bool shouldResize) :
+MPEMessageHandler(),
 mHostname(""),
 mPort(0),
 mIsStarted(false),
@@ -80,17 +81,17 @@ void MPEClient::stop()
 
 void MPEClient::update()
 {
+    printf("update\n");
+    
     // This will just stall the loop until we get
     // a message from the server.    
     if (mIsStarted && mTCPClient && mTCPClient->isConnected())
     {
-        bool done = false;
-        while (!done)
+        mFrameIsReady = false;
+        while (!mFrameIsReady)
         {
-            string incomingMessage = mTCPClient->read();
-            handleServerMessage(incomingMessage);
-            // Stop reading once we get a newline
-            done = incomingMessage.find("\n") != string::npos;
+            printf("Frame is not ready\n");
+            mProtocol.parse(mTCPClient->read(), this);
         }
     }
 }
@@ -182,14 +183,7 @@ void MPEClient::sendClientID()
 
 void MPEClient::doneRendering()
 {
-    mTCPClient->write(mProtocol.renderIsComplete());
-}
-
-void MPEClient::handleServerMessage(const std::string & serverMessage)
-{
-    // TODO: Do something with the server data
-    mProtocol.parse(serverMessage);
-    // TMP: Treating every response like a draw command
+    mTCPClient->write(mProtocol.renderIsComplete(mClientID, mRenderFrameNum));
 }
 
 /*
