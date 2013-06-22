@@ -1,66 +1,43 @@
 //
 //  TCPClient.h
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 6/12/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #pragma once
 
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+#include <boost/thread/thread.hpp>
 #include <cstdlib>
 #include <deque>
 #include <iostream>
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
-#include <boost/thread/thread.hpp>
 
-using namespace std;
-using boost::asio::ip::tcp;
+/*
 
-namespace mpe {
+ TODO: Describe TCPClient class.
 
-    const static int PACKET_SIZE = 10;
-    typedef std::deque<string> MessageQueue;
-    typedef boost::function<void ( bool didConnect, const boost::system::error_code& error )> OpenedCallback;
-    typedef boost::function<void ( const std::string & serverMessage )> ServerMessageCallback;
-    
+*/
+
+namespace mpe
+{
     class TCPClient
     {
     public:
-        
+
         TCPClient();
-        void                        open(const std::string & hostname,
-                                         const int port,
-                                         const OpenedCallback &callback);
-        void                        close();
-        bool                        isConnected(){ return mIsConnected; }
-        void                        write(string msg);
-        void                        setIncomingMessageCallback( ServerMessageCallback callback )
-                                    {
-                                        mReadCallback = callback;
-                                    };
+        bool                            open(const std::string & hostname, const int port);
+        void                            close();
+        bool                            isConnected(){ return mIsConnected; }
+        void                            write(std::string msg);
+        std::string                     read();
 
-    protected:
-        
-        boost::asio::io_service     mIOService;
-        
     private:
-        
-        void                        handleConnect( const boost::system::error_code& error );
-        void                        handleRead( const boost::system::error_code& error );
-        void                        doWrite( string msg );
-        void                        handleWrite( const boost::system::error_code& error );
-        void                        doClose();
 
-        tcp::socket                 mSocket;
-        char                        mReadBuffer[PACKET_SIZE];
-        MessageQueue                mWriteMsgs;
-        bool                        mIsConnected;
-        OpenedCallback              mOpenedCallback;
-        ServerMessageCallback       mReadCallback;
-        std::thread                 mClientThread;
+        boost::asio::io_service         mIOService;
+        boost::asio::ip::tcp::socket    mSocket;
+        bool                            mIsConnected;
 
     };
-        
 }

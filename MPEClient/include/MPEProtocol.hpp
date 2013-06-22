@@ -1,106 +1,111 @@
 //
 //  MPEProtocol.hpp
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 6/16/13.
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
-//
+
+#pragma once
+
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <sstream>
+#include <string>
 
 #include "cinder/Rect.h"
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <algorithm>
-#include <iterator>
+#include "cinder/Utilities.h"
+#include "MPEMessageHandler.hpp"
 
 /*
- 
+
  An MPE server protocol for Shiffman's Java server, which can be found here:
  https://github.com/shiffman/Most-Pixels-Ever/tree/master/server_jar
- 
+
  To start the server:
- java -jar mpeServer.jar -debug1 -framerate30 -screens2
- 
+ $ java -jar mpeServer.jar -debug1 -framerate30 -screens2
+ or
+ $ java -jar mpeServer.jar -framerate60 -screens2
+
+ This class converts actions to/from strings that the server undertands.
+ MPEProtocol can be subclassed to use with other servers, if it's ever updated / rewritten.
+
 */
 
-using namespace std;
-
-namespace mpe {
-    
+namespace mpe
+{
     class MPEProtocol
     {
-        
+
     public:
-        
+
         virtual std::string setClientID( const int clientID )
         {
             return "S" + std::to_string(clientID) + "\n";
         };
-        
+
         virtual std::string broadcast( const std::string & msg )
         {
             return "T" + msg + "\n";
         };
-        
-        virtual std::string renderIsComplete()
+
+        virtual std::string renderIsComplete(int clientID, long frameNum)
         {
-            return "D";
+            return "D," + std::to_string(clientID) + "," + std::to_string(frameNum+1) + "\n";
         };
-        
-        // TODO:
-        // Read incoming messages        
-        virtual void parse( const std::string & serverMessage )
+
+        virtual void parse(const std::string & serverMessage, MPEMessageHandler *handler)
         {
-            vector<string> info;
-            vector<string> frameMessage;
+            // ci::app::console() << "Incoming message: " << serverMessage << "\n";
 
-            istringstream iss(serverMessage);
-            copy(istream_iterator<string>(iss),
-                 istream_iterator<string>(),
-                 back_inserter<vector<string> >(info));
-            
-            //ci::app::console() << "serverMessage: " << serverMessage << "\n";
-            //ci::app::console() << "frameMessages:\n";
-            for( int i=0; i<frameMessage.size(); i++ ){
-                ci::app::console() << frameMessage[i] << "\n";
-            }
-            
-            /*
+            // Example server messages
+            // e.g. IG,19919:blahblahblah
+            // e.g. G,7
 
-            int fc = atoi(frameMessage[0].c_str());
-            
-            if (info.size() > 1) {
-                // there is a message here with the frame event
-                info.erase(info.begin());
-                dataMessage.clear();
-                dataMessage = info;
-                bMessageAvailable = true;
-            } else {
-                bMessageAvailable = false;
+            std::vector<std::string> messages = ci::split(serverMessage, ":");
+            std::string frame = messages[0];
+            std::string payload;
+
+            // Get the frame details
+            std::vector<std::string> frameInfo = ci::split(frame, ",");
+            std::string frameCommand = frameInfo[0];
+            std::string frameNum = frameInfo[1];
+
+            // Get any additional message that was passed along
+            bool hasPayload = messages.size() > 1;
+            if (hasPayload)
+            {
+                payload = messages[1];
             }
-            
-            // assume no arrays are available
-            bIntsAvailable  = false;
-            bBytesAvailable = false;
-            
-            if (fc == frameCount) {
-                rendering = true;
-                frameCount++;
-                
-                // calculate new framerate
-                float ms = ofGetElapsedTimeMillis() - lastMs;
-                fps = 1000.f / ms;
-                lastMs = ofGetElapsedTimeMillis();
-                
-                if (!autoMode) {
-                    parent->frameEvent();
+
+            if (frameCommand == "G")
+            {
+                // Just sending frame num
+                // Nothing else to do here.
+            }
+            else if (frameCommand == "IG")
+            {
+                if (hasPayload)
+                {
+                    handler->receivedIntData(payload);
                 }
             }
-             
-            */
-            
-        }
-        
-    };
+            else if (frameCommand == "BG")
+            {
+                if (hasPayload)
+                {
+                    handler->receivedByteData(payload);
+                }
+            }
+            else
+            {
+                ci::app::console() << "ALERT: Don't know what to do with server message:\n";
+                ci::app::console() << serverMessage << "\n";
+                return;
+            }
 
+            handler->setRenderFrameNum(stoi(frameNum));
+            handler->setFrameIsReady(true);
+        }
+    };
 }
