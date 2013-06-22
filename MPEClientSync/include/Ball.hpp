@@ -1,9 +1,8 @@
 //
 //  Ball.hpp
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 6/22/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #pragma once
@@ -11,23 +10,27 @@
 #include "cinder/Cinder.h"
 #include "cinder/gl/gl.h"
 
-using namespace ci;
+/*
+
+ TODO: Describe Ball class.
+
+*/
 
 class Ball
 {
-    
+
 public:
-    
+
     Ball(){};
-    Ball(const Vec2f & randPosition,
-         const Vec2f & randVelocity,
-         const Vec2i & sizeClient) :
+    Ball(const ci::Vec2f & randPosition,
+         const ci::Vec2f & randVelocity,
+         const ci::Vec2i & sizeClient) :
     mPosition(randPosition),
     mVelocity(randVelocity),
     mDiameter(36),
     mSizeClient(sizeClient)
     {};
-    
+
     void calc()
     {
         if (mPosition.x < 0 || mPosition.x > mSizeClient.x)
@@ -40,21 +43,21 @@ public:
         }
         mPosition += mVelocity;
     }
-    
+
     void draw()
     {
-        gl::color(0, 0, 0);
-        gl::lineWidth(1);
-        gl::drawStrokedCircle(mPosition, mDiameter * 0.5, mDiameter);
-        gl::color(100,100,100);
-        gl::drawSolidCircle(mPosition, mDiameter * 0.5, mDiameter);
+        ci::gl::color(0, 0, 0);
+        ci::gl::lineWidth(1);
+        ci::gl::drawStrokedCircle(mPosition, mDiameter * 0.5, mDiameter);
+        ci::gl::color(100,100,100);
+        ci::gl::drawSolidCircle(mPosition, mDiameter * 0.5, mDiameter);
     }
-    
+
 private:
-    
-    Vec2f mPosition;
-    Vec2f mVelocity;
-    Vec2i mSizeClient;
+
+    ci::Vec2f mPosition;
+    ci::Vec2f mVelocity;
+    ci::Vec2i mSizeClient;
     float mDiameter;
-    
+
 };

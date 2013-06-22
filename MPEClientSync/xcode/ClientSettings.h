@@ -2,8 +2,7 @@
 //  ClientSettings.h
 //  MPEClient
 //
-//  Created by William Lindmeier on 6/22/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #pragma once

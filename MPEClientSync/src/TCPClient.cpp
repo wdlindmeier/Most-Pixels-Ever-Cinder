@@ -1,13 +1,12 @@
 //
 //  TCPClient.cpp
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 6/12/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
-#include "TCPClient.h"
 #include "cinder/CinderMath.h"
+#include "TCPClient.h"
 
 using namespace ci;
 using namespace mpe;
@@ -21,7 +20,7 @@ mIsConnected(false)
 }
 
 bool TCPClient::open(const std::string & hostname,
-                     const int port)                        
+                     const int port)
 {
     tcp::resolver resolver(mIOService);
     tcp::resolver::query query(hostname, std::to_string(port));
@@ -29,7 +28,7 @@ bool TCPClient::open(const std::string & hostname,
     tcp::resolver::iterator end;
 
     mIsConnected = false;
-    
+
     boost::system::error_code error = boost::asio::error::host_not_found;
     while (error && iterator != end)
     {
@@ -41,22 +40,22 @@ bool TCPClient::open(const std::string & hostname,
         close();
         return false;
     }
-    
+
     ci::app::console() << "Open? " << mSocket.is_open() << "\n";
-    
+
     mIsConnected = true;
     return mIsConnected;
 }
 
 string TCPClient::read()
-{    
+{
     boost::system::error_code error;
     boost::asio::streambuf buffer;
     boost::asio::read_until(mSocket, buffer, "\n", error);
 
     // When the server closes the connection, the ip::tcp::socket::read_some()
     // function will exit with the boost::asio::error::eof error,
-    // which is how we know to exit the loop.    
+    // which is how we know to exit the loop.
     if (error == boost::asio::error::eof)
     {
         close();
@@ -71,7 +70,7 @@ string TCPClient::read()
     std::istream str(&buffer);
     std::string message;
     std::getline(str, message);
-    
+
     return message;
 }
 

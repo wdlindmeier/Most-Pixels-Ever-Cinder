@@ -1,9 +1,8 @@
 //
-//  ClientSettings.1.m
+//  ClientSettings.1.cpp
 //  MPEClient
 //
-//  Created by William Lindmeier on 6/22/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #include "ClientSettings.h"

@@ -1,20 +1,20 @@
 //
 //  MPEClient.cpp
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 6/12/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
-#include "MPEClient.h"
-#include "cinder/CinderResources.h"
-#include "cinder/Xml.h"
-#include "cinder/Vector.h"
-#include "cinder/gl/gl.h"
 #include <boost/bind.hpp>
 #include <boost/lambda/lambda.hpp>
-#import <OpenGL/OpenGL.h>
-#import <GLUT/GLUT.h>
+#include <GLUT/GLUT.h>
+#include <OpenGL/OpenGL.h>
+
+#include "cinder/CinderResources.h"
+#include "cinder/gl/gl.h"
+#include "cinder/Vector.h"
+#include "cinder/Xml.h"
+#include "MPEClient.h"
 
 using namespace std;
 using namespace ci;
@@ -47,7 +47,7 @@ void MPEClient::start()
     {
         stop();
     }
- 
+
     mIsStarted = true;
     mTCPClient = new TCPClient();
 
@@ -69,20 +69,20 @@ void MPEClient::tcpConnected()
 }
 
 void MPEClient::stop()
-{    
+{
     mIsStarted = false;
     if (mTCPClient)
     {
         mTCPClient->close();
         delete mTCPClient;
         mTCPClient = NULL;
-    }    
+    }
 }
 
 void MPEClient::update()
 {
     // This will just stall the loop until we get
-    // a message from the server.    
+    // a message from the server.
     if (mIsStarted && isConnected())
     {
         mFrameIsReady = false;
@@ -103,7 +103,7 @@ void MPEClient::draw(FrameEventCallback renderFrameHandler)
     }
 
     glPushMatrix();
-    
+
     // Only show the area of the view we're interested in.
     positionViewport();
 
@@ -111,7 +111,7 @@ void MPEClient::draw(FrameEventCallback renderFrameHandler)
     renderFrameHandler();
 
     glPopMatrix();
-    
+
     // Tell the server we're ready for the next.
     doneRendering();
 }
@@ -148,16 +148,16 @@ void MPEClient::positionViewport3D()
     float lHeight = mLocalViewportRect.getHeight();
     float xOffset = mLocalViewportRect.getX1();
     float yOffset = mLocalViewportRect.getY1();
-    
+
     // TMP
     // TODO: Make this real.
     // Checkout restoreCamera & setFieldOfView
     float cameraZ = 0;
-    
+
     gluLookAt(mWidth/2.f, mHeight/2.f, cameraZ,
               mWidth/2.f, mHeight/2.f, 0,
-              0, 1, 0);    
-    
+              0, 1, 0);
+
     // The frustum defines the 3D clipping plane for each Client window!
     float mod = .1f;
     float left   = (xOffset - mWidth/2)*mod;
@@ -188,34 +188,24 @@ void MPEClient::doneRendering()
     mTCPClient->write(mProtocol.renderIsComplete(mClientID, mRenderFrameNum));
 }
 
-/*
-//  Ping is not a supported call. For testing only.
-*/
-void MPEClient::sendPing()
-{
-    // Ad-hoc
-    std::string sendMsg = "P" + std::to_string(mClientID) + "\n";
-    mTCPClient->write(sendMsg);
-}
-
 #pragma mark - Settings
 
 void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
 {
     XmlTree settingsDoc( loadAsset( settingsFilename ) );
-    
+
     try
     {
         XmlTree debugNode = settingsDoc.getChild( "settings/debug" );
         int isDebug = debugNode.getValue<int>();
-        if(isDebug != 0){
+        if (isDebug != 0){
             // app::console() << "settingsDoc: " << settingsDoc << "\n";
         }
     }
     catch (XmlTree::ExcChildNotFound e)
     {
     }
-    
+
     try
     {
         XmlTree ipNode = settingsDoc.getChild( "settings/server/ip" );
@@ -226,7 +216,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     {
         console() << "ERROR: Could not find server and port settings\n";
     }
-    
+
     try
     {
         XmlTree ipNode = settingsDoc.getChild( "settings/client_id" );
@@ -236,7 +226,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     {
         console() << "ERROR: Could not find client ID\n";
     }
-    
+
     try
     {
         XmlTree widthNode = settingsDoc.getChild( "settings/local_dimensions/width" );
@@ -251,7 +241,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         console() << "mLocalViewportRect: " << mLocalViewportRect << "\n";
 
         // Force the window size based on the settings XML.
-        if( shouldResize ){
+        if (shouldResize){
             ci::app::setWindowSize(width, height);
         }
     }

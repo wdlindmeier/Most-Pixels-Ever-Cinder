@@ -1,44 +1,43 @@
 //
 //  TCPClient.h
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 6/12/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #pragma once
 
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+#include <boost/thread/thread.hpp>
 #include <cstdlib>
 #include <deque>
 #include <iostream>
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
-#include <boost/thread/thread.hpp>
 
-using namespace std;
-using boost::asio::ip::tcp;
+/*
+
+ TODO: Describe TCPClient class.
+
+*/
 
 namespace mpe
 {
-    const static int PACKET_SIZE = 10;
-
     class TCPClient
     {
     public:
-        
+
         TCPClient();
-        bool                        open(const std::string & hostname,
-                                         const int por);
+        bool                        open(const std::string & hostname, const int port);
         void                        close();
         bool                        isConnected(){ return mIsConnected; }
         void                        write(string msg);
         std::string                 read();
 
     private:
-        
+
         boost::asio::io_service     mIOService;
-        tcp::socket                 mSocket;
+        boost::tcp::socket          mSocket;
         bool                        mIsConnected;
 
-    };        
+    };
 }
