@@ -3,6 +3,7 @@
 #include "cinder/Rand.h"
 #include "Ball.hpp"
 #include "MPEClient.h"
+#include "ClientSettings.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -53,8 +54,11 @@ void MPEClientApp::prepareSettings( Settings *settings )
 }
 
 void MPEClientApp::setup()
-{
-    mClient = MPEClient("settings.xml");
+{    
+    console() << "Loading settings from " << SettingsFileName << "\n";
+    
+    mClient = MPEClient(SettingsFileName);
+    
     // The same as the processing sketch.
     // Does Processing Rand work the same as Cinder Rand as OF Rand?
     mRand.seed(1);

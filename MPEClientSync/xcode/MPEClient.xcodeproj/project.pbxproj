@@ -19,8 +19,24 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		A91AACC6176EC4B3002F5DF0 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91AACC5176EC4B3002F5DF0 /* GLUT.framework */; };
 		A94C184817690AB000F56801 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94C184617690AB000F56801 /* MPEClient.cpp */; };
-		A94C184C176912F600F56801 /* settings.xml in Resources */ = {isa = PBXBuildFile; fileRef = A94C184B176912F600F56801 /* settings.xml */; };
+		A94C184C176912F600F56801 /* settings.0.xml in Resources */ = {isa = PBXBuildFile; fileRef = A94C184B176912F600F56801 /* settings.0.xml */; };
 		A9655FC61768A6B600DD1085 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9655FC41768A6B600DD1085 /* TCPClient.cpp */; };
+		A9E8D0CB177604BA00B6F8CC /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4A27B30B7A46449384A4BC31 /* CinderApp.icns */; };
+		A9E8D0CE177604BA00B6F8CC /* MPEClientApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DCEBB27E38943B1875239E6 /* MPEClientApp.cpp */; };
+		A9E8D0CF177604BA00B6F8CC /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9655FC41768A6B600DD1085 /* TCPClient.cpp */; };
+		A9E8D0D0177604BA00B6F8CC /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94C184617690AB000F56801 /* MPEClient.cpp */; };
+		A9E8D0D2177604BA00B6F8CC /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91AACC5176EC4B3002F5DF0 /* GLUT.framework */; };
+		A9E8D0D3177604BA00B6F8CC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A9E8D0D4177604BA00B6F8CC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		A9E8D0D5177604BA00B6F8CC /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		A9E8D0D6177604BA00B6F8CC /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		A9E8D0D7177604BA00B6F8CC /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		A9E8D0D8177604BA00B6F8CC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		A9E8D0D9177604BA00B6F8CC /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		A9E8D0DA177604BA00B6F8CC /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		A9E8D0E11776051E00B6F8CC /* settings.1.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9E8D0E01776051E00B6F8CC /* settings.1.xml */; };
+		A9E8D0E51776061600B6F8CC /* ClientSettings.0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E8D0E41776061600B6F8CC /* ClientSettings.0.cpp */; };
+		A9E8D0E61776065800B6F8CC /* ClientSettings.1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E8D0E31776059800B6F8CC /* ClientSettings.1.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,16 +52,22 @@
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		6DCEBB27E38943B1875239E6 /* MPEClientApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClientApp.cpp; path = ../src/MPEClientApp.cpp; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* MPEClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* MPEClient0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEClient0.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocol.hpp; path = ../include/MPEProtocol.hpp; sourceTree = "<group>"; };
 		A91AACC5176EC4B3002F5DF0 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		A94C184617690AB000F56801 /* MPEClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEClient.cpp; path = ../src/MPEClient.cpp; sourceTree = "<group>"; };
 		A94C184917690AFD00F56801 /* MPEClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../include/MPEClient.h; sourceTree = "<group>"; };
-		A94C184B176912F600F56801 /* settings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.xml; sourceTree = "<group>"; };
+		A94C184B176912F600F56801 /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
 		A9655FC41768A6B600DD1085 /* TCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPClient.cpp; path = ../src/TCPClient.cpp; sourceTree = "<group>"; };
 		A9655FC71768A6CE00DD1085 /* TCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../include/TCPClient.h; sourceTree = "<group>"; };
 		A9E8D0C317750BD400B6F8CC /* MPEMessageHandler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEMessageHandler.hpp; path = ../include/MPEMessageHandler.hpp; sourceTree = "<group>"; };
 		A9E8D0C81775FA9600B6F8CC /* Ball.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ball.hpp; path = ../include/Ball.hpp; sourceTree = "<group>"; };
+		A9E8D0DE177604BA00B6F8CC /* MPEClient1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEClient1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9E8D0DF177604BA00B6F8CC /* MPEClient copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MPEClient copy-Info.plist"; path = "/Users/bill/Documents/ITP/BIG-MPE/MPEClientSync/xcode/MPEClient copy-Info.plist"; sourceTree = "<absolute>"; };
+		A9E8D0E01776051E00B6F8CC /* settings.1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.1.xml; sourceTree = "<group>"; };
+		A9E8D0E21776058A00B6F8CC /* ClientSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientSettings.h; sourceTree = "<group>"; };
+		A9E8D0E31776059800B6F8CC /* ClientSettings.1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientSettings.1.cpp; sourceTree = "<group>"; };
+		A9E8D0E41776061600B6F8CC /* ClientSettings.0.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientSettings.0.cpp; sourceTree = "<group>"; };
 		B1D71D4254444E788DE3D95C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D02E465518744D3A967C743D /* MPEClient_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = MPEClient_Prefix.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,6 +86,22 @@
 				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
 				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
 				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9E8D0D1177604BA00B6F8CC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9E8D0D2177604BA00B6F8CC /* GLUT.framework in Frameworks */,
+				A9E8D0D3177604BA00B6F8CC /* Cocoa.framework in Frameworks */,
+				A9E8D0D4177604BA00B6F8CC /* OpenGL.framework in Frameworks */,
+				A9E8D0D5177604BA00B6F8CC /* CoreVideo.framework in Frameworks */,
+				A9E8D0D6177604BA00B6F8CC /* QTKit.framework in Frameworks */,
+				A9E8D0D7177604BA00B6F8CC /* Accelerate.framework in Frameworks */,
+				A9E8D0D8177604BA00B6F8CC /* AudioToolbox.framework in Frameworks */,
+				A9E8D0D9177604BA00B6F8CC /* AudioUnit.framework in Frameworks */,
+				A9E8D0DA177604BA00B6F8CC /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,7 +153,8 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* MPEClient.app */,
+				8D1107320486CEB800E47090 /* MPEClient0.app */,
+				A9E8D0DE177604BA00B6F8CC /* MPEClient1.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -130,6 +169,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				A9E8D0DF177604BA00B6F8CC /* MPEClient copy-Info.plist */,
 			);
 			name = MPEClient;
 			sourceTree = "<group>";
@@ -152,6 +192,9 @@
 			children = (
 				4A27B30B7A46449384A4BC31 /* CinderApp.icns */,
 				B1D71D4254444E788DE3D95C /* Info.plist */,
+				A9E8D0E21776058A00B6F8CC /* ClientSettings.h */,
+				A9E8D0E31776059800B6F8CC /* ClientSettings.1.cpp */,
+				A9E8D0E41776061600B6F8CC /* ClientSettings.0.cpp */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -168,7 +211,8 @@
 		A94C184A176912F600F56801 /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				A94C184B176912F600F56801 /* settings.xml */,
+				A94C184B176912F600F56801 /* settings.0.xml */,
+				A9E8D0E01776051E00B6F8CC /* settings.1.xml */,
 			);
 			name = assets;
 			path = ../assets;
@@ -177,9 +221,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* MPEClient */ = {
+		8D1107260486CEB800E47090 /* MPEClient0 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MPEClient" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MPEClient0" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -189,10 +233,28 @@
 			);
 			dependencies = (
 			);
-			name = MPEClient;
+			name = MPEClient0;
 			productInstallPath = "$(HOME)/Applications";
 			productName = MPEClient;
-			productReference = 8D1107320486CEB800E47090 /* MPEClient.app */;
+			productReference = 8D1107320486CEB800E47090 /* MPEClient0.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A9E8D0C9177604BA00B6F8CC /* MPEClient1 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9E8D0DB177604BA00B6F8CC /* Build configuration list for PBXNativeTarget "MPEClient1" */;
+			buildPhases = (
+				A9E8D0CA177604BA00B6F8CC /* Resources */,
+				A9E8D0CD177604BA00B6F8CC /* Sources */,
+				A9E8D0D1177604BA00B6F8CC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPEClient1;
+			productInstallPath = "$(HOME)/Applications";
+			productName = MPEClient;
+			productReference = A9E8D0DE177604BA00B6F8CC /* MPEClient1.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -214,7 +276,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* MPEClient */,
+				8D1107260486CEB800E47090 /* MPEClient0 */,
+				A9E8D0C9177604BA00B6F8CC /* MPEClient1 */,
 			);
 		};
 /* End PBXProject section */
@@ -225,7 +288,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				03FA722B3EC84917AA0BF407 /* CinderApp.icns in Resources */,
-				A94C184C176912F600F56801 /* settings.xml in Resources */,
+				A94C184C176912F600F56801 /* settings.0.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9E8D0CA177604BA00B6F8CC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9E8D0CB177604BA00B6F8CC /* CinderApp.icns in Resources */,
+				A9E8D0E11776051E00B6F8CC /* settings.1.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,12 +311,72 @@
 				10DD0A41832F490D996C3504 /* MPEClientApp.cpp in Sources */,
 				A9655FC61768A6B600DD1085 /* TCPClient.cpp in Sources */,
 				A94C184817690AB000F56801 /* MPEClient.cpp in Sources */,
+				A9E8D0E51776061600B6F8CC /* ClientSettings.0.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9E8D0CD177604BA00B6F8CC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9E8D0CE177604BA00B6F8CC /* MPEClientApp.cpp in Sources */,
+				A9E8D0CF177604BA00B6F8CC /* TCPClient.cpp in Sources */,
+				A9E8D0D0177604BA00B6F8CC /* MPEClient.cpp in Sources */,
+				A9E8D0E61776065800B6F8CC /* ClientSettings.1.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		A9E8D0DC177604BA00B6F8CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEClient_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "MPEClient copy-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				PRODUCT_NAME = MPEClient1;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A9E8D0DD177604BA00B6F8CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEClient_Prefix.pch;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "MPEClient copy-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				PRODUCT_NAME = MPEClient1;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -264,7 +396,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
-				PRODUCT_NAME = MPEClient;
+				PRODUCT_NAME = MPEClient0;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
 			};
@@ -286,7 +418,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
-				PRODUCT_NAME = MPEClient;
+				PRODUCT_NAME = MPEClient0;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
@@ -330,7 +462,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MPEClient" */ = {
+		A9E8D0DB177604BA00B6F8CC /* Build configuration list for PBXNativeTarget "MPEClient1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9E8D0DC177604BA00B6F8CC /* Debug */,
+				A9E8D0DD177604BA00B6F8CC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MPEClient0" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,

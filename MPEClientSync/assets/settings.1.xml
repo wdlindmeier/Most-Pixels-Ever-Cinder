@@ -1,15 +1,15 @@
 <settings>
-	<client_id>0</client_id>
+	<client_id>1</client_id>
 	<server>
 		<ip>127.0.0.1</ip>
-		<port>7777</port>
+		<port>9002</port>
 	</server>
 	<local_dimensions>
 		<width>400</width>
 		<height>400</height>
 	</local_dimensions>
 	<local_location>
-		<x>0</x>
+		<x>400</x>
 		<y>0</y>
 	</local_location>
 	<master_dimensions>
