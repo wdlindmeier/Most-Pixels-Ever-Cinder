@@ -2,7 +2,7 @@
 	<client_id>0</client_id>
 	<server>
 		<ip>127.0.0.1</ip>
-		<port>9002</port>
+		<port>7777</port>
 	</server>
 	<local_dimensions>
 		<width>400</width>

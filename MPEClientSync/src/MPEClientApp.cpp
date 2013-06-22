@@ -1,5 +1,7 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
+#include "cinder/Rand.h"
+#include "Ball.hpp"
 #include "MPEClient.h"
 
 using namespace ci;
@@ -32,11 +34,15 @@ class MPEClientApp : public AppNative {
     private:
     
     MPEClient   mClient;
+    Rand        mRand;
+    Ball        mBall;
+    /*
     // For demonstration purposes:
     // Drag the window around the screen to change the
     // position of the client.
     Vec2i       mScreenSize;
     Vec2i       mScreenPos;
+    */
 };
 
 void MPEClientApp::prepareSettings( Settings *settings )
@@ -49,6 +55,17 @@ void MPEClientApp::prepareSettings( Settings *settings )
 void MPEClientApp::setup()
 {
     mClient = MPEClient("settings.xml");
+    // The same as the processing sketch.
+    // Does Processing Rand work the same as Cinder Rand as OF Rand?
+    mRand.seed(1);
+    
+    Vec2i sizeMaster = mClient.getMasterSize();
+    Vec2f posBall = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y));
+    Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
+    
+    console() << "Creating ball with master size: " << sizeMaster << "\n";
+    mBall = Ball(posBall, velBall, sizeMaster);
+    
     mClient.start();
 }
 
@@ -86,6 +103,9 @@ void MPEClientApp::update()
         // It will just stall until it's ready to draw
         mClient.update();
         
+        mBall.calc();
+        
+        /*
         Vec2i size = getWindowSize();
         Vec2i pos = getWindowPos();
         
@@ -97,6 +117,8 @@ void MPEClientApp::update()
             mScreenSize = size;
             mScreenPos = pos;
         }
+        */
+        
     }
     else
     {
@@ -119,6 +141,8 @@ void MPEClientApp::drawViewport()
     gl::clear( Color( 1, 0, 0 ) );
     gl::color(0,0,0);
     gl::drawString(std::to_string(getElapsedFrames()), Vec2f(100, 100));
+    
+    mBall.draw();    
 }
 
 CINDER_APP_NATIVE( MPEClientApp, RendererGl )

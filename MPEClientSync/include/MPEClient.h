@@ -34,7 +34,7 @@ namespace mpe
         // Handle Connection
         void                start();
         void                stop();
-        bool                isConnected(){ return mTCPClient->isConnected(); };
+        bool                isConnected(){ return mTCPClient && mTCPClient->isConnected(); };
         
         // Loop
         void                update();

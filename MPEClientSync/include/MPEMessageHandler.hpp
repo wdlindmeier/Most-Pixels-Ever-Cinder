@@ -18,11 +18,13 @@ public:
     void setRenderFrameNum(int frameNum){ mRenderFrameNum = frameNum; };
     void setFrameIsReady(bool isFrameReady)
     {
-        if (isFrameReady)
+        mFrameIsReady = isFrameReady;
+        /*
+        if (mFrameIsReady)
         {
             printf("****Frame is ready\n");
         }
-        mFrameIsReady = isFrameReady;
+        */
     }
 
     // Overload if desired

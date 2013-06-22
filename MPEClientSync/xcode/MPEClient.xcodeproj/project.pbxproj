@@ -45,6 +45,7 @@
 		A9655FC41768A6B600DD1085 /* TCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPClient.cpp; path = ../src/TCPClient.cpp; sourceTree = "<group>"; };
 		A9655FC71768A6CE00DD1085 /* TCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../include/TCPClient.h; sourceTree = "<group>"; };
 		A9E8D0C317750BD400B6F8CC /* MPEMessageHandler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEMessageHandler.hpp; path = ../include/MPEMessageHandler.hpp; sourceTree = "<group>"; };
+		A9E8D0C81775FA9600B6F8CC /* Ball.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ball.hpp; path = ../include/Ball.hpp; sourceTree = "<group>"; };
 		B1D71D4254444E788DE3D95C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D02E465518744D3A967C743D /* MPEClient_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = MPEClient_Prefix.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -141,6 +142,7 @@
 				A9E8D0C317750BD400B6F8CC /* MPEMessageHandler.hpp */,
 				A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */,
 				A9655FC71768A6CE00DD1085 /* TCPClient.h */,
+				A9E8D0C81775FA9600B6F8CC /* Ball.hpp */,
 			);
 			name = Headers;
 			sourceTree = "<group>";

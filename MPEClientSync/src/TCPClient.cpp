@@ -78,7 +78,7 @@ string TCPClient::read()
 void TCPClient::write(string msg)
 {
     boost::system::error_code error;
-    ci::app::console() << "Write " << msg << "\n";
+    // ci::app::console() << "Write " << msg << "\n";
     size_t len = mSocket.write_some(boost::asio::buffer(msg), error);
     if (error)
     {

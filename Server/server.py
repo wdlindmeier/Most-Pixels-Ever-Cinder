@@ -5,9 +5,6 @@ from twisted.internet import reactor
 from math import *
 import sys
 
-#framecount = 0
-#num_clients_drawn = 0
-
 # TODO: Replace with argparse
 num_clients = 2
 if len(sys.argv) > 1:
@@ -18,15 +15,12 @@ CMD_DID_DRAW = "D"
 CMD_CLIENT_CONNECT = "S"
 CMD_BROADCAST = "T"
 
-# Keep the padding as long as MAX_PACKET_LENGTH
-MAX_PACKET_LENGTH = 10 
-#PACKET_PADDING = "\nXXXXXXXXXX"
-PACKET_PADDING = "\n          "
+framecount = 0
+num_clients_drawn = 0    
  
 class MPEServer(Protocol):
     
-    framecount = 0
-    num_clients_drawn = 0
+    client_id = -1;
     
     def connectionMade(self):
         self.factory.clients.append(self)
@@ -36,12 +30,12 @@ class MPEServer(Protocol):
         self.factory.clients.remove(self)
  
     def dataReceived(self, data):        
-        #print "Received message: " + data;
+        global num_clients_drawn
         cmd = data[:1]
         payload = data[1:]
         if cmd == CMD_DID_DRAW:
-            self.num_clients_drawn += 1
-            if self.num_clients_drawn >= len(self.factory.clients):
+            num_clients_drawn += 1
+            if num_clients_drawn >= len(self.factory.clients):
                 # all of the frames are drawn, send out the next frames
                 self.sendNextFrame();
                 
@@ -51,10 +45,18 @@ class MPEServer(Protocol):
         elif cmd == CMD_BROADCAST:
             self.broadcastMessage(payload)
             
+        else:
+            print "Unknown message: " + payload
+            
+        # print "Received message: ", data, "FROM", self.client_id;        
+            
     def handleClientAdd(self, client_id):
         global num_clients
+        global framecount
         # NOTE: We're not paying attention to the client ID at the moment
-        self.framecount = 0
+        framecount = 0
+        print "Adding client " + client_id;
+        self.client_id = client_id;
         if len(self.factory.clients) < num_clients:
             print "Waiting for more clients"
         elif len(self.factory.clients) == num_clients:
@@ -64,13 +66,14 @@ class MPEServer(Protocol):
             print "ERROR: More than MAX clients have connected"                    
                 
     def sendNextFrame(self):
-        self.num_clients_drawn = 0
-        self.broadcastMessage("G,%i" % self.framecount)
+        global num_clients_drawn
+        global framecount
+        num_clients_drawn = 0
+        self.broadcastMessage("G,%i" % framecount)
+        framecount += 1
     
     def sendMessage(self, message):
-        # Always send out MAX_PACKET_LENGTH chars
-        packet = (message + PACKET_PADDING)[:MAX_PACKET_LENGTH]
-        self.transport.write(packet)
+        self.transport.write(message + "\n")
           
     # TODO: Don't send a message back to the sender      
     def broadcastMessage(self, message):         

@@ -81,16 +81,13 @@ void MPEClient::stop()
 
 void MPEClient::update()
 {
-    printf("update\n");
-    
     // This will just stall the loop until we get
     // a message from the server.    
-    if (mIsStarted && mTCPClient && mTCPClient->isConnected())
+    if (mIsStarted && isConnected())
     {
         mFrameIsReady = false;
         while (!mFrameIsReady)
         {
-            printf("Frame is not ready\n");
             mProtocol.parse(mTCPClient->read(), this);
         }
     }
@@ -100,6 +97,11 @@ void MPEClient::update()
 
 void MPEClient::draw(FrameEventCallback renderFrameHandler)
 {
+    if (!isConnected())
+    {
+        return;
+    }
+
     glPushMatrix();
     
     // Only show the area of the view we're interested in.

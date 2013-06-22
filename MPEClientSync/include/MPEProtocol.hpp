@@ -48,12 +48,12 @@ namespace mpe {
         
         virtual string renderIsComplete(int clientID, long frameNum)
         {
-            return "D," + std::to_string(clientID) + "," + std::to_string(frameNum) + "\n";
+            return "D," + std::to_string(clientID) + "," + std::to_string(frameNum+1) + "\n";
         };
         
         virtual void parse(const string & serverMessage, MPEMessageHandler *handler)
         {            
-            ci::app::console() << "Incoming message: " << serverMessage << "\n";
+            // ci::app::console() << "Incoming message: " << serverMessage << "\n";
             
             // Example server messages
             // e.g. IG,19919:blahblahblah
