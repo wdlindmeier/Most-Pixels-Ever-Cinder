@@ -16,12 +16,12 @@
 #include "cinder/Xml.h"
 #include "MPEClient.h"
 
-using namespace std;
+using std::string;
 using namespace ci;
 using namespace ci::app;
 using namespace mpe;
 
-MPEClient::MPEClient(string settingsFilename, bool shouldResize) :
+MPEClient::MPEClient(const string & settingsFilename, bool shouldResize) :
 MPEMessageHandler(),
 mHostname(""),
 mPort(0),
@@ -112,7 +112,7 @@ bool MPEClient::update()
 
 #pragma mark - Drawing
 
-void MPEClient::draw(FrameEventCallback renderFrameHandler)
+void MPEClient::draw(const FrameRenderCallback & renderFrameHandler)
 {
     if (!isConnected())
     {

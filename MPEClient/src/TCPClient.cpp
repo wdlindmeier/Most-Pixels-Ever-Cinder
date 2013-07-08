@@ -86,7 +86,7 @@ string TCPClient::read(bool & isDataAvailable)
     return message;
 }
 
-void TCPClient::write(string msg)
+void TCPClient::write(const string & msg)
 {
     boost::system::error_code error;
     // ci::app::console() << "Write " << msg << "\n";

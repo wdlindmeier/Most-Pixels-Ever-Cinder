@@ -27,14 +27,14 @@ namespace mpe
     public:
 
         TCPClient();
-        bool                            open(const std::string & hostname, const int port);
-        void                            close();
-        bool                            isConnected(){ return mIsConnected; }
-        void                            write(std::string msg);
-        //std::string                     read();
+        ~TCPClient() {};
+        virtual bool                    open(const std::string & hostname, const int port);
+        virtual void                    close();
+        virtual bool                    isConnected(){ return mIsConnected; }
+        virtual void                    write(const std::string & msg);
         std::string                     read(bool & isDataAvailable);
 
-    private:
+    protected:
 
         boost::asio::io_service         mIOService;
         boost::asio::ip::tcp::socket    mSocket;

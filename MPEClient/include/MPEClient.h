@@ -22,7 +22,7 @@
 
 namespace mpe
 {
-    typedef boost::function<void(bool isNewFrame)> FrameEventCallback;
+    typedef boost::function<void(bool isNewFrame)> FrameRenderCallback;
     typedef boost::function<void( const ci::Rectf & renderRect, bool is3D )> RepositionCallback;
 
     class MPEClient : public MPEMessageHandler
@@ -31,7 +31,7 @@ namespace mpe
     public:
 
         MPEClient(){};
-        MPEClient( std::string settingsFilename, bool shouldResize = true );
+        MPEClient(const std::string & settingsFilename, bool shouldResize = true );
         ~MPEClient();
 
         // Handle Connection
@@ -41,7 +41,7 @@ namespace mpe
 
         // Loop
         bool                update();
-        void                draw(FrameEventCallback renderFrameHandler);
+        virtual void        draw(const FrameRenderCallback & renderFrameHandler);
 
         // Server Com
         void                broadcast(const std::string & message);
@@ -56,28 +56,20 @@ namespace mpe
 
     protected:
 
+        virtual void        doneRendering();
+
         void                positionViewport();
         void                positionViewport3D();
         void                positionViewport2D();
-        void                handleServerMessage(const std::string & serverMessage);
-
-    private:
-
-        void                tcpConnected();
-        void                doneRendering();
-        void                loadSettings(std::string settingsFilename, bool shouldResize);
-
-        // A connection to the server.
-        TCPClient           *mTCPClient;
 
         // A protocol to convert a given command into a transport string.
         MPEProtocol         mProtocol;
-
+        
         // A reposition callback to let the App override the repositioning GL calls.
         RepositionCallback  mRepositionCallback;
-
+        
         bool                mIsRendering3D;
-
+        
         // Settings loaded from settings.xml
         int                 mPort;
         std::string         mHostname;
@@ -85,6 +77,14 @@ namespace mpe
         ci::Rectf           mLocalViewportRect;
         ci::Vec2i           mMasterSize;
         int                 mClientID;
+        
+        // A connection to the server.
+        TCPClient           *mTCPClient;
+
+    private:
+
+        void                tcpConnected();
+        void                loadSettings(std::string settingsFilename, bool shouldResize);
         bool                mHasData;
         
     };

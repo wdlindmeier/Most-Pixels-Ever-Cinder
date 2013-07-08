@@ -10,7 +10,14 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
 #include "ClientSettings.h"
+
+#define USE_ASYNC   1
+
+#if USE_ASYNC
+#include "MPEAsyncClient.h"
+#else
 #include "MPEClient.h"
+#endif
 
 using namespace ci;
 using namespace ci::app;
@@ -32,12 +39,18 @@ class MPEClientApp : public AppNative
     void        update();
     void        draw();
     void        drawViewport(bool dra);
-    void        clientUpdate();
-    void        clientDraw();
+//    void        clientUpdate();
+//    void        clientDraw();
+    void        frameEvent();
 
     private:
 
+#if USE_ASYNC
+    MPEAsyncClient mClient;
+#else
     MPEClient   mClient;
+#endif
+    
     Rand        mRand;
     Ball        mBall;
     /*
@@ -59,9 +72,14 @@ void MPEClientApp::prepareSettings( Settings *settings )
 void MPEClientApp::setup()
 {
     console() << "Loading settings from " << SettingsFileName << "\n";
-
+    
+#if USE_ASYNC
+    mClient = MPEAsyncClient(SettingsFileName);
+    mClient.setFrameUpdateHandler(boost::bind(&MPEClientApp::frameEvent, this));    
+#else
     mClient = MPEClient(SettingsFileName);
-
+#endif
+    
     // The same as the processing sketch.
     // Does Processing Rand work the same as Cinder Rand as OF Rand?
     mRand.seed(1);
@@ -102,12 +120,30 @@ void MPEClientApp::sendMousePosition()
 
 #pragma mark - Loop
 
+#if USE_ASYNC
+
+void MPEClientApp::frameEvent()
+{
+    mBall.calc();
+}
+
+#endif
+
 void MPEClientApp::update()
 {
     int frameCount = getElapsedFrames();
 
+    
     if (mClient.isConnected())
     {
+
+#if USE_ASYNC
+        
+        // Don't do anything here.
+        // The async client will call the frameEvent function from
+        // another thread.
+#else                
+ 
         // It will just stall until it's ready to draw
         bool isNewDataAvailable = mClient.update();
 
@@ -130,7 +166,8 @@ void MPEClientApp::update()
             mScreenPos = pos;
         }
         */
-
+#endif
+        
     }
     else
     {
@@ -140,12 +177,13 @@ void MPEClientApp::update()
             mClient.start();
         }
     }
+    
 }
 
 void MPEClientApp::draw()
 {
     // App drawing should be done in frameEvent.
-    mClient.draw(boost::bind(&MPEClientApp::drawViewport, this, _1));
+    mClient.draw(boost::bind(&MPEClientApp::drawViewport, this, _1));    
 }
 
 void MPEClientApp::drawViewport(bool isNewFrame)

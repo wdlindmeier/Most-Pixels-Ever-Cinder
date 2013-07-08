@@ -18,6 +18,10 @@
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		A91AACC6176EC4B3002F5DF0 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91AACC5176EC4B3002F5DF0 /* GLUT.framework */; };
+		A921E179178A4C1F002129E4 /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A921E177178A4C1F002129E4 /* TCPAsyncClient.cpp */; };
+		A921E17A178A4C1F002129E4 /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A921E177178A4C1F002129E4 /* TCPAsyncClient.cpp */; };
+		A921E17E178A5503002129E4 /* MPEAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A921E17C178A5503002129E4 /* MPEAsyncClient.cpp */; };
+		A921E17F178A5503002129E4 /* MPEAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A921E17C178A5503002129E4 /* MPEAsyncClient.cpp */; };
 		A94C184817690AB000F56801 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94C184617690AB000F56801 /* MPEClient.cpp */; };
 		A94C184C176912F600F56801 /* settings.0.xml in Resources */ = {isa = PBXBuildFile; fileRef = A94C184B176912F600F56801 /* settings.0.xml */; };
 		A9655FC61768A6B600DD1085 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9655FC41768A6B600DD1085 /* TCPClient.cpp */; };
@@ -55,6 +59,10 @@
 		8D1107320486CEB800E47090 /* MPEClient0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEClient0.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocol.hpp; path = ../include/MPEProtocol.hpp; sourceTree = "<group>"; };
 		A91AACC5176EC4B3002F5DF0 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		A921E177178A4C1F002129E4 /* TCPAsyncClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPAsyncClient.cpp; path = ../src/TCPAsyncClient.cpp; sourceTree = "<group>"; };
+		A921E17B178A4C37002129E4 /* TCPAsyncClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPAsyncClient.h; path = ../include/TCPAsyncClient.h; sourceTree = "<group>"; };
+		A921E17C178A5503002129E4 /* MPEAsyncClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEAsyncClient.cpp; path = ../src/MPEAsyncClient.cpp; sourceTree = "<group>"; };
+		A921E180178A5512002129E4 /* MPEAsyncClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEAsyncClient.h; path = ../include/MPEAsyncClient.h; sourceTree = "<group>"; };
 		A94C184617690AB000F56801 /* MPEClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEClient.cpp; path = ../src/MPEClient.cpp; sourceTree = "<group>"; };
 		A94C184917690AFD00F56801 /* MPEClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../include/MPEClient.h; sourceTree = "<group>"; };
 		A94C184B176912F600F56801 /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
@@ -117,8 +125,10 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				A921E17C178A5503002129E4 /* MPEAsyncClient.cpp */,
 				A94C184617690AB000F56801 /* MPEClient.cpp */,
 				6DCEBB27E38943B1875239E6 /* MPEClientApp.cpp */,
+				A921E177178A4C1F002129E4 /* TCPAsyncClient.cpp */,
 				A9655FC41768A6B600DD1085 /* TCPClient.cpp */,
 			);
 			name = Source;
@@ -175,12 +185,14 @@
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				A9E8D0C81775FA9600B6F8CC /* Ball.hpp */,
+				A921E180178A5512002129E4 /* MPEAsyncClient.h */,
 				A94C184917690AFD00F56801 /* MPEClient.h */,
 				D02E465518744D3A967C743D /* MPEClient_Prefix.pch */,
 				A9E8D0C317750BD400B6F8CC /* MPEMessageHandler.hpp */,
 				A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */,
+				A921E17B178A4C37002129E4 /* TCPAsyncClient.h */,
 				A9655FC71768A6CE00DD1085 /* TCPClient.h */,
-				A9E8D0C81775FA9600B6F8CC /* Ball.hpp */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -310,6 +322,8 @@
 				A9655FC61768A6B600DD1085 /* TCPClient.cpp in Sources */,
 				A94C184817690AB000F56801 /* MPEClient.cpp in Sources */,
 				A9E8D0E51776061600B6F8CC /* ClientSettings.0.cpp in Sources */,
+				A921E179178A4C1F002129E4 /* TCPAsyncClient.cpp in Sources */,
+				A921E17E178A5503002129E4 /* MPEAsyncClient.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +335,8 @@
 				A9E8D0CF177604BA00B6F8CC /* TCPClient.cpp in Sources */,
 				A9E8D0D0177604BA00B6F8CC /* MPEClient.cpp in Sources */,
 				A9E8D0E61776065800B6F8CC /* ClientSettings.1.cpp in Sources */,
+				A921E17A178A4C1F002129E4 /* TCPAsyncClient.cpp in Sources */,
+				A921E17F178A5503002129E4 /* MPEAsyncClient.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
