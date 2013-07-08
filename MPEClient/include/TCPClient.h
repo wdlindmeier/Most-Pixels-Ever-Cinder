@@ -31,7 +31,8 @@ namespace mpe
         void                            close();
         bool                            isConnected(){ return mIsConnected; }
         void                            write(std::string msg);
-        std::string                     read();
+        //std::string                     read();
+        std::string                     read(bool & isDataAvailable);
 
     private:
 

@@ -27,6 +27,7 @@ mHostname(""),
 mPort(0),
 mIsStarted(false),
 mIsRendering3D(false),
+mHasData(false),
 mClientID(-1)
 {
     loadSettings(settingsFilename, shouldResize);
@@ -79,18 +80,34 @@ void MPEClient::stop()
     }
 }
 
-void MPEClient::update()
+bool MPEClient::update()
 {
+    mFrameIsReady = false;
+    
     // This will just stall the loop until we get
     // a message from the server.
     if (mIsStarted && isConnected())
     {
-        mFrameIsReady = false;
-        while (!mFrameIsReady)
+        bool isDataAvailable = true;
+        while (isDataAvailable)
         {
-            mProtocol.parse(mTCPClient->read(), this);
+            string data = mTCPClient->read(isDataAvailable);
+            if (isDataAvailable)
+            {
+                mProtocol.parse(data, this);
+            }
+        }
+        
+        if (!mFrameIsReady)
+        {
+            // No message. Skipping update.
+        }
+        else
+        {
+            // Frame is ready.
         }
     }
+    return mFrameIsReady;    
 }
 
 #pragma mark - Drawing
@@ -108,7 +125,7 @@ void MPEClient::draw(FrameEventCallback renderFrameHandler)
     positionViewport();
 
     // Tell the app to draw.
-    renderFrameHandler();
+    renderFrameHandler(mFrameIsReady);
 
     glPopMatrix();
 

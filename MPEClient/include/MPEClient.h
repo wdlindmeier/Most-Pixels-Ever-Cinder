@@ -22,7 +22,7 @@
 
 namespace mpe
 {
-    typedef boost::function<void()> FrameEventCallback;
+    typedef boost::function<void(bool isNewFrame)> FrameEventCallback;
     typedef boost::function<void( const ci::Rectf & renderRect, bool is3D )> RepositionCallback;
 
     class MPEClient : public MPEMessageHandler
@@ -40,7 +40,7 @@ namespace mpe
         bool                isConnected(){ return mTCPClient && mTCPClient->isConnected(); };
 
         // Loop
-        void                update();
+        bool                update();
         void                draw(FrameEventCallback renderFrameHandler);
 
         // Server Com
@@ -54,14 +54,14 @@ namespace mpe
         bool                getIsRendering3D(){ return mIsRendering3D; };
         void                setIsRendering3D(bool is3D){ mIsRendering3D = is3D; };
 
-        protected:
+    protected:
 
         void                positionViewport();
         void                positionViewport3D();
         void                positionViewport2D();
         void                handleServerMessage(const std::string & serverMessage);
 
-        private:
+    private:
 
         void                tcpConnected();
         void                doneRendering();
@@ -85,5 +85,7 @@ namespace mpe
         ci::Rectf           mLocalViewportRect;
         ci::Vec2i           mMasterSize;
         int                 mClientID;
+        bool                mHasData;
+        
     };
 }

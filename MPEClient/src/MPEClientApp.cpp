@@ -14,7 +14,8 @@
 
 using namespace ci;
 using namespace ci::app;
-using namespace std;
+//using namespace std;
+using std::string;
 using namespace mpe;
 
 class MPEClientApp : public AppNative
@@ -30,7 +31,7 @@ class MPEClientApp : public AppNative
     void        sendMousePosition();
     void        update();
     void        draw();
-    void        drawViewport();
+    void        drawViewport(bool dra);
     void        clientUpdate();
     void        clientDraw();
 
@@ -108,9 +109,12 @@ void MPEClientApp::update()
     if (mClient.isConnected())
     {
         // It will just stall until it's ready to draw
-        mClient.update();
+        bool isNewDataAvailable = mClient.update();
 
-        mBall.calc();
+        if (isNewDataAvailable)
+        {
+            mBall.calc();            
+        }
 
         /*
         Vec2i size = getWindowSize();
@@ -141,15 +145,22 @@ void MPEClientApp::update()
 void MPEClientApp::draw()
 {
     // App drawing should be done in frameEvent.
-    mClient.draw(boost::bind(&MPEClientApp::drawViewport, this));
+    mClient.draw(boost::bind(&MPEClientApp::drawViewport, this, _1));
 }
 
-void MPEClientApp::drawViewport()
+void MPEClientApp::drawViewport(bool isNewFrame)
 {
-    gl::clear( Color( 1, 0, 0 ) );
+    if (isNewFrame)
+    {
+        gl::clear(Color( 1, 0, 0 ));
+    }
+    else
+    {
+        gl::clear(Color( 1, 0, 1 ));
+    }
+    
     gl::color(0,0,0);
     gl::drawString(std::to_string(getElapsedFrames()), Vec2f(100, 100));
-
     mBall.draw();
 }
 

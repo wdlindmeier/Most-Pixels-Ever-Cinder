@@ -48,30 +48,41 @@ bool TCPClient::open(const std::string & hostname,
     return mIsConnected;
 }
 
-string TCPClient::read()
+string TCPClient::read(bool & isDataAvailable)
 {
-    boost::system::error_code error;
-    boost::asio::streambuf buffer;
-    boost::asio::read_until(mSocket, buffer, "\n", error);
-
-    // When the server closes the connection, the ip::tcp::socket::read_some()
-    // function will exit with the boost::asio::error::eof error,
-    // which is how we know to exit the loop.
-    if (error == boost::asio::error::eof)
-    {
-        close();
-        return "";
-    }
-    else if (error)
-    {
-        ci::app::console() << "ERROR: " << error.message() << "\n";
-        throw boost::system::system_error(error); // Some other error.
-    }
-
-    std::istream str(&buffer);
     std::string message;
-    std::getline(str, message);
 
+    // First check if there's any data
+    boost::asio::socket_base::bytes_readable command(true);
+    mSocket.io_control(command);
+    std::size_t bytes_readable = command.get();
+    isDataAvailable = bytes_readable > 0;
+    
+    if (isDataAvailable)
+    {
+    
+        boost::system::error_code error;
+        boost::asio::streambuf buffer;
+        boost::asio::read_until(mSocket, buffer, "\n", error);
+
+        // When the server closes the connection, the ip::tcp::socket::read_some()
+        // function will exit with the boost::asio::error::eof error,
+        // which is how we know to exit the loop.
+        if (error == boost::asio::error::eof)
+        {
+            close();
+            return "";
+        }
+        else if (error)
+        {
+            ci::app::console() << "ERROR: " << error.message() << "\n";
+            throw boost::system::system_error(error); // Some other error.
+        }
+
+        std::istream str(&buffer);
+        std::getline(str, message);
+    }
+    
     return message;
 }
 
