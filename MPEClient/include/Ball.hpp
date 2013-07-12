@@ -31,17 +31,40 @@ public:
     mSizeClient(sizeClient)
     {};
 
-    void calc()
+    void calc(bool isUpdating)
     {
-        if (mPosition.x < 0 || mPosition.x > mSizeClient.x)
+        // Some random vector access to try and trigger a crash.
+        // This is designed to prove the thread locks.
+
+        for (int i = 0; i < 10000; i++)
         {
-            mVelocity.x = mVelocity.x * -1;
+            if (mTestVector.size() > i)
+            {
+                mTestVector[i] = std::to_string(i);
+            }
+            else
+            {
+                mTestVector.push_back(std::to_string(i));
+            }
         }
-        if (mPosition.y < 0 || mPosition.y > mSizeClient.y)
+        for (int i = 0; i < 10000; i++)
         {
-            mVelocity.y = mVelocity.y * -1;
+            std::string vi = mTestVector[i];
+            assert(vi == std::to_string(i));
         }
-        mPosition += mVelocity;
+        
+        if (isUpdating)
+        {
+            if (mPosition.x < 0 || mPosition.x > mSizeClient.x)
+            {
+                mVelocity.x = mVelocity.x * -1;
+            }
+            if (mPosition.y < 0 || mPosition.y > mSizeClient.y)
+            {
+                mVelocity.y = mVelocity.y * -1;
+            }
+            mPosition += mVelocity;
+        }
     }
 
     void draw()
@@ -58,6 +81,7 @@ private:
     ci::Vec2f mPosition;
     ci::Vec2f mVelocity;
     ci::Vec2i mSizeClient;
+    std::vector<std::string> mTestVector;
     float mDiameter;
 
 };

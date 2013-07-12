@@ -105,6 +105,10 @@ void TCPClient::close()
 {
     mIsConnected = false;
     ci::app::console() << "Closing socket\n";
-    mSocket.close();
+    if (mSocket.is_open())
+    {
+        mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        mSocket.close();
+    }
     mIOService.stop();
 }

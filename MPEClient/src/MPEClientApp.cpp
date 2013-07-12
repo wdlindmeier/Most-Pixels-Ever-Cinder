@@ -46,7 +46,10 @@ class MPEClientApp : public AppNative
     private:
 
 #if USE_ASYNC
-    MPEAsyncClient mClient;
+    // NOTE: mutex is not copyable so I can't
+    // use a standard member variable and just copy a new one
+    // in setup. So we're using a pointer.
+    MPEAsyncClient *mClient;
 #else
     MPEClient   mClient;
 #endif
@@ -74,8 +77,8 @@ void MPEClientApp::setup()
     console() << "Loading settings from " << SettingsFileName << "\n";
     
 #if USE_ASYNC
-    mClient = MPEAsyncClient(SettingsFileName);
-    mClient.setFrameUpdateHandler(boost::bind(&MPEClientApp::frameEvent, this));    
+    mClient = new MPEAsyncClient(SettingsFileName);
+    mClient->setFrameUpdateHandler(boost::bind(&MPEClientApp::frameEvent, this));
 #else
     mClient = MPEClient(SettingsFileName);
 #endif
@@ -84,19 +87,20 @@ void MPEClientApp::setup()
     // Does Processing Rand work the same as Cinder Rand as OF Rand?
     mRand.seed(1);
 
-    Vec2i sizeMaster = mClient.getMasterSize();
+    Vec2i sizeMaster = mClient->getMasterSize();
     Vec2f posBall = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y));
     Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
 
     console() << "Creating ball with master size: " << sizeMaster << "\n";
     mBall = Ball(posBall, velBall, sizeMaster);
 
-    mClient.start();
+    mClient->start();
 }
 
 void MPEClientApp::shutdown()
 {
-    mClient.stop();
+    delete mClient;
+    mClient = NULL;
 }
 
 void MPEClientApp::mouseDown( MouseEvent event )
@@ -111,10 +115,10 @@ void MPEClientApp::mouseDrag( MouseEvent event )
 
 void MPEClientApp::sendMousePosition()
 {
-    if (mClient.isConnected())
+    if (mClient->isConnected())
     {
         Vec2i pos = getMousePos();
-        mClient.broadcast(std::to_string(pos.x) + "," + std::to_string(pos.y));
+        mClient->broadcast(std::to_string(pos.x) + "," + std::to_string(pos.y));
     }
 }
 
@@ -124,7 +128,7 @@ void MPEClientApp::sendMousePosition()
 
 void MPEClientApp::frameEvent()
 {
-    mBall.calc();
+    mBall.calc(true);
 }
 
 #endif
@@ -134,7 +138,7 @@ void MPEClientApp::update()
     int frameCount = getElapsedFrames();
 
     
-    if (mClient.isConnected())
+    if (mClient->isConnected())
     {
 
 #if USE_ASYNC
@@ -145,7 +149,7 @@ void MPEClientApp::update()
 #else                
  
         // It will just stall until it's ready to draw
-        bool isNewDataAvailable = mClient.update();
+        bool isNewDataAvailable = mClient->update();
 
         if (isNewDataAvailable)
         {
@@ -160,8 +164,8 @@ void MPEClientApp::update()
         {
             // The position has changed.
             // Update the renderable area.
-            mClient.setVisibleRect(ci::Rectf(pos.x, pos.y, pos.x + size.x, pos.y + size.y));
-            console() << "Visible Rect: " << mClient.getVisibleRect() << "\n";
+            mClient->setVisibleRect(ci::Rectf(pos.x, pos.y, pos.x + size.x, pos.y + size.y));
+            console() << "Visible Rect: " << mClient->getVisibleRect() << "\n";
             mScreenSize = size;
             mScreenPos = pos;
         }
@@ -174,7 +178,7 @@ void MPEClientApp::update()
         // Attempt to reconnect every 60 frames
         if (frameCount % 60 == 0)
         {
-            mClient.start();
+            mClient->start();
         }
     }
     
@@ -183,11 +187,14 @@ void MPEClientApp::update()
 void MPEClientApp::draw()
 {
     // App drawing should be done in frameEvent.
-    mClient.draw(boost::bind(&MPEClientApp::drawViewport, this, _1));    
+    mClient->draw(boost::bind(&MPEClientApp::drawViewport, this, _1));
 }
 
 void MPEClientApp::drawViewport(bool isNewFrame)
 {
+    // Just for the hell of it to see if we can crash
+    mBall.calc(false);
+    
     if (isNewFrame)
     {
         gl::clear(Color( 1, 0, 0 ));
@@ -199,6 +206,7 @@ void MPEClientApp::drawViewport(bool isNewFrame)
     
     gl::color(0,0,0);
     gl::drawString(std::to_string(getElapsedFrames()), Vec2f(100, 100));
+    gl::drawString(std::to_string(getAverageFps()), Vec2f(200, 100));
     mBall.draw();
 }
 

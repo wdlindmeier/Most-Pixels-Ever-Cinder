@@ -54,18 +54,18 @@ void MPEAsyncClient::serverMessageReceived(const std::string & message)
         
         if (mUpdateCallback)
         {
-            // TODO: Wrap this in a mutex lock
+            std::lock_guard<std::mutex> lock(mClientDataMutex);
             mUpdateCallback();
-            // Unwrap lock
         }        
     }
+    // Lock is now out of scope
 }
 
 void MPEAsyncClient::draw(const FrameRenderCallback & renderFrameHandler)
 {
-    // TODO: Wrap in a mutex lock
+    std::lock_guard<std::mutex> lock(mClientDataMutex);
     MPEClient::draw(renderFrameHandler);
-    // TODO: Unwrap lock
+    // Lock is now out of scope
 }
 
 void MPEAsyncClient::doneRendering()

@@ -122,5 +122,10 @@ void TCPAsyncClient::handleWrite(const boost::system::error_code& error)
 
 void TCPAsyncClient::doClose()
 {
-    mSocket.close();
+    if (mSocket.is_open())
+    {
+        mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        mSocket.close();
+    }
+    mIsConnected = false;
 }
