@@ -12,6 +12,8 @@
 using ci::app::console;
 using namespace mpe;
 
+#pragma mark - Connection
+
 void MPEAsyncClient::start()
 {
     if (mIsStarted)
@@ -44,6 +46,8 @@ void MPEAsyncClient::tcpConnected(bool didConnect, const boost::system::error_co
     }
 }
 
+#pragma mark - Receiving Messages
+
 void MPEAsyncClient::serverMessageReceived(const std::string & message)
 {
     // console() << "Received server message:\n" << message << "\n";
@@ -51,15 +55,34 @@ void MPEAsyncClient::serverMessageReceived(const std::string & message)
     if (mFrameIsReady)
     {
         // Call the app update.
-        
         if (mUpdateCallback)
         {
             std::lock_guard<std::mutex> lock(mClientDataMutex);
             mUpdateCallback();
-        }        
+        }
     }
     // Lock is now out of scope
 }
+
+void MPEAsyncClient::receivedBroadcast(const std::string & dataMessage)
+{
+    std::lock_guard<std::mutex> lock(mClientDataMutex);
+    MPEClient::receivedBroadcast(dataMessage);
+}
+
+void MPEAsyncClient::readIncomingIntegers()
+{
+    std::lock_guard<std::mutex> lock(mClientDataMutex);
+    MPEClient::readIncomingIntegers();
+}
+
+void MPEAsyncClient::readIncomingBytes()
+{
+    std::lock_guard<std::mutex> lock(mClientDataMutex);
+    MPEClient::readIncomingBytes();
+}
+
+#pragma mark - Drawing
 
 void MPEAsyncClient::draw(const FrameRenderCallback & renderFrameHandler)
 {
@@ -72,9 +95,9 @@ void MPEAsyncClient::doneRendering()
 {
     // Only confirm this once since we may have
     // multiple draws for each update
-    if (mLastFrameConfirmed < mRenderFrameNum)
+    if (mLastFrameConfirmed < mCurrentRenderFrame)
     {
-        mTCPClient->write(mProtocol.renderIsComplete(mClientID, mRenderFrameNum));
-        mRenderFrameNum = mLastFrameConfirmed;
+        mTCPClient->write(mProtocol.renderIsComplete(mClientID, mCurrentRenderFrame));
+        mCurrentRenderFrame = mLastFrameConfirmed;
     }
 }

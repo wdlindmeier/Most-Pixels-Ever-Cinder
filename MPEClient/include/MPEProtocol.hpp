@@ -38,64 +38,88 @@ namespace mpe
     {
 
     public:
-
+        
+#pragma mark - Outgoing Messages
+        
+        // S == Start
+        // Send the client ID once the connection has been made.
         virtual std::string setClientID( const int clientID )
         {
             return "S" + std::to_string(clientID) + "\n";
         };
 
+        // T == daTa
+        // Send an arbitrary string to every connected client.
         virtual std::string broadcast( const std::string & msg )
         {
             return "T" + msg + "\n";
         };
 
+        // D == Done
+        // Send with the client and frame ID when the frame render is complete.
         virtual std::string renderIsComplete(int clientID, long frameNum)
         {
             return "D," + std::to_string(clientID) + "," + std::to_string(frameNum+1) + "\n";
         };
 
+#pragma mark - Incoming Messages
+        
         virtual void parse(const std::string & serverMessage, MPEMessageHandler *handler)
         {
             // ci::app::console() << "Incoming message: " << serverMessage << "\n";
 
-            // Example server messages
-            // e.g. IG,19919:blahblahblah
-            // e.g. G,7
+            // Example server messages:
+            // 1) IG,19919:blahblahblah
+            // 2) G,7
+            //
+            // Format:
+            // [command],[frame count]:[data message]
+            //
+            // • Commands are identified by 1-2 characters (e.g. 'G' or 'IG').
+            //
+            // • Frame Count is the current frame tracked by the server.
+            //   This is the frame number that each client should be rendering.
+            //
+            // • Data Message is an arbitrary string that contains information
+            //   from the other clients or server.
 
             std::vector<std::string> messages = ci::split(serverMessage, ":");
             std::string frame = messages[0];
-            std::string payload;
 
             // Get the frame details
             std::vector<std::string> frameInfo = ci::split(frame, ",");
             std::string frameCommand = frameInfo[0];
             std::string frameNum = frameInfo[1];
 
-            // Get any additional message that was passed along
-            bool hasPayload = messages.size() > 1;
-            if (hasPayload)
+            handler->setCurrentRenderFrame(stoi(frameNum));
+
+            // Get any additional message that was passed along.
+            if (messages.size() > 1)
             {
-                payload = messages[1];
+                std::string dataMessage = messages[1];
+                handler->receivedBroadcast(dataMessage);
             }
 
             if (frameCommand == "G")
             {
-                // Just sending frame num
-                // Nothing else to do here.
+                // This is simply the current frame
             }
             else if (frameCommand == "IG")
             {
-                if (hasPayload)
-                {
-                    handler->receivedIntData(payload);
-                }
+                // There are ints available.
+                // The next message will be in the following format:
+                // [n]iiiiiiiiiiii...
+                // The first 4 bytes is an int declaring the length of the subsequent payload.
+                // Keep reading [i] ints for n*4 bytes.
             }
+            //
             else if (frameCommand == "BG")
             {
-                if (hasPayload)
-                {
-                    handler->receivedByteData(payload);
-                }
+                // There are bytes available.
+                // The next message will be in the following format:
+                // [n]bbbbbbbbbbbb...
+                // The first 4 bytes is an int declaring the length of the subsequent payload.
+                // Keep reading [b] bytes for n bytes.
             }
             else
             {
@@ -104,7 +128,6 @@ namespace mpe
                 return;
             }
 
-            handler->setRenderFrameNum(stoi(frameNum));
             handler->setFrameIsReady(true);
         }
     };

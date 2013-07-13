@@ -32,13 +32,21 @@ public:
     ~MPEAsyncClient()
     {};
     
+    // Connection
     void                    start();
+
+    // Drawing
     void                    draw(const FrameRenderCallback & renderFrameHandler);
-    void                    serverMessageReceived(const std::string & message);
     void                    setFrameUpdateHandler( const FrameUpdateCallback & updateCallback)
                             {
                                 mUpdateCallback = updateCallback;
                             };
+
+    // Recieving Messages
+    void                    serverMessageReceived(const std::string & message);
+    void                    receivedBroadcast(const std::string & dataMessage);
+    void                    readIncomingIntegers();
+    void                    readIncomingBytes();
 
 protected:
     

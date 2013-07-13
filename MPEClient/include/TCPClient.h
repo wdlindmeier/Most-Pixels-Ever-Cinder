@@ -33,6 +33,8 @@ namespace mpe
         virtual bool                    isConnected(){ return mIsConnected; }
         virtual void                    write(const std::string & msg);
         std::string                     read(bool & isDataAvailable);
+        std::vector<int>                readIntegers();
+        std::vector<char>               readBytes();
 
     protected:
 

@@ -18,18 +18,35 @@ class MPEMessageHandler
 
 public:
 
-    MPEMessageHandler() : mRenderFrameNum(0), mFrameIsReady(false){};
+    MPEMessageHandler() : mCurrentRenderFrame(0), mFrameIsReady(false){};
 
-    void setRenderFrameNum(int frameNum){ mRenderFrameNum = frameNum; };
-    void setFrameIsReady(bool isFrameReady) { mFrameIsReady = isFrameReady; };
+    // The frame that every client should be rendering.
+    void setCurrentRenderFrame(int frameNum)
+    {
+        mCurrentRenderFrame = frameNum;
+    };
+    
+    // mFrameIsReady is set to true once the incoming server message is ready.
+    void setFrameIsReady(bool isFrameReady)
+    {
+        mFrameIsReady = isFrameReady;
+    };
 
-    // Overload if desired
-    virtual void receivedIntData( const std::string & intString ){};
-    virtual void receivedByteData( const std::string & byteString ){};
+    // Overload these functions in the subclass to receive data.
+
+    // This will be a broadcast.
+    virtual void receivedBroadcast(const std::string & dataMessage)
+    {};
+    // Integers are waiting in the connection.
+    virtual void readIncomingIntegers()
+    {};
+    // Bytes are waiting in the connection.
+    virtual void readIncomingBytes()
+    {};
 
 protected:
 
-    int                 mRenderFrameNum;
+    int                 mCurrentRenderFrame;
     bool                mFrameIsReady;
 
 };

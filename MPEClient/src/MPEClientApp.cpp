@@ -149,7 +149,7 @@ void MPEClientApp::update()
 #else                
  
         // It will just stall until it's ready to draw
-        bool isNewDataAvailable = mClient->update();
+        bool isNewDataAvailable = mClient->syncUpdate();
 
         if (isNewDataAvailable)
         {

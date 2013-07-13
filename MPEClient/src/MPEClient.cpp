@@ -17,6 +17,7 @@
 #include "MPEClient.h"
 
 using std::string;
+using std::vector;
 using namespace ci;
 using namespace ci::app;
 using namespace mpe;
@@ -27,7 +28,6 @@ mHostname(""),
 mPort(0),
 mIsStarted(false),
 mIsRendering3D(false),
-mHasData(false),
 mClientID(-1)
 {
     loadSettings(settingsFilename, shouldResize);
@@ -80,7 +80,7 @@ void MPEClient::stop()
     }
 }
 
-bool MPEClient::update()
+bool MPEClient::syncUpdate()
 {
     mFrameIsReady = false;
     
@@ -107,7 +107,8 @@ bool MPEClient::update()
             // Frame is ready.
         }
     }
-    return mFrameIsReady;    
+    
+    return mFrameIsReady;
 }
 
 #pragma mark - Drawing
@@ -188,7 +189,7 @@ void MPEClient::positionViewport3D()
               near, far);
 }
 
-#pragma mark - Server Com
+#pragma mark - Sending Messages
 
 void MPEClient::broadcast(const std::string & message)
 {
@@ -202,7 +203,37 @@ void MPEClient::sendClientID()
 
 void MPEClient::doneRendering()
 {
-    mTCPClient->write(mProtocol.renderIsComplete(mClientID, mRenderFrameNum));
+    mTCPClient->write(mProtocol.renderIsComplete(mClientID, mCurrentRenderFrame));
+}
+
+#pragma mark - Receiving Messages
+
+// TODO:
+// Wrap these in a lock for the Async Client
+void MPEClient::receivedBroadcast(const std::string & dataMessage)
+{
+    if (mStringDataCallback)
+    {
+        mStringDataCallback(dataMessage);
+    }
+}
+
+void MPEClient::readIncomingIntegers()
+{
+    vector<int> ints = mTCPClient->readIntegers();
+    if (mIntegerDataCallback)
+    {
+        mIntegerDataCallback(ints);
+    }
+}
+
+void MPEClient::readIncomingBytes()
+{
+    vector<char> bytes = mTCPClient->readBytes();
+    if (mBytesDataCallback)
+    {
+        mBytesDataCallback(bytes);
+    }
 }
 
 #pragma mark - Settings

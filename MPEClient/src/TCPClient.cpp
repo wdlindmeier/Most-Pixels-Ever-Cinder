@@ -11,7 +11,9 @@
 using namespace ci;
 using namespace mpe;
 using std::string;
+using std::vector;
 using namespace boost::asio::ip;
+using cinder::app::console;
 
 TCPClient::TCPClient() :
 mIOService(),
@@ -75,7 +77,7 @@ string TCPClient::read(bool & isDataAvailable)
         }
         else if (error)
         {
-            ci::app::console() << "ERROR: " << error.message() << "\n";
+            console() << "ERROR: " << error.message() << "\n";
             throw boost::system::system_error(error); // Some other error.
         }
 
@@ -84,6 +86,41 @@ string TCPClient::read(bool & isDataAvailable)
     }
     
     return message;
+}
+
+// TODO: Test that this works
+vector<int> TCPClient::readIntegers()
+{
+    // Read the first 4 bytes to see how long the integer array is.
+    // Then read the rest.
+    int intLength;
+    boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&intLength),
+                                                   sizeof(int)));
+    console() << "Reading Integer Array of length: %i" << intLength << "\n";
+    int ints[intLength];
+    boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&ints),
+                                                   sizeof(int) * intLength));
+    vector<int> vecInt;
+    vecInt.assign(ints, ints+intLength);
+    return vecInt;
+}
+
+// TODO: Test that this works
+vector<char> TCPClient::readBytes()
+{
+    // Read the first 4 bytes to see how long the integer array is.
+    // Then read the rest.
+    int byteLength;
+    boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&byteLength),
+                                                   sizeof(int)));
+    console() << "Reading Byte Array of length: %i" << byteLength << "\n";
+    char bytes[byteLength];
+    boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&bytes),
+                                                   sizeof(char) * byteLength));
+
+    vector<char> vecBytes;
+    vecBytes.assign(bytes, bytes+byteLength);
+    return vecBytes;
 }
 
 void TCPClient::write(const string & msg)
