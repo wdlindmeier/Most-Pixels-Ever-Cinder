@@ -80,7 +80,7 @@ void MPEClient::stop()
     }
 }
 
-bool MPEClient::syncUpdate()
+bool MPEClient::shouldUpdate()
 {
     mFrameIsReady = false;
     
@@ -120,27 +120,26 @@ void MPEClient::draw(const FrameRenderCallback & renderFrameHandler)
         return;
     }
 
-    glPushMatrix();
+    if (renderFrameHandler)
+    {
+        glPushMatrix();
 
-    // Only show the area of the view we're interested in.
-    positionViewport();
+        // Only show the area of the view we're interested in.
+        positionViewport();
 
-    // Tell the app to draw.
-    renderFrameHandler(mFrameIsReady);
+        // Tell the app to draw.
+        renderFrameHandler(mFrameIsReady);
 
-    glPopMatrix();
-
+        glPopMatrix();
+    }
+    
     // Tell the server we're ready for the next.
     doneRendering();
 }
 
 void MPEClient::positionViewport()
 {
-    if (mRepositionCallback)
-    {
-        mRepositionCallback( mLocalViewportRect, mIsRendering3D );
-    }
-    else if (mIsRendering3D)
+    if (mIsRendering3D)
     {
         positionViewport3D();
     }
@@ -191,14 +190,26 @@ void MPEClient::positionViewport3D()
 
 #pragma mark - Sending Messages
 
-void MPEClient::broadcast(const std::string & message)
+void MPEClient::sendClientID()
+{
+    mTCPClient->write(mProtocol.setClientID(mClientID));
+}
+
+void MPEClient::sendStringData(const std::string & message)
 {
     mTCPClient->write(mProtocol.broadcast(message));
 }
 
-void MPEClient::sendClientID()
+void MPEClient::sendIntegerData(const std::vector<int> & integers)
 {
-    mTCPClient->write(mProtocol.setClientID(mClientID));
+    console() << "Sending Integer data\n";
+    mTCPClient->writeBuffer(mProtocol.sendInts(integers));
+}
+
+void MPEClient::sendBytesData(const std::vector<char> & bytes)
+{
+    console() << "Sending Bytes data\n";
+    mTCPClient->writeBuffer(mProtocol.sendBytes(bytes));
 }
 
 void MPEClient::doneRendering()
@@ -208,9 +219,7 @@ void MPEClient::doneRendering()
 
 #pragma mark - Receiving Messages
 
-// TODO:
-// Wrap these in a lock for the Async Client
-void MPEClient::receivedBroadcast(const std::string & dataMessage)
+void MPEClient::receivedStringMessage(const std::string & dataMessage)
 {
     if (mStringDataCallback)
     {

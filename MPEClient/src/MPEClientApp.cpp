@@ -27,14 +27,14 @@ using namespace mpe;
 
 class MPEClientApp : public AppNative
 {
-
     public:
 
     void        prepareSettings( Settings *settings );
     void        setup();
     void        shutdown();
-    void        mouseDown( MouseEvent event );
-    void        mouseDrag( MouseEvent event );
+    void        mouseDown(MouseEvent event);
+    void        mouseDrag(MouseEvent event);
+    void        keyDown(KeyEvent event);
     void        sendMousePosition();
     void        update();
     void        draw();
@@ -43,6 +43,11 @@ class MPEClientApp : public AppNative
 //    void        clientDraw();
     void        frameEvent();
 
+    // Data Callbacks
+    void        stringDataReceived(const std::string & message);
+    void        integerDataReceived(const std::vector<int> & integers);
+    void        bytesDataReceived(const std::vector<char> & bytes);
+    
     private:
 
 #if USE_ASYNC
@@ -51,7 +56,7 @@ class MPEClientApp : public AppNative
     // in setup. So we're using a pointer.
     MPEAsyncClient *mClient;
 #else
-    MPEClient   mClient;
+    MPEClient   *mClient;
 #endif
     
     Rand        mRand;
@@ -77,10 +82,17 @@ void MPEClientApp::setup()
     console() << "Loading settings from " << SettingsFileName << "\n";
     
 #if USE_ASYNC
+    
     mClient = new MPEAsyncClient(SettingsFileName);
     mClient->setFrameUpdateHandler(boost::bind(&MPEClientApp::frameEvent, this));
+    mClient->setStringDataCallback(boost::bind(&MPEClientApp::stringDataReceived, this, _1));
+    mClient->setIntegerDataCallback(boost::bind(&MPEClientApp::integerDataReceived, this, _1));
+    mClient->setBytesDataCallback(boost::bind(&MPEClientApp::bytesDataReceived, this, _1));
+
 #else
-    mClient = MPEClient(SettingsFileName);
+    
+    mClient = new MPEClient(SettingsFileName);
+    
 #endif
     
     // The same as the processing sketch.
@@ -103,12 +115,12 @@ void MPEClientApp::shutdown()
     mClient = NULL;
 }
 
-void MPEClientApp::mouseDown( MouseEvent event )
+void MPEClientApp::mouseDown(MouseEvent event)
 {
     sendMousePosition();
 }
 
-void MPEClientApp::mouseDrag( MouseEvent event )
+void MPEClientApp::mouseDrag(MouseEvent event)
 {
     sendMousePosition();
 }
@@ -118,8 +130,54 @@ void MPEClientApp::sendMousePosition()
     if (mClient->isConnected())
     {
         Vec2i pos = getMousePos();
-        mClient->broadcast(std::to_string(pos.x) + "," + std::to_string(pos.y));
+        mClient->sendStringData(std::to_string(pos.x) + "," + std::to_string(pos.y));
     }
+}
+
+void MPEClientApp::keyDown(KeyEvent event)
+{
+    // NOTE:
+    // Int/Byte arrays are not yet supported
+    if (mClient->isConnected())
+    {
+        if (event.getChar() == 'i')
+        {
+            std::vector<int> ints = {1,2,3,4,5};
+            mClient->sendIntegerData(ints);
+        }
+        else if (event.getChar() == 'b')
+        {
+            std::vector<char> bytes = {'a','b','c','d','e'};
+            mClient->sendBytesData(bytes);
+        }
+    }
+}
+
+#pragma mark - Data
+
+void MPEClientApp::stringDataReceived(const std::string & message)
+{
+    console() << "stringDataReceived: " << message << "\n";
+}
+
+void MPEClientApp::integerDataReceived(const std::vector<int> & integers)
+{
+    string outp = "";
+    for (int i = 0; i < integers.size(); ++i)
+    {
+        outp += std::to_string(integers[i]);
+    }
+    console() << "integerDataReceived: " << outp << "\n";
+}
+
+void MPEClientApp::bytesDataReceived(const std::vector<char> & bytes)
+{
+    string outp = "";
+    for (int i = 0; i < bytes.size(); ++i)
+    {
+        outp += std::to_string(bytes[i]);
+    }
+    console() << "bytesDataReceived: " << outp << "\n";
 }
 
 #pragma mark - Loop
@@ -130,30 +188,26 @@ void MPEClientApp::frameEvent()
 {
     mBall.calc(true);
 }
-
 #endif
 
 void MPEClientApp::update()
 {
     int frameCount = getElapsedFrames();
 
-    
     if (mClient->isConnected())
     {
 
-#if USE_ASYNC
+    // NOTE: Async client should update the app state in frameEvent,
+    // not update.
         
-        // Don't do anything here.
-        // The async client will call the frameEvent function from
-        // another thread.
-#else                
- 
+#if !USE_ASYNC
         // It will just stall until it's ready to draw
-        bool isNewDataAvailable = mClient->syncUpdate();
+        bool isNewDataAvailable = mClient->shouldUpdate();
 
         if (isNewDataAvailable)
         {
-            mBall.calc();            
+            //console() << "isNewDataAvailable\n";
+            mBall.calc(true);
         }
 
         /*
@@ -186,7 +240,16 @@ void MPEClientApp::update()
 
 void MPEClientApp::draw()
 {
-    // App drawing should be done in frameEvent.
+    // NOTE: The MPEClient will handle the repositioning in a
+    // default way, but if you want to handle this yourself,
+    // just pass clientDraw a NULL render handler.
+    //
+    // E.g. Draw without repositioning:
+        // drawViewport(true);
+        // mClient->draw(NULL);
+    //
+    // Draw with repositioning:
+    
     mClient->draw(boost::bind(&MPEClientApp::drawViewport, this, _1));
 }
 

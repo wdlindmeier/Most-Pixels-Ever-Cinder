@@ -35,7 +35,7 @@ public:
     // Overload these functions in the subclass to receive data.
 
     // This will be a broadcast.
-    virtual void receivedBroadcast(const std::string & dataMessage)
+    virtual void receivedStringMessage(const std::string & dataMessage)
     {};
     // Integers are waiting in the connection.
     virtual void readIncomingIntegers()

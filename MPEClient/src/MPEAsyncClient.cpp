@@ -50,24 +50,24 @@ void MPEAsyncClient::tcpConnected(bool didConnect, const boost::system::error_co
 
 void MPEAsyncClient::serverMessageReceived(const std::string & message)
 {
-    // console() << "Received server message:\n" << message << "\n";
+    mFrameIsReady = false;
+    // This will set mFrameIsReady
     mProtocol.parse(message, this);
+    //mShouldUpdate = mShouldUpdate || mFrameIsReady;
     if (mFrameIsReady)
     {
-        // Call the app update.
         if (mUpdateCallback)
         {
             std::lock_guard<std::mutex> lock(mClientDataMutex);
             mUpdateCallback();
         }
     }
-    // Lock is now out of scope
 }
 
-void MPEAsyncClient::receivedBroadcast(const std::string & dataMessage)
+void MPEAsyncClient::receivedStringMessage(const std::string & dataMessage)
 {
     std::lock_guard<std::mutex> lock(mClientDataMutex);
-    MPEClient::receivedBroadcast(dataMessage);
+    MPEClient::receivedStringMessage(dataMessage);
 }
 
 void MPEAsyncClient::readIncomingIntegers()
@@ -82,13 +82,21 @@ void MPEAsyncClient::readIncomingBytes()
     MPEClient::readIncomingBytes();
 }
 
+#pragma mark - Update
+/*
+bool MPEAsyncClient::shouldUpdate()
+{
+    bool shouldUpdate = mShouldUpdate;
+    mShouldUpdate = false;
+    return shouldUpdate;
+}
+*/
 #pragma mark - Drawing
 
 void MPEAsyncClient::draw(const FrameRenderCallback & renderFrameHandler)
 {
     std::lock_guard<std::mutex> lock(mClientDataMutex);
     MPEClient::draw(renderFrameHandler);
-    // Lock is now out of scope
 }
 
 void MPEAsyncClient::doneRendering()

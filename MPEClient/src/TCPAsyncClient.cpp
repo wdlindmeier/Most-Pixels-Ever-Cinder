@@ -61,8 +61,17 @@ void TCPAsyncClient::handleConnect(const boost::system::error_code& error)
 
 void TCPAsyncClient::write(const string & msg)
 {
-    // console() << "Writing async: " << msg << "\n";
+    console() << "Writing async: " << msg << "\n";
     mIOService.post(boost::bind(&TCPAsyncClient::doWrite, this, msg));
+}
+
+void TCPAsyncClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
+{
+#if USE_STRING_QUEUE
+    console() << "ALERT: Not using writeBuffer. Ignoring message.\n";
+#else
+    mIOService.post(boost::bind(&TCPAsyncClient::doWriteBuffer, this, buffer));
+#endif
 }
 
 void TCPAsyncClient::handleRead(const boost::system::error_code& error)
@@ -88,8 +97,25 @@ void TCPAsyncClient::handleRead(const boost::system::error_code& error)
     }
 }
 
+void TCPAsyncClient::doWriteBuffer(const boost::asio::const_buffers_1 & buffer)
+{
+#if USE_STRING_QUEUE
+    printf("ERROR not using doWriteBuffer. Ignoring message.\n");
+#else
+    bool write_in_progress = !mWriteMessages.empty();
+    mWriteMessages.push_back(buffer);
+    if (!write_in_progress)
+    {
+        boost::asio::async_write(mSocket, mWriteMessages.front(),
+                                 boost::bind(&TCPAsyncClient::handleWrite, this,
+                                             boost::asio::placeholders::error));
+    }
+#endif
+}
+
 void TCPAsyncClient::doWrite(const string & msg)
 {
+#if USE_STRING_QUEUE
     bool write_in_progress = !mWriteMessages.empty();
     mWriteMessages.push_back(msg);
     if (!write_in_progress)
@@ -100,6 +126,9 @@ void TCPAsyncClient::doWrite(const string & msg)
                                  boost::bind(&TCPAsyncClient::handleWrite, this,
                                              boost::asio::placeholders::error));
     }
+#else
+    doWriteBuffer(boost::asio::buffer(msg, msg.length()));
+#endif
 }
 
 void TCPAsyncClient::handleWrite(const boost::system::error_code& error)
@@ -109,13 +138,23 @@ void TCPAsyncClient::handleWrite(const boost::system::error_code& error)
         mWriteMessages.pop_front();
         if (!mWriteMessages.empty())
         {
-            boost::asio::async_write(mSocket, mBuffer,
+            //Send another
+#if USE_STRING_QUEUE
+            boost::asio::async_write(mSocket,
+                                     boost::asio::buffer(mWriteMessages.front(),
+                                                         mWriteMessages.front().length()),
                                      boost::bind(&TCPAsyncClient::handleWrite, this,
                                                  boost::asio::placeholders::error));
+#else
+            boost::asio::async_write(mSocket, mWriteMessages.front(),
+                                     boost::bind(&TCPAsyncClient::handleWrite, this,
+                                                 boost::asio::placeholders::error));
+#endif
         }
     }
     else
     {
+        printf("ERROR writing: %s\n", error.message().c_str());
         doClose();
     }
 }

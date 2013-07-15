@@ -44,7 +44,7 @@ public:
 
     // Recieving Messages
     void                    serverMessageReceived(const std::string & message);
-    void                    receivedBroadcast(const std::string & dataMessage);
+    void                    receivedStringMessage(const std::string & dataMessage);
     void                    readIncomingIntegers();
     void                    readIncomingBytes();
 
@@ -62,6 +62,7 @@ private:
     // on one thread (that's communicating with the server)
     // and accessed for drawing on another thread.
     std::mutex              mClientDataMutex;
+    bool                    mShouldUpdate;
 
 };
 

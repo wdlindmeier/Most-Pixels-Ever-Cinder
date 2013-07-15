@@ -123,19 +123,46 @@ vector<char> TCPClient::readBytes()
     return vecBytes;
 }
 
-void TCPClient::write(const string & msg)
+void TCPClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
 {
+#if USE_STRING_QUEUE
+    console() << "ALERT: Not using write buffer. Message Ignored.\n";
+#else
     boost::system::error_code error;
-    // ci::app::console() << "Write " << msg << "\n";
-    size_t len = mSocket.write_some(boost::asio::buffer(msg), error);
+    // TODO: Guarantee that all of the data has been sent.
+    // write_some doesn't make that promise.
+    size_t len = mSocket.write_some(buffer, error);
     if (error)
     {
         ci::app::console() << "ERROR: Couldn't write. " << error.message() << "\n";
+        return;
     }
     else if (len == 0)
     {
         ci::app::console() << "ALERT: Wrote 0 bytes.\n";
+        return;
     }
+#endif
+}
+
+void TCPClient::write(const string & msg)
+{
+#if USE_STRING_QUEUE
+    boost::system::error_code error;
+    // TODO: Guarantee that all of the data has been sent.
+    // write_some doesn't make that promise.
+    size_t len = mSocket.write_some(boost::asio::buffer(msg), error);
+    if (error)
+    {
+        console() << "ERROR: Couldn't write. " << error.message() << "\n";
+    }
+    else if (len == 0)
+    {
+        console() << "ALERT: Wrote 0 bytes.\n";
+    }    
+#else
+    writeBuffer(boost::asio::buffer(msg));
+#endif
 }
 
 void TCPClient::close()

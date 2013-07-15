@@ -23,8 +23,7 @@
 namespace mpe
 {
     typedef boost::function<void(bool isNewFrame)> FrameRenderCallback;
-    typedef boost::function<void( const ci::Rectf & renderRect, bool is3D )> RepositionCallback;
-    typedef boost::function<void( const std::string & renderRect )> StringDataCallback;
+    typedef boost::function<void( const std::string & message )> StringDataCallback;
     typedef boost::function<void( const std::vector<int> & integers )> IntegerDataCallback;
     typedef boost::function<void( const std::vector<char> & bytes )> BytesDataCallback;
 
@@ -37,24 +36,6 @@ namespace mpe
         MPEClient(const std::string & settingsFilename, bool shouldResize = true );
         ~MPEClient();
 
-        // Handle Connection
-        void                start();
-        void                stop();
-        bool                isConnected(){ return mTCPClient && mTCPClient->isConnected(); };
-
-        // Loop
-        bool                syncUpdate();
-        virtual void        draw(const FrameRenderCallback & renderFrameHandler);
-
-        // Sending Messages To Server
-        void                broadcast(const std::string & message);
-        void                sendClientID();
-        
-        // Receiving Messages From Server (MPE Message Handler)
-        virtual void        receivedBroadcast(const std::string & dataMessage);
-        virtual void        readIncomingIntegers();
-        virtual void        readIncomingBytes();
-        
         // Accessors
         ci::Rectf           getVisibleRect(){ return mLocalViewportRect; };
         void                setVisibleRect(const ci::Rectf & rect){ mLocalViewportRect = rect; }
@@ -62,14 +43,30 @@ namespace mpe
         bool                getIsRendering3D(){ return mIsRendering3D; };
         void                setIsRendering3D(bool is3D){ mIsRendering3D = is3D; };
         
-        // Callbacks
-        void                setRepositionCallback(const RepositionCallback & callback)
-        {
-            // A callback that lets the App override the repositioning GL calls.
-            // If a callback doesn't exist, the client will reposition based on the
-            // current value of mIsRendering3D.
-            mRepositionCallback = callback;
-        }
+        // Handle Connection
+        void                start();
+        void                stop();
+        bool                isConnected(){ return mTCPClient && mTCPClient->isConnected(); };
+
+        // Loop
+        virtual bool        shouldUpdate();
+        virtual void        draw(const FrameRenderCallback & renderFrameHandler);
+
+        // Sending Messages To Server
+        void                sendClientID();
+        // Send Data functions are called by the App and the values are received by every client.
+        // The sending App will receive its own data, and should act on that data
+        // only once it's received (always as if it came from another client) so the
+        // apps are in sync.
+        void                sendStringData(const std::string & message); // née broadcast
+        void                sendIntegerData(const std::vector<int> & integers);
+        void                sendBytesData(const std::vector<char> & bytes);
+        
+        // Receiving Messages From Server
+        // These are called by the MPE Message Handler and should not be called by the App.
+        virtual void        receivedStringMessage(const std::string & dataMessage);
+        virtual void        readIncomingIntegers();
+        virtual void        readIncomingBytes();
         
         void                setStringDataCallback(const StringDataCallback & callback)
         {
@@ -102,7 +99,6 @@ namespace mpe
         MPEProtocol         mProtocol;
         
         // Callbacks
-        RepositionCallback  mRepositionCallback;
         StringDataCallback  mStringDataCallback;
         IntegerDataCallback mIntegerDataCallback;
         BytesDataCallback   mBytesDataCallback;

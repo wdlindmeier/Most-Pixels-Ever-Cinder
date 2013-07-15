@@ -61,6 +61,38 @@ namespace mpe
         {
             return "D," + std::to_string(clientID) + "," + std::to_string(frameNum+1) + "\n";
         };
+        
+        // I == Integers (not supported?)
+        virtual boost::asio::const_buffers_1 sendInts(const std::vector<int> & integers)
+        {
+            // TODO: Make this more efficient
+            char command = 'I';
+            size_t bufferLength = sizeof(command) + (integers.size() * sizeof(int));
+            char data[bufferLength];
+            data[0] = command;
+            for (int i = 0; i<integers.size(); ++i)
+            {
+                int idx = sizeof(command) + (i * sizeof(int));
+                data[idx] = integers[i];
+            }
+            return boost::asio::buffer((const void *)data, bufferLength);
+        }
+
+        // B == Bytes (not supported?)        
+        virtual boost::asio::const_buffers_1 sendBytes(const std::vector<char> & bytes)
+        {
+            // TODO: Make this more efficient
+            char command = 'B';
+            size_t bufferLength = sizeof(command) + (bytes.size() * sizeof(char));
+            char data[bufferLength];
+            data[0] = command;
+            for (int i = 0; i<bytes.size(); ++i)
+            {
+                int idx = sizeof(command) + (i * sizeof(char));
+                data[idx] = bytes[i];
+            }
+            return boost::asio::buffer((const void *)data, bufferLength);
+        }
 
 #pragma mark - Incoming Messages
         
@@ -71,17 +103,18 @@ namespace mpe
             // Example server messages:
             // 1) IG,19919:blahblahblah
             // 2) G,7
+            // 1) G,21:blah1:blah2:blah3
             //
             // Format:
-            // [command],[frame count]:[data message]
+            // [command],[frame count]:[data message(s)]...
             //
             // • Commands are identified by 1-2 characters (e.g. 'G' or 'IG').
             //
             // • Frame Count is the current frame tracked by the server.
             //   This is the frame number that each client should be rendering.
             //
-            // • Data Message is an arbitrary string that contains information
-            //   from the other clients or server.
+            // • Data Messages are arbitrary strings that contains information
+            //   from the other clients or server, separated by semicolons.
 
             std::vector<std::string> messages = ci::split(serverMessage, ":");
             std::string frame = messages[0];
@@ -96,8 +129,15 @@ namespace mpe
             // Get any additional message that was passed along.
             if (messages.size() > 1)
             {
-                std::string dataMessage = messages[1];
-                handler->receivedBroadcast(dataMessage);
+                ci::app::console() << (messages.size() - 1) << " Incoming Data Messags: ";                
+                for (int i=1;i<messages.size();i++)
+                {
+                    // Send all of the messages
+                    std::string dataMessage = messages[i];
+                    ci::app::console() << dataMessage << ", ";
+                    handler->receivedStringMessage(dataMessage);
+                }
+                ci::app::console() << "\n";
             }
 
             if (frameCommand == "G")
