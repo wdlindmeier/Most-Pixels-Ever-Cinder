@@ -19,7 +19,7 @@ class MPEAsyncClient : public MPEClient
     
 public:
     
-    typedef boost::function<void()> FrameUpdateCallback;
+    typedef boost::function<void(long serverFrameNumber)> FrameUpdateCallback;
     
     MPEAsyncClient() : MPEClient()
     {};

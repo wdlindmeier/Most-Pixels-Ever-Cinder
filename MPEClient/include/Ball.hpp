@@ -9,6 +9,7 @@
 
 #include "cinder/Cinder.h"
 #include "cinder/gl/gl.h"
+#include "cinder/CinderMath.h"
 
 /*
 
@@ -16,26 +17,28 @@
 
 */
 
+const static int kDefaultRadius = 18;
+
 class Ball
 {
 
 public:
 
-    Ball(){};
+    Ball(){};    
     Ball(const ci::Vec2f & randPosition,
          const ci::Vec2f & randVelocity,
          const ci::Vec2i & sizeClient) :
-    mPosition(randPosition),
+    mPosition(ci::math<float>::clamp(randPosition.x, kDefaultRadius, sizeClient.x - kDefaultRadius),
+              ci::math<float>::clamp(randPosition.y, kDefaultRadius, sizeClient.y - kDefaultRadius)),
     mVelocity(randVelocity),
-    mDiameter(36),
+    mDiameter(kDefaultRadius*2),
     mSizeClient(sizeClient)
     {};
 
-    void calc(bool isUpdating)
+    // This method performs internal data read/write to try and trigger a crash.
+    // This is just here to prove that the thread locks are working.
+    void manipulateInternalData()
     {
-        // Some random vector access to try and trigger a crash.
-        // This is designed to prove the thread locks.
-
         for (int i = 0; i < 10000; i++)
         {
             if (mTestVector.size() > i)
@@ -52,19 +55,22 @@ public:
             std::string vi = mTestVector[i];
             assert(vi == std::to_string(i));
         }
+    }
+    
+    void calc()
+    {
+        float radius = mDiameter * 0.5;
         
-        if (isUpdating)
+        if (mPosition.x < radius || mPosition.x > (mSizeClient.x - radius))
         {
-            if (mPosition.x < 0 || mPosition.x > mSizeClient.x)
-            {
-                mVelocity.x = mVelocity.x * -1;
-            }
-            if (mPosition.y < 0 || mPosition.y > mSizeClient.y)
-            {
-                mVelocity.y = mVelocity.y * -1;
-            }
-            mPosition += mVelocity;
+            mVelocity.x = mVelocity.x * -1;
         }
+        if (mPosition.y < radius || mPosition.y > (mSizeClient.y - radius))
+        {
+            mVelocity.y = mVelocity.y * -1;
+        }
+        
+        mPosition += mVelocity;
     }
 
     void draw()

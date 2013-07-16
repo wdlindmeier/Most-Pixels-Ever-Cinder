@@ -115,11 +115,6 @@ bool MPEClient::shouldUpdate()
 
 void MPEClient::draw(const FrameRenderCallback & renderFrameHandler)
 {
-    if (!isConnected())
-    {
-        return;
-    }
-
     if (renderFrameHandler)
     {
         glPushMatrix();
@@ -133,8 +128,11 @@ void MPEClient::draw(const FrameRenderCallback & renderFrameHandler)
         glPopMatrix();
     }
     
-    // Tell the server we're ready for the next.
-    doneRendering();
+    if (isConnected())
+    {
+        // Tell the server we're ready for the next.
+        doneRendering();
+    }
 }
 
 void MPEClient::positionViewport()

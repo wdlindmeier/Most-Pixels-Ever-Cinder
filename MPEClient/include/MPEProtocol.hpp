@@ -124,7 +124,7 @@ namespace mpe
             std::string frameCommand = frameInfo[0];
             std::string frameNum = frameInfo[1];
 
-            handler->setCurrentRenderFrame(stoi(frameNum));
+            handler->setCurrentRenderFrame(stol(frameNum));
 
             // Get any additional message that was passed along.
             if (messages.size() > 1)

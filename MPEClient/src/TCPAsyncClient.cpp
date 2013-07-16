@@ -35,7 +35,7 @@ void TCPAsyncClient::open(const std::string & hostname,
 
 void TCPAsyncClient::close()
 {
-    mIOService.post(boost::bind(&TCPAsyncClient::doClose, this));
+    mIOService.post(boost::bind(&TCPAsyncClient::_close, this));
 }
 
 void TCPAsyncClient::handleConnect(const boost::system::error_code& error)
@@ -61,8 +61,7 @@ void TCPAsyncClient::handleConnect(const boost::system::error_code& error)
 
 void TCPAsyncClient::write(const string & msg)
 {
-    console() << "Writing async: " << msg << "\n";
-    mIOService.post(boost::bind(&TCPAsyncClient::doWrite, this, msg));
+    mIOService.post(boost::bind(&TCPAsyncClient::_write, this, msg));
 }
 
 void TCPAsyncClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
@@ -70,7 +69,7 @@ void TCPAsyncClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
 #if USE_STRING_QUEUE
     console() << "ALERT: Not using writeBuffer. Ignoring message.\n";
 #else
-    mIOService.post(boost::bind(&TCPAsyncClient::doWriteBuffer, this, buffer));
+    mIOService.post(boost::bind(&TCPAsyncClient::_writeBuffer, this, buffer));
 #endif
 }
 
@@ -93,14 +92,14 @@ void TCPAsyncClient::handleRead(const boost::system::error_code& error)
     else
     {
         printf("ERROR reading from host: %s\n", error.message().c_str());
-        doClose();
+        _close();
     }
 }
 
-void TCPAsyncClient::doWriteBuffer(const boost::asio::const_buffers_1 & buffer)
+void TCPAsyncClient::_writeBuffer(const boost::asio::const_buffers_1 & buffer)
 {
 #if USE_STRING_QUEUE
-    printf("ERROR not using doWriteBuffer. Ignoring message.\n");
+    printf("ERROR not using _writeBuffer. Ignoring message.\n");
 #else
     bool write_in_progress = !mWriteMessages.empty();
     mWriteMessages.push_back(buffer);
@@ -113,7 +112,7 @@ void TCPAsyncClient::doWriteBuffer(const boost::asio::const_buffers_1 & buffer)
 #endif
 }
 
-void TCPAsyncClient::doWrite(const string & msg)
+void TCPAsyncClient::_write(const string & msg)
 {
 #if USE_STRING_QUEUE
     bool write_in_progress = !mWriteMessages.empty();
@@ -127,7 +126,7 @@ void TCPAsyncClient::doWrite(const string & msg)
                                              boost::asio::placeholders::error));
     }
 #else
-    doWriteBuffer(boost::asio::buffer(msg, msg.length()));
+    _writeBuffer(boost::asio::buffer(msg, msg.length()));
 #endif
 }
 
@@ -155,16 +154,19 @@ void TCPAsyncClient::handleWrite(const boost::system::error_code& error)
     else
     {
         printf("ERROR writing: %s\n", error.message().c_str());
-        doClose();
+        _close();
     }
 }
 
-void TCPAsyncClient::doClose()
+void TCPAsyncClient::_close()
 {
+    // Hmm, manually closing the socket causes a crash. Cause TBD.
+    /*
     if (mSocket.is_open())
     {
         mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
         mSocket.close();
     }
+    */
     mIsConnected = false;
 }

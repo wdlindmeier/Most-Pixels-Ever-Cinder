@@ -21,11 +21,16 @@ public:
     MPEMessageHandler() : mCurrentRenderFrame(0), mFrameIsReady(false){};
 
     // The frame that every client should be rendering.
-    void setCurrentRenderFrame(int frameNum)
+    void setCurrentRenderFrame(long frameNum)
     {
         mCurrentRenderFrame = frameNum;
     };
-    
+
+    long getCurrentRenderFrame()
+    {
+        return mCurrentRenderFrame;
+    };
+
     // mFrameIsReady is set to true once the incoming server message is ready.
     void setFrameIsReady(bool isFrameReady)
     {
@@ -46,7 +51,7 @@ public:
 
 protected:
 
-    int                 mCurrentRenderFrame;
+    long                 mCurrentRenderFrame;
     bool                mFrameIsReady;
 
 };

@@ -53,13 +53,12 @@ void MPEAsyncClient::serverMessageReceived(const std::string & message)
     mFrameIsReady = false;
     // This will set mFrameIsReady
     mProtocol.parse(message, this);
-    //mShouldUpdate = mShouldUpdate || mFrameIsReady;
     if (mFrameIsReady)
     {
         if (mUpdateCallback)
         {
             std::lock_guard<std::mutex> lock(mClientDataMutex);
-            mUpdateCallback();
+            mUpdateCallback(this->getCurrentRenderFrame());
         }
     }
 }
@@ -82,15 +81,6 @@ void MPEAsyncClient::readIncomingBytes()
     MPEClient::readIncomingBytes();
 }
 
-#pragma mark - Update
-/*
-bool MPEAsyncClient::shouldUpdate()
-{
-    bool shouldUpdate = mShouldUpdate;
-    mShouldUpdate = false;
-    return shouldUpdate;
-}
-*/
 #pragma mark - Drawing
 
 void MPEAsyncClient::draw(const FrameRenderCallback & renderFrameHandler)

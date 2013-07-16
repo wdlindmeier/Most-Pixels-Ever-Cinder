@@ -50,15 +50,14 @@ namespace mpe
         void                            handleConnect(const boost::system::error_code& error);
         void                            handleRead(const boost::system::error_code& error);
         void                            handleWrite(const boost::system::error_code& error);
-        void                            doWrite(const std::string & msg);
-        void                            doWriteBuffer(const boost::asio::const_buffers_1 & buffer);
-        void                            doClose();
         
-//        boost::asio::io_service         mIOService;
-//        boost::asio::ip::tcp::socket    mSocket;
-//        bool                            mIsConnected;
+        // Internal versions of the public interface.
+        // These happen on a different thread.
+        void                            _write(const std::string & msg);
+        void                            _writeBuffer(const boost::asio::const_buffers_1 & buffer);
+        void                            _close();
+
         MessageQueue                    mWriteMessages;
-        //std::string                     mReadMessage;
         boost::asio::streambuf          mBuffer;
         std::thread                     mClientThread;
         OpenedCallback                  mOpenedCallback;
