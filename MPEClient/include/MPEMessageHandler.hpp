@@ -1,5 +1,5 @@
 //
-//  MPEMessageHandler.hpp
+//  MPEMessageCallback.hpp
 //  Unknown Project
 //
 //  Copyright (c) 2013 William Lindmeier. All rights reserved.
@@ -9,18 +9,18 @@
 
 /*
 
- MPEMessageHandler:
+ MPEMessageCallback:
  A minimal interface that the MPEProtocol requires when parsing data.
- MPEClient is a subclass of MPEMessageHandler.
+ MPEClient is a subclass of MPEMessageCallback.
 
 */
 
-class MPEMessageHandler
+class MPEMessageCallback
 {
 
 public:
 
-    MPEMessageHandler() : mCurrentRenderFrame(0), mFrameIsReady(false){};
+    MPEMessageCallback() : mCurrentRenderFrame(0), mFrameIsReady(false){};
 
     // The frame that every client should be rendering.
     // This is set by the protocol and should never by called by your App.

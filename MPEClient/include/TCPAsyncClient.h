@@ -48,7 +48,7 @@ namespace mpe
         void                            close();
         void                            write(const std::string & msg);
         void                            writeBuffer(const boost::asio::const_buffers_1 & buffer);
-        void                            setIncomingMessageHandler( ServerMessageCallback callback )
+        void                            setIncomingMessageCallback( ServerMessageCallback callback )
                                         {
                                             mReadCallback = callback;
                                         };
@@ -56,7 +56,7 @@ namespace mpe
     private:
 
         void                            handleConnect(const boost::system::error_code & error);
-        void                            handleRead(const boost::system::error_code & error);
+        void                            Callbackead(const boost::system::error_code & error);
         void                            handleWrite(const boost::system::error_code & error);
 
         // Internal versions of the public interface.

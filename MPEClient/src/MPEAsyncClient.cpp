@@ -35,7 +35,7 @@ void MPEAsyncClient::start()
     mTCPClient = new TCPAsyncClient(mProtocol.incomingMessageDelimiter());
 
     TCPAsyncClient *client = static_cast<TCPAsyncClient *>(mTCPClient);
-    client->setIncomingMessageHandler(boost::bind(&MPEAsyncClient::serverMessageReceived, this, _1));
+    client->setIncomingMessageCallback(boost::bind(&MPEAsyncClient::serverMessageReceived, this, _1));
     client->open(mHostname, mPort, boost::bind(&MPEAsyncClient::tcpConnected, this, _1, _2));
 }
 

@@ -28,7 +28,7 @@ MPEClient(settingsFilename, MPEProtocol(), shouldResize)
 }
 
 MPEClient::MPEClient(const string & settingsFilename, MPEProtocol protocol, bool shouldResize) :
-MPEMessageHandler(),
+MPEMessageCallback(),
 mProtocol(protocol),
 mHostname(""),
 mPort(0),
@@ -85,14 +85,14 @@ void MPEClient::setBytesDataCallback(const BytesDataCallback & callback)
     mBytesDataCallback = callback;
 }
 
-void MPEClient::setFrameUpdateHandler( const FrameUpdateCallback & updateCallback)
+void MPEClient::setFrameUpdateCallback( const FrameUpdateCallback & callback)
 {
-    mUpdateCallback = updateCallback;
+    mUpdateCallback = callback;
 }
 
-void MPEClient::setDrawHandler( const FrameRenderCallback & renderCallback)
+void MPEClient::setDrawCallback( const FrameRenderCallback & callback)
 {
-    mRenderCallback = renderCallback;
+    mRenderCallback = callback;
 }
 
 #pragma mark - Connection
@@ -165,7 +165,7 @@ void MPEClient::update()
         }
         else if (!mUpdateCallback)
         {
-            console() << "WARNING: The FrameUpdateHandler has not been set." << std::endl;
+            console() << "WARNING: The FrameUpdateCallback has not been set." << std::endl;
         }
     }
 }
@@ -277,11 +277,11 @@ void MPEClient::doneRendering()
     }
 }
 
-#pragma mark - MPEMessageHandler
+#pragma mark - MPEMessageCallback
 
 void MPEClient::setCurrentRenderFrame(long frameNum)
 {
-    MPEMessageHandler::setCurrentRenderFrame(frameNum);
+    MPEMessageCallback::setCurrentRenderFrame(frameNum);
     // mLastFrameConfirmed has to reset when the current render frame is.
     mLastFrameConfirmed = mCurrentRenderFrame - 1;
 }

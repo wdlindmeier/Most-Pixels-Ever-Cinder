@@ -90,8 +90,8 @@ void MPEClientApp::setup()
     mClient = new MPEClient(SettingsFileName);
 #endif
     
-    mClient->setFrameUpdateHandler(boost::bind(&MPEClientApp::updateFrame, this, _1));
-    mClient->setDrawHandler(boost::bind(&MPEClientApp::drawViewport, this, _1));    
+    mClient->setFrameUpdateCallback(boost::bind(&MPEClientApp::updateFrame, this, _1));
+    mClient->setDrawCallback(boost::bind(&MPEClientApp::drawViewport, this, _1));    
     mClient->setStringDataCallback(boost::bind(&MPEClientApp::stringDataReceived, this, _1));
     mClient->setIntegerDataCallback(boost::bind(&MPEClientApp::integerDataReceived, this, _1));
     mClient->setBytesDataCallback(boost::bind(&MPEClientApp::bytesDataReceived, this, _1));    

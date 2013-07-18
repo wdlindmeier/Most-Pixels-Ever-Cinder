@@ -32,8 +32,8 @@ void MyCinderApp::setup()
     mClient = new MPEAsyncClient("settings.xml");
     
     // Set the event handlers.
-    mClient->setFrameUpdateHandler(boost::bind(&MyCinderApp::updateFrame, this, _1));
-    mClient->setDrawHandler(boost::bind(&MyCinderApp::drawViewport, this, _1));    
+    mClient->setFrameUpdateCallback(boost::bind(&MyCinderApp::updateFrame, this, _1));
+    mClient->setDrawCallback(boost::bind(&MyCinderApp::drawViewport, this, _1));    
     mClient->setStringDataCallback(boost::bind(&MyCinderApp::stringDataReceived, this, _1));
 }
 

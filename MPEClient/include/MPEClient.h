@@ -10,7 +10,7 @@
 #include <boost/asio.hpp>
 
 #include "cinder/Rect.h"
-#include "MPEMessageHandler.hpp"
+#include "MPEMessageCallback.hpp"
 #include "MPEProtocol.hpp"
 #include "TCPClient.h"
 
@@ -23,7 +23,7 @@
  settings file. See settings.0.xml for an example.
  
  The client keeps track of the current frame that should be rendered (see 
- MPEMessageHandler::getCurrentRenderFrame) and informs the server when it's complete. Once
+ MPEMessageCallback::getCurrentRenderFrame) and informs the server when it's complete. Once
  all of the clients have rendered the frame the server will send out the next frame number.
  
  MPEClient uses callbacks for updating, drawing, and sending data to your App.
@@ -32,7 +32,7 @@
         App state changes should only happen in this callback, rather than in App::update() so that
         all of the clients stay in sync. This must be set.
  
-    • FrameRenderCallback: This is the draw callback The client will position the viewport before 
+    • FrameRenderCallback: This is the draw callback. The client will position the viewport before
         calling the callback and tells the server that the frame has been rendered after the callback.
  
     • StringDataCallback: This will be called when string data is received from any of the connected
@@ -51,7 +51,7 @@ namespace mpe
     typedef boost::function<void( const std::vector<int> & integers )> IntegerDataCallback;
     typedef boost::function<void( const std::vector<char> & bytes )> BytesDataCallback;
     
-    class MPEClient : public MPEMessageHandler
+    class MPEClient : public MPEMessageCallback
     {
 
     public:
@@ -69,8 +69,8 @@ namespace mpe
         void                setIsRendering3D(bool is3D);
         
         // Callback Accessors
-        void                setFrameUpdateHandler( const FrameUpdateCallback & updateCallback);
-        void                setDrawHandler( const FrameRenderCallback & renderCallback);
+        void                setFrameUpdateCallback( const FrameUpdateCallback & callback);
+        void                setDrawCallback( const FrameRenderCallback & callback);
         void                setStringDataCallback(const StringDataCallback & callback);
         void                setIntegerDataCallback(const IntegerDataCallback & callback);
         void                setBytesDataCallback(const BytesDataCallback & callback);
@@ -95,14 +95,14 @@ namespace mpe
         void                sendBytesData(const std::vector<char> & bytes);
 
         // Receiving Messages From Server
-        // These are called by the MPE Message Handler and should not be called by the App.
+        // These are called by the MPE Message Callback and should not be called by the App.
         virtual void        receivedStringMessage(const std::string & dataMessage);
         virtual void        readIncomingIntegers();
         virtual void        readIncomingBytes();
 
     protected:
 
-        // Overloading MPEMessageHandler for internal purposes.
+        // Overloading MPEMessageCallback for internal purposes.
         void                setCurrentRenderFrame(long frameNum);        
 
         void                doneRendering();
