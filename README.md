@@ -13,14 +13,11 @@ class MyCinderApp : public AppNative
 {
     public:      
     
-    void        setup();
-    
+    void        setup();    
     void        update();
-    void        updateFrame(long serverFrameNumber);
-    
+    void        updateFrame(long serverFrameNumber);    
     void        draw();
-    void        drawViewport(bool isNewFrame);
-    
+    void        drawViewport(bool isNewFrame);    
     void        stringDataReceived(const std::string & message);
     
     private:
