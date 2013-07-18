@@ -73,7 +73,7 @@ void MyCinderApp::drawViewport(bool isNewFrame)
 
 void MyCinderApp::stringDataReceived(const std::string & message)
 {
-    // Any app can send data to the other clients. E.g.:
+    // Apps can broadcast data to the other clients. E.g.:
     //
     // mClient->sendStringData("mouse_pos: 100,200");
     // 
