@@ -78,7 +78,7 @@ void MPEClientApp::prepareSettings( Settings *settings )
 
 void MPEClientApp::setup()
 {
-    console() << "Loading settings from " << SettingsFileName << "\n";
+    console() << "Loading settings from " << SettingsFileName << std::endl;
     
 #if USE_ASYNC
     
@@ -105,7 +105,7 @@ void MPEClientApp::setup()
     Vec2f posBall = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y));
     Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
 
-    console() << "Creating ball with master size: " << sizeMaster << "\n";
+    console() << "Creating ball with master size: " << sizeMaster << std::endl;
     mBall = Ball(posBall, velBall, sizeMaster);
 
     mClient->start();
@@ -159,7 +159,7 @@ void MPEClientApp::keyDown(KeyEvent event)
 
 void MPEClientApp::stringDataReceived(const std::string & message)
 {
-    console() << "stringDataReceived: " << message << "\n";
+    console() << "stringDataReceived: " << message << std::endl;
 }
 
 void MPEClientApp::integerDataReceived(const std::vector<int> & integers)
@@ -169,7 +169,7 @@ void MPEClientApp::integerDataReceived(const std::vector<int> & integers)
     {
         outp += std::to_string(integers[i]);
     }
-    console() << "integerDataReceived: " << outp << "\n";
+    console() << "integerDataReceived: " << outp << std::endl;
 }
 
 void MPEClientApp::bytesDataReceived(const std::vector<char> & bytes)
@@ -179,7 +179,7 @@ void MPEClientApp::bytesDataReceived(const std::vector<char> & bytes)
     {
         outp += std::to_string(bytes[i]);
     }
-    console() << "bytesDataReceived: " << outp << "\n";
+    console() << "bytesDataReceived: " << outp << std::endl;
 }
 
 #pragma mark - Update
@@ -236,7 +236,7 @@ void MPEClientApp::updateLocalViewportFromScreenPosition()
         // The position has changed.
         // Update the renderable area.
         mClient->setVisibleRect(ci::Rectf(pos.x, pos.y, pos.x + size.x, pos.y + size.y));
-        console() << "Visible Rect: " << mClient->getVisibleRect() << "\n";
+        console() << "Visible Rect: " << mClient->getVisibleRect() << std::endl;
         mScreenSize = size;
         mScreenPos = pos;
     }

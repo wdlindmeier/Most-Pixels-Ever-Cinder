@@ -44,8 +44,6 @@ bool TCPClient::open(const std::string & hostname,
         return false;
     }
 
-    ci::app::console() << "Open? " << mSocket.is_open() << "\n";
-
     mIsConnected = true;
     return mIsConnected;
 }
@@ -65,7 +63,7 @@ string TCPClient::read(bool & isDataAvailable)
     
         boost::system::error_code error;
         boost::asio::streambuf buffer;
-        boost::asio::read_until(mSocket, buffer, "\n", error);
+        boost::asio::read_until(mSocket, buffer, kMessageTerminus, error);
 
         // When the server closes the connection, the ip::tcp::socket::read_some()
         // function will exit with the boost::asio::error::eof error,
@@ -77,7 +75,7 @@ string TCPClient::read(bool & isDataAvailable)
         }
         else if (error)
         {
-            console() << "ERROR: " << error.message() << "\n";
+            console() << "ERROR: " << error.message() << std::endl;
             throw boost::system::system_error(error); // Some other error.
         }
 
@@ -96,7 +94,7 @@ vector<int> TCPClient::readIntegers()
     int intLength;
     boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&intLength),
                                                    sizeof(int)));
-    console() << "Reading Integer Array of length: %i" << intLength << "\n";
+    // console() << "Reading Integer Array of length: %i" << intLength << std::endl;
     int ints[intLength];
     boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&ints),
                                                    sizeof(int) * intLength));
@@ -113,7 +111,7 @@ vector<char> TCPClient::readBytes()
     int byteLength;
     boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&byteLength),
                                                    sizeof(int)));
-    console() << "Reading Byte Array of length: %i" << byteLength << "\n";
+    // console() << "Reading Byte Array of length: %i" << byteLength << std::endl;
     char bytes[byteLength];
     boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&bytes),
                                                    sizeof(char) * byteLength));
@@ -126,7 +124,7 @@ vector<char> TCPClient::readBytes()
 void TCPClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
 {
 #if USE_STRING_QUEUE
-    console() << "ALERT: Not using write buffer. Message Ignored.\n";
+    console() << "ALERT: Not using write buffer. Message Ignored." << std::endl;
 #else
     boost::system::error_code error;
     // TODO: Guarantee that all of the data has been sent.
@@ -134,12 +132,12 @@ void TCPClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
     size_t len = mSocket.write_some(buffer, error);
     if (error)
     {
-        ci::app::console() << "ERROR: Couldn't write. " << error.message() << "\n";
+        console() << "ERROR: Couldn't write. " << error.message() << std::endl;
         return;
     }
     else if (len == 0)
     {
-        ci::app::console() << "ALERT: Wrote 0 bytes.\n";
+        console() << "ALERT: Wrote 0 bytes." << std::endl;
         return;
     }
 #endif
@@ -168,7 +166,6 @@ void TCPClient::write(const string & msg)
 void TCPClient::close()
 {
     mIsConnected = false;
-    ci::app::console() << "Closing socket\n";
     if (mSocket.is_open())
     {
         mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);

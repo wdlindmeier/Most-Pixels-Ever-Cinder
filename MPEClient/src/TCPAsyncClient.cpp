@@ -13,7 +13,7 @@ using std::string;
 using ci::app::console;
 using namespace boost::asio::ip;
 
-void TCPAsyncClient::open(const std::string & hostname,
+void TCPAsyncClient::open(const string & hostname,
                           const int port,
                           const OpenedCallback &callback)
 {
@@ -22,8 +22,6 @@ void TCPAsyncClient::open(const std::string & hostname,
     tcp::resolver::iterator iterator = resolver.resolve(query);
     
     mOpenedCallback = callback;
-    
-    printf("Opening connection to %s:%i\n", hostname.c_str(), port);
     
     boost::asio::async_connect(mSocket, iterator,
                                boost::bind(&TCPAsyncClient::handleConnect, this,
@@ -42,9 +40,8 @@ void TCPAsyncClient::handleConnect(const boost::system::error_code& error)
 {
     if (!error)
     {
-        console() << "Connected Async\n";
         mIsConnected = true;
-        boost::asio::async_read_until(mSocket, mBuffer, "\n",
+        boost::asio::async_read_until(mSocket, mBuffer, kMessageTerminus,
                                       boost::bind(&TCPAsyncClient::handleRead, this,
                                                   boost::asio::placeholders::error));
     }
@@ -82,10 +79,10 @@ void TCPAsyncClient::handleRead(const boost::system::error_code& error)
         {
             std::ostringstream ss;
             ss << &mBuffer;
-            std::string message = ss.str();
+            string message = ss.str();
             mReadCallback(message);
         }
-        boost::asio::async_read_until(mSocket, mBuffer, "\n",
+        boost::asio::async_read_until(mSocket, mBuffer, kMessageTerminus,
                                       boost::bind(&TCPAsyncClient::handleRead, this,
                                                   boost::asio::placeholders::error));
     }
@@ -161,12 +158,10 @@ void TCPAsyncClient::handleWrite(const boost::system::error_code& error)
 void TCPAsyncClient::_close()
 {
     // Hmm, manually closing the socket causes a crash. Cause TBD.
-    /*
     if (mSocket.is_open())
     {
         mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
         mSocket.close();
     }
-    */
     mIsConnected = false;
 }

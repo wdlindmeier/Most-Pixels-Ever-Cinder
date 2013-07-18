@@ -28,6 +28,9 @@
 
 */
 
+// TODO: Pass this in from the protocol.
+const static string kMessageTerminus = "\n";
+
 namespace mpe
 {
     class TCPClient

@@ -28,7 +28,8 @@ mHostname(""),
 mPort(0),
 mIsStarted(false),
 mIsRendering3D(false),
-mClientID(-1)
+mClientID(-1),
+mIsDebug(false)
 {
     loadSettings(settingsFilename, shouldResize);
 }
@@ -65,7 +66,6 @@ void MPEClient::start()
 
 void MPEClient::tcpConnected()
 {
-    ci::app::console() << "Connected.\n";
     sendClientID();
 }
 
@@ -149,7 +149,6 @@ void MPEClient::positionViewport()
 
 void MPEClient::positionViewport2D()
 {
-//    console() << "mLocalViewportRect: " << mLocalViewportRect << "\n";
     glTranslatef(mLocalViewportRect.getX1() * -1,
                  mLocalViewportRect.getY1() * -1,
                  0);
@@ -200,13 +199,11 @@ void MPEClient::sendStringData(const std::string & message)
 
 void MPEClient::sendIntegerData(const std::vector<int> & integers)
 {
-    console() << "Sending Integer data\n";
     mTCPClient->writeBuffer(mProtocol.sendInts(integers));
 }
 
 void MPEClient::sendBytesData(const std::vector<char> & bytes)
 {
-    console() << "Sending Bytes data\n";
     mTCPClient->writeBuffer(mProtocol.sendBytes(bytes));
 }
 
@@ -252,10 +249,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     try
     {
         XmlTree debugNode = settingsDoc.getChild( "settings/debug" );
-        int isDebug = debugNode.getValue<int>();
-        if (isDebug != 0){
-            // app::console() << "settingsDoc: " << settingsDoc << "\n";
-        }
+        mIsDebug = debugNode.getValue<int>();
     }
     catch (XmlTree::ExcChildNotFound e)
     {
@@ -269,7 +263,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     }
     catch (XmlTree::ExcChildNotFound e)
     {
-        console() << "ERROR: Could not find server and port settings\n";
+        console() << "ERROR: Could not find server and port settings." << std::endl;
     }
 
     try
@@ -279,7 +273,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     }
     catch (XmlTree::ExcChildNotFound e)
     {
-        console() << "ERROR: Could not find client ID\n";
+        console() << "ERROR: Could not find client ID." << std::endl;
     }
 
     try
@@ -293,7 +287,6 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         int x = xNode.getValue<int>();
         int y = yNode.getValue<int>();
         mLocalViewportRect = Rectf( x, y, x+width, y+height );
-        console() << "mLocalViewportRect: " << mLocalViewportRect << "\n";
 
         // Force the window size based on the settings XML.
         if (shouldResize){
@@ -302,7 +295,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     }
     catch (XmlTree::ExcChildNotFound e)
     {
-        console() << "ERROR: Could not find local dimensions settings\n";
+        console() << "ERROR: Could not find local dimensions settings." << std::endl;
     }
 
     try
@@ -315,6 +308,6 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     }
     catch (XmlTree::ExcChildNotFound e)
     {
-        console() << "ERROR: Could not find master dimensions settings\n";
+        console() << "ERROR: Could not find master dimensions settings" << std::endl;
     }
 }

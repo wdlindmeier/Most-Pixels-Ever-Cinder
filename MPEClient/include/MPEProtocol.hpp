@@ -41,25 +41,27 @@ namespace mpe
         
 #pragma mark - Outgoing Messages
         
+        const static char kMessageTerminus = '\n';
+        
         // S == Start
         // Send the client ID once the connection has been made.
         virtual std::string setClientID( const int clientID )
         {
-            return "S" + std::to_string(clientID) + "\n";
+            return "S" + std::to_string(clientID) + kMessageTerminus;
         };
 
         // T == daTa
         // Send an arbitrary string to every connected client.
         virtual std::string broadcast( const std::string & msg )
         {
-            return "T" + msg + "\n";
+            return "T" + msg + kMessageTerminus;
         };
 
         // D == Done
         // Send with the client and frame ID when the frame render is complete.
         virtual std::string renderIsComplete(int clientID, long frameNum)
         {
-            return "D," + std::to_string(clientID) + "," + std::to_string(frameNum+1) + "\n";
+            return "D," + std::to_string(clientID) + "," + std::to_string(frameNum+1) + kMessageTerminus;
         };
         
         // I == Integers (not supported?)
@@ -98,8 +100,6 @@ namespace mpe
         
         virtual void parse(const std::string & serverMessage, MPEMessageHandler *handler)
         {
-            // ci::app::console() << "Incoming message: " << serverMessage << "\n";
-
             // Example server messages:
             // 1) IG,19919:blahblahblah
             // 2) G,7
@@ -129,7 +129,6 @@ namespace mpe
             // Get any additional message that was passed along.
             if (messages.size() > 1)
             {
-                ci::app::console() << (messages.size() - 1) << " Incoming Data Messags: ";                
                 for (int i=1;i<messages.size();i++)
                 {
                     // Send all of the messages

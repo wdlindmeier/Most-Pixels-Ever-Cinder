@@ -112,6 +112,7 @@ namespace mpe
         ci::Rectf           mLocalViewportRect;
         ci::Vec2i           mMasterSize;
         int                 mClientID;
+        bool                mIsDebug;
         
         // A connection to the server.
         TCPClient           *mTCPClient;

@@ -35,8 +35,9 @@ public:
     // Connection
     void                    start();
 
-    // Drawing
+    // Loop
     void                    draw(const FrameRenderCallback & renderFrameHandler);
+    bool                    shouldUpdate();
     void                    setFrameUpdateHandler( const FrameUpdateCallback & updateCallback)
                             {
                                 mUpdateCallback = updateCallback;

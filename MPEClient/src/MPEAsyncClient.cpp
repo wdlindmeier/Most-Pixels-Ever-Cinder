@@ -81,6 +81,16 @@ void MPEAsyncClient::readIncomingBytes()
     MPEClient::readIncomingBytes();
 }
 
+#pragma mark - Update
+
+bool MPEAsyncClient::shouldUpdate()
+{
+    console() << "WARNING: Do not use shouldUpdate with the Async client." << std::endl
+              << "Set the FrameUpdateHandler instead and do any update state changes "
+              << "in that function." << std::endl;
+    return false;
+}
+
 #pragma mark - Drawing
 
 void MPEAsyncClient::draw(const FrameRenderCallback & renderFrameHandler)
