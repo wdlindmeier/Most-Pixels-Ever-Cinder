@@ -9,7 +9,7 @@
 #include <boost/lambda/lambda.hpp>
 #include <GLUT/GLUT.h>
 #include <OpenGL/OpenGL.h>
-
+#include <boost/filesystem.hpp>
 #include "cinder/CinderResources.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Vector.h"
@@ -22,23 +22,77 @@ using namespace ci;
 using namespace ci::app;
 using namespace mpe;
 
-MPEClient::MPEClient(const string & settingsFilename, bool shouldResize) :
+MPEClient::MPEClient(const std::string & settingsFilename, bool shouldResize) :
+MPEClient(settingsFilename, MPEProtocol(), shouldResize)
+{
+}
+
+MPEClient::MPEClient(const string & settingsFilename, MPEProtocol protocol, bool shouldResize) :
 MPEMessageHandler(),
+mProtocol(protocol),
 mHostname(""),
 mPort(0),
 mIsStarted(false),
 mIsRendering3D(false),
 mClientID(-1),
-mIsDebug(false)
+mIsDebug(false),
+mLastFrameConfirmed(-1)
 {
     loadSettings(settingsFilename, shouldResize);
 }
 
-MPEClient::~MPEClient()
+#pragma mark - Accessors
+
+ci::Rectf MPEClient::getVisibleRect()
 {
-    if (mIsStarted){
-        stop();
-    }
+    return mLocalViewportRect;
+}
+
+void MPEClient::setVisibleRect(const ci::Rectf & rect)
+{
+    mLocalViewportRect = rect;
+}
+
+ci::Vec2i MPEClient::getMasterSize()
+{
+    return mMasterSize;
+}
+
+bool MPEClient::getIsRendering3D()
+{
+    return mIsRendering3D;
+}
+
+void MPEClient::setIsRendering3D(bool is3D)
+{
+    mIsRendering3D = is3D;
+}
+
+#pragma mark - Callbacks
+
+void MPEClient::setStringDataCallback(const StringDataCallback & callback)
+{
+    mStringDataCallback = callback;
+}
+
+void MPEClient::setIntegerDataCallback(const IntegerDataCallback & callback)
+{
+    mIntegerDataCallback = callback;
+}
+
+void MPEClient::setBytesDataCallback(const BytesDataCallback & callback)
+{
+    mBytesDataCallback = callback;
+}
+
+void MPEClient::setFrameUpdateHandler( const FrameUpdateCallback & updateCallback)
+{
+    mUpdateCallback = updateCallback;
+}
+
+void MPEClient::setDrawHandler( const FrameRenderCallback & renderCallback)
+{
+    mRenderCallback = renderCallback;
 }
 
 #pragma mark - Connection
@@ -51,7 +105,7 @@ void MPEClient::start()
     }
 
     mIsStarted = true;
-    mTCPClient = new TCPClient();
+    mTCPClient = new TCPClient(mProtocol.incomingMessageDelimiter());
 
     // Open the client
     if (mTCPClient->open(mHostname, mPort))
@@ -66,6 +120,11 @@ void MPEClient::start()
 
 void MPEClient::tcpConnected()
 {
+    if (mIsDebug)
+    {
+        console() << "Established synchronous connection to server: "
+                  << mHostname << ":" << mPort << std::endl;
+    }
     sendClientID();
 }
 
@@ -80,10 +139,12 @@ void MPEClient::stop()
     }
 }
 
-bool MPEClient::shouldUpdate()
+#pragma mark - Update
+
+void MPEClient::update()
 {
     mFrameIsReady = false;
-    
+
     // This will just stall the loop until we get
     // a message from the server.
     if (mIsStarted && isConnected())
@@ -97,25 +158,23 @@ bool MPEClient::shouldUpdate()
                 mProtocol.parse(data, this);
             }
         }
-        
-        if (!mFrameIsReady)
+
+        if (mFrameIsReady && mUpdateCallback)
         {
-            // No message. Skipping update.
+            mUpdateCallback(this->getCurrentRenderFrame());
         }
-        else
+        else if (!mUpdateCallback)
         {
-            // Frame is ready.
+            console() << "WARNING: The FrameUpdateHandler has not been set." << std::endl;
         }
     }
-    
-    return mFrameIsReady;
 }
 
 #pragma mark - Drawing
 
-void MPEClient::draw(const FrameRenderCallback & renderFrameHandler)
+void MPEClient::draw()
 {
-    if (renderFrameHandler)
+    if (mRenderCallback)
     {
         glPushMatrix();
 
@@ -123,11 +182,11 @@ void MPEClient::draw(const FrameRenderCallback & renderFrameHandler)
         positionViewport();
 
         // Tell the app to draw.
-        renderFrameHandler(mFrameIsReady);
+        mRenderCallback(mFrameIsReady);
 
         glPopMatrix();
     }
-    
+
     if (isConnected())
     {
         // Tell the server we're ready for the next.
@@ -209,7 +268,22 @@ void MPEClient::sendBytesData(const std::vector<char> & bytes)
 
 void MPEClient::doneRendering()
 {
-    mTCPClient->write(mProtocol.renderIsComplete(mClientID, mCurrentRenderFrame));
+    // Only inform the server if this is a new frame. It's possible that a given frame is
+    // rendered multiple times if the server update is slower than the app loop.
+    if (mLastFrameConfirmed < mCurrentRenderFrame)
+    {
+        mTCPClient->write(mProtocol.renderIsComplete(mClientID, mCurrentRenderFrame));
+        mLastFrameConfirmed = mCurrentRenderFrame;
+    }
+}
+
+#pragma mark - MPEMessageHandler
+
+void MPEClient::setCurrentRenderFrame(long frameNum)
+{
+    MPEMessageHandler::setCurrentRenderFrame(frameNum);
+    // mLastFrameConfirmed has to reset when the current render frame is.
+    mLastFrameConfirmed = mCurrentRenderFrame - 1;
 }
 
 #pragma mark - Receiving Messages
@@ -244,7 +318,10 @@ void MPEClient::readIncomingBytes()
 
 void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
 {
-    XmlTree settingsDoc( loadAsset( settingsFilename ) );
+    // Make sure the settings file exists.
+    assert(boost::filesystem::exists(getAssetPath(settingsFilename)));
+    
+    XmlTree settingsDoc(loadAsset(settingsFilename));
 
     try
     {

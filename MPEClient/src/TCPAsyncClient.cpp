@@ -1,9 +1,8 @@
 //
 //  TCPAsyncClient.cpp
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 7/7/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #include "TCPAsyncClient.h"
@@ -13,6 +12,11 @@ using std::string;
 using ci::app::console;
 using namespace boost::asio::ip;
 
+TCPAsyncClient::TCPAsyncClient(const std::string & messageDelimeter) :
+TCPClient(messageDelimeter)
+{
+};
+
 void TCPAsyncClient::open(const string & hostname,
                           const int port,
                           const OpenedCallback &callback)
@@ -20,13 +24,13 @@ void TCPAsyncClient::open(const string & hostname,
     tcp::resolver resolver(mIOService);
     tcp::resolver::query query(hostname, std::to_string(port));
     tcp::resolver::iterator iterator = resolver.resolve(query);
-    
+
     mOpenedCallback = callback;
-    
+
     boost::asio::async_connect(mSocket, iterator,
                                boost::bind(&TCPAsyncClient::handleConnect, this,
                                             boost::asio::placeholders::error));
-    
+
     mClientThread = std::thread(boost::bind(&boost::asio::io_service::run,
                                             &mIOService));
 }
@@ -36,12 +40,12 @@ void TCPAsyncClient::close()
     mIOService.post(boost::bind(&TCPAsyncClient::_close, this));
 }
 
-void TCPAsyncClient::handleConnect(const boost::system::error_code& error)
+void TCPAsyncClient::handleConnect(const boost::system::error_code & error)
 {
     if (!error)
     {
         mIsConnected = true;
-        boost::asio::async_read_until(mSocket, mBuffer, kMessageTerminus,
+        boost::asio::async_read_until(mSocket, mBuffer, mMessageDelimiter,
                                       boost::bind(&TCPAsyncClient::handleRead, this,
                                                   boost::asio::placeholders::error));
     }
@@ -49,7 +53,7 @@ void TCPAsyncClient::handleConnect(const boost::system::error_code& error)
     {
         printf("ERROR connecting to host: %s\n", error.message().c_str());
     }
-    
+
     if (mOpenedCallback)
     {
         mOpenedCallback(mIsConnected, error);
@@ -70,7 +74,7 @@ void TCPAsyncClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
 #endif
 }
 
-void TCPAsyncClient::handleRead(const boost::system::error_code& error)
+void TCPAsyncClient::handleRead(const boost::system::error_code & error)
 {
     // console() << "handle read\n";
     if (!error)
@@ -82,7 +86,7 @@ void TCPAsyncClient::handleRead(const boost::system::error_code& error)
             string message = ss.str();
             mReadCallback(message);
         }
-        boost::asio::async_read_until(mSocket, mBuffer, kMessageTerminus,
+        boost::asio::async_read_until(mSocket, mBuffer, mMessageDelimiter,
                                       boost::bind(&TCPAsyncClient::handleRead, this,
                                                   boost::asio::placeholders::error));
     }
@@ -127,7 +131,7 @@ void TCPAsyncClient::_write(const string & msg)
 #endif
 }
 
-void TCPAsyncClient::handleWrite(const boost::system::error_code& error)
+void TCPAsyncClient::handleWrite(const boost::system::error_code & error)
 {
     if (!error)
     {
@@ -157,7 +161,6 @@ void TCPAsyncClient::handleWrite(const boost::system::error_code& error)
 
 void TCPAsyncClient::_close()
 {
-    // Hmm, manually closing the socket causes a crash. Cause TBD.
     if (mSocket.is_open())
     {
         mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);

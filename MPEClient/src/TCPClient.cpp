@@ -15,7 +15,8 @@ using std::vector;
 using namespace boost::asio::ip;
 using cinder::app::console;
 
-TCPClient::TCPClient() :
+TCPClient::TCPClient(const std::string & messageDelimeter) :
+mMessageDelimiter(messageDelimeter),
 mIOService(),
 mSocket(mIOService),
 mIsConnected(false)
@@ -57,13 +58,13 @@ string TCPClient::read(bool & isDataAvailable)
     mSocket.io_control(command);
     std::size_t bytes_readable = command.get();
     isDataAvailable = bytes_readable > 0;
-    
+
     if (isDataAvailable)
     {
-    
+
         boost::system::error_code error;
         boost::asio::streambuf buffer;
-        boost::asio::read_until(mSocket, buffer, kMessageTerminus, error);
+        boost::asio::read_until(mSocket, buffer, mMessageDelimiter, error);
 
         // When the server closes the connection, the ip::tcp::socket::read_some()
         // function will exit with the boost::asio::error::eof error,
@@ -82,7 +83,7 @@ string TCPClient::read(bool & isDataAvailable)
         std::istream str(&buffer);
         std::getline(str, message);
     }
-    
+
     return message;
 }
 
@@ -157,7 +158,7 @@ void TCPClient::write(const string & msg)
     else if (len == 0)
     {
         console() << "ALERT: Wrote 0 bytes.\n";
-    }    
+    }
 #else
     writeBuffer(boost::asio::buffer(msg));
 #endif

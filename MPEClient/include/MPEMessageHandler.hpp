@@ -9,7 +9,9 @@
 
 /*
 
- TODO: Describe MPEMessageHandler class.
+ MPEMessageHandler:
+ A minimal interface that the MPEProtocol requires when parsing data.
+ MPEClient is a subclass of MPEMessageHandler.
 
 */
 
@@ -21,7 +23,8 @@ public:
     MPEMessageHandler() : mCurrentRenderFrame(0), mFrameIsReady(false){};
 
     // The frame that every client should be rendering.
-    void setCurrentRenderFrame(long frameNum)
+    // This is set by the protocol and should never by called by your App.
+    virtual void setCurrentRenderFrame(long frameNum)
     {
         mCurrentRenderFrame = frameNum;
     };
@@ -51,7 +54,7 @@ public:
 
 protected:
 
-    long                 mCurrentRenderFrame;
+    long                mCurrentRenderFrame;
     bool                mFrameIsReady;
 
 };

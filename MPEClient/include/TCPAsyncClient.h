@@ -1,9 +1,8 @@
 //
 //  TCPAsyncClient.h
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 7/7/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #pragma once
@@ -14,26 +13,35 @@
 #include <cstdlib>
 #include <deque>
 #include <iostream>
+
 #include "TCPClient.h"
+
+/*
+ 
+ TCPClient:
+ An asynchronous socket layer that communicates between the client and the server.
+ This class is used by the MPEAsyncClient, not your App.
+ 
+ */
 
 namespace mpe
 {
     class TCPAsyncClient : public TCPClient
     {
-        
+
 #if USE_STRING_QUEUE
     typedef std::deque<const std::string> MessageQueue;
 #else
     typedef std::deque<const boost::asio::const_buffers_1> MessageQueue;
 #endif
-    typedef boost::function<void (bool didConnect, const boost::system::error_code& error)> OpenedCallback;
+    typedef boost::function<void (bool didConnect, const boost::system::error_code & error)> OpenedCallback;
     typedef boost::function<void (const std::string & message)> ServerMessageCallback;
-        
+
     public:
-        
-        TCPAsyncClient() : TCPClient() {};
-        ~TCPAsyncClient() {};
-        
+
+        TCPAsyncClient(const std::string & messageDelimeter);
+        ~TCPAsyncClient(){};
+
         void                            open(const std::string & hostname,
                                              const int port,
                                              const OpenedCallback &callback);
@@ -44,13 +52,13 @@ namespace mpe
                                         {
                                             mReadCallback = callback;
                                         };
-        
+
     private:
-        
-        void                            handleConnect(const boost::system::error_code& error);
-        void                            handleRead(const boost::system::error_code& error);
-        void                            handleWrite(const boost::system::error_code& error);
-        
+
+        void                            handleConnect(const boost::system::error_code & error);
+        void                            handleRead(const boost::system::error_code & error);
+        void                            handleWrite(const boost::system::error_code & error);
+
         // Internal versions of the public interface.
         // These happen on a different thread.
         void                            _write(const std::string & msg);
@@ -62,6 +70,6 @@ namespace mpe
         std::thread                     mClientThread;
         OpenedCallback                  mOpenedCallback;
         ServerMessageCallback           mReadCallback;
-        
+
     };
 }

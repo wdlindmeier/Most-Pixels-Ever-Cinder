@@ -1,9 +1,8 @@
 //
 //  MPEAsyncClient.cpp
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 7/7/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #include "MPEAsyncClient.h"
@@ -11,6 +10,16 @@
 
 using ci::app::console;
 using namespace mpe;
+
+MPEAsyncClient::MPEAsyncClient(const std::string & settingsFilename, bool shouldResize) :
+MPEAsyncClient(settingsFilename, MPEProtocol(), shouldResize)
+{
+};
+
+MPEAsyncClient::MPEAsyncClient(const std::string & settingsFilename, MPEProtocol protocol, bool shouldResize) :
+MPEClient(settingsFilename, protocol, shouldResize)
+{
+};
 
 #pragma mark - Connection
 
@@ -20,24 +29,25 @@ void MPEAsyncClient::start()
     {
         stop();
     }
-    
+
     mIsStarted = true;
     mLastFrameConfirmed = -1;
-    mTCPClient = new TCPAsyncClient();
-    
+    mTCPClient = new TCPAsyncClient(mProtocol.incomingMessageDelimiter());
+
     TCPAsyncClient *client = static_cast<TCPAsyncClient *>(mTCPClient);
-    
-    // Set the message callback
     client->setIncomingMessageHandler(boost::bind(&MPEAsyncClient::serverMessageReceived, this, _1));
-    
-    // Open the client
     client->open(mHostname, mPort, boost::bind(&MPEAsyncClient::tcpConnected, this, _1, _2));
 }
 
-void MPEAsyncClient::tcpConnected(bool didConnect, const boost::system::error_code& error)
+void MPEAsyncClient::tcpConnected(bool didConnect, const boost::system::error_code & error)
 {
     if (didConnect)
     {
+        if (mIsDebug)
+        {
+            console() << "Established async connection to server: "
+                      << mHostname << ":" << mPort << std::endl;
+        }
         sendClientID();
     }
     else
@@ -83,29 +93,24 @@ void MPEAsyncClient::readIncomingBytes()
 
 #pragma mark - Update
 
-bool MPEAsyncClient::shouldUpdate()
+void MPEAsyncClient::update()
 {
-    console() << "WARNING: Do not use shouldUpdate with the Async client." << std::endl
-              << "Set the FrameUpdateHandler instead and do any update state changes "
-              << "in that function." << std::endl;
-    return false;
+    if (mIsDebug)
+    {
+        static bool DidAlertAsyncNoEffect = false;
+        if (!DidAlertAsyncNoEffect)
+        {
+            // Frame events are called as messages are received from the server.
+            console() << "**INFO: Calling update() has no effect in the Async client." << std::endl;
+            DidAlertAsyncNoEffect = true;
+        }
+    }
 }
 
 #pragma mark - Drawing
 
-void MPEAsyncClient::draw(const FrameRenderCallback & renderFrameHandler)
+void MPEAsyncClient::draw()
 {
     std::lock_guard<std::mutex> lock(mClientDataMutex);
-    MPEClient::draw(renderFrameHandler);
-}
-
-void MPEAsyncClient::doneRendering()
-{
-    // Only confirm this once since we may have
-    // multiple draws for each update
-    if (mLastFrameConfirmed < mCurrentRenderFrame)
-    {
-        mTCPClient->write(mProtocol.renderIsComplete(mClientID, mCurrentRenderFrame));
-        mCurrentRenderFrame = mLastFrameConfirmed;
-    }
+    MPEClient::draw();
 }

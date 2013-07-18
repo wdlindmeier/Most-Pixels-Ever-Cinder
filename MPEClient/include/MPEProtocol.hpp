@@ -19,7 +19,11 @@
 
 /*
 
- An MPE server protocol for Shiffman's Java server, which can be found here:
+ MPEProtocol:
+ This class converts actions to/from strings that the server undertands.
+ MPEProtocol can be subclassed to use with other servers, if it's ever updated / modified.
+ 
+ The basic MPE protocol found below is for Shiffman's Java server, which can be found here:
  https://github.com/shiffman/Most-Pixels-Ever/tree/master/server_jar
 
  To start the server:
@@ -27,8 +31,8 @@
  or
  $ java -jar mpeServer.jar -framerate60 -screens2
 
- This class converts actions to/from strings that the server undertands.
- MPEProtocol can be subclassed to use with other servers, if it's ever updated / rewritten.
+ This is used by default, but subclassed protocols can also be used by passing them into 
+ the MPEClient constructor.
 
 */
 
@@ -38,11 +42,11 @@ namespace mpe
     {
 
     public:
-        
-#pragma mark - Outgoing Messages
-        
+
         const static char kMessageTerminus = '\n';
-        
+
+#pragma mark - Outgoing Messages
+
         // S == Start
         // Send the client ID once the connection has been made.
         virtual std::string setClientID( const int clientID )
@@ -63,7 +67,7 @@ namespace mpe
         {
             return "D," + std::to_string(clientID) + "," + std::to_string(frameNum+1) + kMessageTerminus;
         };
-        
+
         // I == Integers (not supported?)
         virtual boost::asio::const_buffers_1 sendInts(const std::vector<int> & integers)
         {
@@ -80,7 +84,7 @@ namespace mpe
             return boost::asio::buffer((const void *)data, bufferLength);
         }
 
-        // B == Bytes (not supported?)        
+        // B == Bytes (not supported?)
         virtual boost::asio::const_buffers_1 sendBytes(const std::vector<char> & bytes)
         {
             // TODO: Make this more efficient
@@ -97,7 +101,15 @@ namespace mpe
         }
 
 #pragma mark - Incoming Messages
-        
+
+        // The TCP client listens to the socket until it reaches the delimiter,
+        // at which point the string is parsed.
+        virtual std::string incomingMessageDelimiter()
+        {
+            const static std::string kIncomingMessageDelimiter = "\n";
+            return kIncomingMessageDelimiter;
+        }
+
         virtual void parse(const std::string & serverMessage, MPEMessageHandler *handler)
         {
             // Example server messages:
@@ -129,14 +141,12 @@ namespace mpe
             // Get any additional message that was passed along.
             if (messages.size() > 1)
             {
+                // Send all of the messages, one by one.
                 for (int i=1;i<messages.size();i++)
                 {
-                    // Send all of the messages
                     std::string dataMessage = messages[i];
-                    ci::app::console() << dataMessage << ", ";
                     handler->receivedStringMessage(dataMessage);
                 }
-                ci::app::console() << "\n";
             }
 
             if (frameCommand == "G")
@@ -162,8 +172,8 @@ namespace mpe
             }
             else
             {
-                ci::app::console() << "ALERT: Don't know what to do with server message:\n";
-                ci::app::console() << serverMessage << "\n";
+                ci::app::console() << "ALERT: Don't know what to do with server message:" << std::endl;
+                ci::app::console() << serverMessage << std::endl;
                 return;
             }
 

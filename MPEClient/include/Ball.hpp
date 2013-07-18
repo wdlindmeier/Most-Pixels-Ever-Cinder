@@ -13,7 +13,10 @@
 
 /*
 
- TODO: Describe Ball class.
+ Ball:
+ A simple ball that bounces around the screen. 
+ Ball also has some meaningless internal data that's manipulated every frame
+ so we can ensure that the Async client is thread-safe. 
 
 */
 

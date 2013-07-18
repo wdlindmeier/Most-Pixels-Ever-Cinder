@@ -11,12 +11,15 @@
 #include "cinder/Rand.h"
 #include "ClientSettings.h"
 
+// Choose the client mode. Generally Async is the way to go.
 #define USE_ASYNC   1
 
 #if USE_ASYNC
 #include "MPEAsyncClient.h"
+
 #else
 #include "MPEClient.h"
+
 #endif
 
 using namespace ci;
@@ -36,27 +39,26 @@ class MPEClientApp : public AppNative
     void        keyDown(KeyEvent event);
     void        sendMousePosition();
     void        update();
+    void        updateFrame(long serverFrameNumber);
     void        updateLocalViewportFromScreenPosition();
     void        draw();
     void        drawViewport(bool isNewFrame);
-    void        mpeFrameEvent(long serverFrameNumber);
 
     // Data Callbacks
     void        stringDataReceived(const std::string & message);
     void        integerDataReceived(const std::vector<int> & integers);
     void        bytesDataReceived(const std::vector<char> & bytes);
-    
+
     private:
 
 #if USE_ASYNC
-    // NOTE: mutex is not copyable so I can't
-    // use a standard member variable and just copy a new one
-    // in setup. So we're using a pointer.
+    // NOTE: mutex is not copyable so we must use a pointer otherwise the
+    // default constructor is called and we can't reassign this variable.
     MPEAsyncClient *mClient;
 #else
     MPEClient   *mClient;
 #endif
-    
+
     bool        mDidMoveFrame;
     long        mServerFramesProcessed;
     Rand        mRand;
@@ -73,34 +75,34 @@ void MPEClientApp::prepareSettings( Settings *settings )
 {
     // NOTE: Initially making the window small to prove that
     // the settings.xml forces a resize.
-    settings->setWindowSize( 100, 100 );    
+    settings->setWindowSize( 100, 100 );
 }
 
 void MPEClientApp::setup()
 {
+    // NOTE: SettingsFileName can be found in ClientSettings.[n].cpp
+    // TODO: What's the best cross-platform way of storing these?
     console() << "Loading settings from " << SettingsFileName << std::endl;
-    
-#if USE_ASYNC
-    
-    mClient = new MPEAsyncClient(SettingsFileName);
-    mClient->setFrameUpdateHandler(boost::bind(&MPEClientApp::mpeFrameEvent, this, _1));
-    mClient->setStringDataCallback(boost::bind(&MPEClientApp::stringDataReceived, this, _1));
-    mClient->setIntegerDataCallback(boost::bind(&MPEClientApp::integerDataReceived, this, _1));
-    mClient->setBytesDataCallback(boost::bind(&MPEClientApp::bytesDataReceived, this, _1));
 
+#if USE_ASYNC
+    mClient = new MPEAsyncClient(SettingsFileName);
 #else
-    
     mClient = new MPEClient(SettingsFileName);
-    
 #endif
     
+    mClient->setFrameUpdateHandler(boost::bind(&MPEClientApp::updateFrame, this, _1));
+    mClient->setDrawHandler(boost::bind(&MPEClientApp::drawViewport, this, _1));    
+    mClient->setStringDataCallback(boost::bind(&MPEClientApp::stringDataReceived, this, _1));
+    mClient->setIntegerDataCallback(boost::bind(&MPEClientApp::integerDataReceived, this, _1));
+    mClient->setBytesDataCallback(boost::bind(&MPEClientApp::bytesDataReceived, this, _1));    
+
     // The same as the processing sketch.
     // Does Processing Rand work the same as Cinder Rand as OF Rand?
     mRand.seed(1);
-    
+
     mDidMoveFrame = false;
     mServerFramesProcessed = 0;
-    
+
     Vec2i sizeMaster = mClient->getMasterSize();
     Vec2f posBall = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y));
     Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
@@ -187,33 +189,35 @@ void MPEClientApp::bytesDataReceived(const std::vector<char> & bytes)
 void MPEClientApp::update()
 {
     updateLocalViewportFromScreenPosition();
-    
-    int frameCount = getElapsedFrames();
 
     if (mClient->isConnected())
     {
-    // NOTE: Async client should update the app state in mpeFrameEvent,
-    // not update.
-        
 #if !USE_ASYNC
-        // It will just stall until it's ready to draw
-        bool isNewDataAvailable = mClient->shouldUpdate();
-
-        if (isNewDataAvailable)
-        {
-            mBall.calc();
-            mBall.manipulateInternalData();
-        }
-#endif        
-     
+        // MPEClient::update has no effect in async mode.
+        mClient->update();
+#endif
     }
-    else
+    else if (getElapsedFrames() % 60 == 0)
     {
-        // Attempt to reconnect every 60 frames
-        if (frameCount % 60 == 0)
-        {
-            mClient->start();
-        }
+        // Attempt to reconnect.
+        mClient->start();
+    }
+}
+
+// updateFrame is where any state/data changes should be happen (rather than update).
+// It's only called when the server has a new frame, which may be less often
+// than update() is called by the App loop.
+// This is the equivalent to frameEvent in the Processing / OF clients.
+
+void MPEClientApp::updateFrame(long serverFrameNumber)
+{
+    mBall.manipulateInternalData();
+    
+    // This loop forces the app to get up-to-speed if it disconnects and then re-connects.
+    while (mServerFramesProcessed < serverFrameNumber)
+    {
+        mBall.calc();
+        mServerFramesProcessed++;
     }
 }
 
@@ -225,14 +229,14 @@ void MPEClientApp::updateLocalViewportFromScreenPosition()
     // Moving the window simulates repositioning the screen.
     Vec2i size = getWindowSize();
     Vec2i pos = getWindowPos() - Vec2f(200, 200); // Add a margin to the master
-    
+
     if (mScreenSize != size || mScreenPos != pos)
     {
         if (mScreenSize != Vec2f::zero())
         {
             mDidMoveFrame = true;
         }
-        
+
         // The position has changed.
         // Update the renderable area.
         mClient->setVisibleRect(ci::Rectf(pos.x, pos.y, pos.x + size.x, pos.y + size.y));
@@ -242,57 +246,34 @@ void MPEClientApp::updateLocalViewportFromScreenPosition()
     }
 }
 
-#if USE_ASYNC
-
-// This is where any state/data changes should be updated
-// in Async mode (rather than in update()).
-
-void MPEClientApp::mpeFrameEvent(long serverFrameNumber)
-{
-    mBall.manipulateInternalData();
-    
-    // This while loop forces the app to get up-to-speed if it
-    // disconnects and then re-connects.
-    while(mServerFramesProcessed < serverFrameNumber)
-    {
-        mBall.calc();
-        mServerFramesProcessed++;
-    }
-}
-
-#endif
-
 #pragma mark - Drawing
 
 void MPEClientApp::draw()
-{
-    // NOTE: The MPEClient will handle the repositioning in a
-    // default way, but if you want to handle this yourself,
-    // just pass clientDraw a NULL render handler.
+{    
+    mClient->draw();
+
+    // NOTE: The MPEClient will reposition the viewport in a default way, but if you want to
+    // handle this yourself, just don't set a draw callback.
+    // However, MPEClient::draw() must always be called after you render.
     //
-    // E.g. Draw without repositioning:
-        // drawViewport(true);
-        // mClient->draw(NULL);
-    //
-    // Draw with repositioning:
-    
-    mClient->draw(boost::bind(&MPEClientApp::drawViewport, this, _1));
+    // E.g.
+    //      // APP DRAWING CODE
+    //      // ...
+    //      mClient->draw();
 }
 
 void MPEClientApp::drawViewport(bool isNewFrame)
 {
     // Just for the hell of it to see if we can crash by accessing the same data on different threads.
     mBall.manipulateInternalData();
-    
+
     gl::clear(Color(0,0,0));
-    
-    // Paint the Master drawable region red if we're in step with the server,
-    // and magenta if our draw loop is ahead of the server.
-    // The App draw/update loop will continue at the normal
-    // speed even if we're waiting for data from the server,
-    // we just don't update the state.
-    // A flickering background means the FPS is faster than the
-    // server data-rate.
+
+    // Paint the Master drawable region red if we're in step with the server, or magenta if our
+    // draw loop is ahead of the server.
+    // The App's loop will continue at the normal speed even if we're waiting for data from the
+    // server, we just don't update the state.
+    // A flickering background means the FPS is faster than the server data-rate.
     if (isNewFrame)
     {
         gl::color(Color(1, 0, 0));
@@ -301,15 +282,15 @@ void MPEClientApp::drawViewport(bool isNewFrame)
     {
         gl::color(Color(1, 0, 1));
     }
-    
+
     Vec2i masterSize = mClient->getMasterSize();
     Rectf masterFrame = Rectf(0,0,masterSize.x,masterSize.y);
     gl::drawSolidRect(masterFrame);
-    
+
     gl::color(0,0,0);
     gl::drawString("Frame Num: " + std::to_string(mClient->getCurrentRenderFrame()), Vec2f(100, 100));
     gl::drawString("FPS: " + std::to_string(getAverageFps()), Vec2f(100, 130));
-    
+
     float myX = mClient->getVisibleRect().x1;
     float myY = mClient->getVisibleRect().y1;
     if (!mDidMoveFrame)
@@ -322,7 +303,7 @@ void MPEClientApp::drawViewport(bool isNewFrame)
         gl::drawString("X: " + std::to_string((int)myX) + ", y: " + std::to_string((int)myY),
                        Vec2f(myX + 20, myY + 20));
     }
-    
+
     mBall.draw();
 }
 

@@ -1,9 +1,8 @@
 //
 //  MPEAsyncClient.h
-//  MPEClient
+//  Unknown Project
 //
-//  Created by William Lindmeier on 7/7/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #pragma once
@@ -11,37 +10,36 @@
 #include "MPEClient.h"
 #include "TCPAsyncClient.h"
 
+/*
+ 
+ MPEAsyncClient:
+ An asynchronous version of the MPEClient. Generally speaking this is the client you want to use,
+ unless the multithreaded nature poses problems for your app.
+ 
+ Since frame events happen as messages are received from the server, update() doesn't need to be 
+ called on the Async client. 
+ 
+*/
+
 namespace mpe
 {
-    
+
 class MPEAsyncClient : public MPEClient
 {
-    
+
 public:
-    
-    typedef boost::function<void(long serverFrameNumber)> FrameUpdateCallback;
-    
-    MPEAsyncClient() : MPEClient()
-    {};
-    
-    MPEAsyncClient(const std::string & settingsFilename, bool shouldResize = true) :
-    MPEClient(settingsFilename, shouldResize),
-    mLastFrameConfirmed(0)
-    {};
-    
-    ~MPEAsyncClient()
-    {};
-    
+
+    MPEAsyncClient() : MPEClient(){};
+    MPEAsyncClient(const std::string & settingsFilename, bool shouldResize = true);
+    MPEAsyncClient(const std::string & settingsFilename, MPEProtocol protocol, bool shouldResize = true);
+    ~MPEAsyncClient(){};
+
     // Connection
     void                    start();
 
     // Loop
-    void                    draw(const FrameRenderCallback & renderFrameHandler);
-    bool                    shouldUpdate();
-    void                    setFrameUpdateHandler( const FrameUpdateCallback & updateCallback)
-                            {
-                                mUpdateCallback = updateCallback;
-                            };
+    void                    draw();
+    void                    update(); // NOTE: Update has no effect in the Async client.
 
     // Recieving Messages
     void                    serverMessageReceived(const std::string & message);
@@ -49,16 +47,10 @@ public:
     void                    readIncomingIntegers();
     void                    readIncomingBytes();
 
-protected:
-    
-    void                    doneRendering();
-    
 private:
 
-    void                    tcpConnected(bool didConnect, const boost::system::error_code& error);
-    
-    long                    mLastFrameConfirmed;
-    FrameUpdateCallback     mUpdateCallback;
+    void                    tcpConnected(bool didConnect, const boost::system::error_code & error);
+
     // This lock is to protect the client data that's being updated
     // on one thread (that's communicating with the server)
     // and accessed for drawing on another thread.

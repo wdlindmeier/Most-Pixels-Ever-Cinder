@@ -24,12 +24,11 @@
 
 /*
 
- TODO: Describe TCPClient class.
+ TCPClient:
+ A synchronous socket layer that communicates between the client and the server.
+ This class is used by the MPEClient, not your App.
 
 */
-
-// TODO: Pass this in from the protocol.
-const static string kMessageTerminus = "\n";
 
 namespace mpe
 {
@@ -37,7 +36,7 @@ namespace mpe
     {
     public:
 
-        TCPClient();
+        TCPClient(const std::string & messageDelimeter);
         ~TCPClient() {};
         virtual bool                    open(const std::string & hostname, const int port);
         virtual void                    close();
@@ -50,6 +49,7 @@ namespace mpe
 
     protected:
 
+        std::string                     mMessageDelimiter;
         boost::asio::io_service         mIOService;
         boost::asio::ip::tcp::socket    mSocket;
         bool                            mIsConnected;
