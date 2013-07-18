@@ -52,7 +52,7 @@ void MyCinderApp::update()
 void MyCinderApp::updateFrame(long serverFrameNumber)
 {
     // This is where the app state should be modified. 
-    // This is called whenever we get a message from the server,
+    // The FrameUpdateCallback is called whenever we get a message from the server,
     // which may be less frequent than update() or draw() is called.
     
     mBall.update();
@@ -65,12 +65,19 @@ void MyCinderApp::draw()
 
 void MyCinderApp::drawViewport(bool isNewFrame)
 {
+    // The viewport is automatically translated by the client so each
+    // machine is only drawing a segment of the scene.
     gl::clear(Color(0,0,0));
     mBall.draw();
 }
 
 void MyCinderApp::stringDataReceived(const std::string & message)
 {
+    // Any app can send data to the other clients. E.g.:
+    //
+    // mClient->sendStringData("mouse_pos: 100,200");
+    // 
+    
     ci::app::console() << "Received broadcast data: " << message << std::endl;
 }
 ```
