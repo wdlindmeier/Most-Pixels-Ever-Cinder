@@ -1,0 +1,7 @@
+# Xcode
+build/*
+xcuserdata/
+
+# OS X 
+.DS_Store
+profile

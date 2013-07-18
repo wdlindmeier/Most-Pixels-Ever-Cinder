@@ -1,5 +1,22 @@
 #!/usr/bin/env python
 
+#
+#  simple_server.py
+#  A simple Most-Pixels-Ever compatable server.
+#  Used for testing purposes. This may not have 100%
+#  feature parody with the Java server.
+#
+#  Created by William Lindmeier.
+#  https://github.com/wdlindmeier/Most-Pixels-Ever-Cinder
+#
+
+'''
+Usage:
+
+python ./simple_server.py [num_clients]
+
+'''
+
 from twisted.internet.protocol import Factory, Protocol
 from twisted.internet import reactor
 from math import *
@@ -31,11 +48,12 @@ class MPEServer(Protocol):
 
     def dataReceived(self, data):
         global num_clients_drawn
+        global num_clients
         cmd = data[:1]
         payload = data[1:]
         if cmd == CMD_DID_DRAW:
             num_clients_drawn += 1
-            if num_clients_drawn >= len(self.factory.clients):
+            if num_clients_drawn >= num_clients:
                 # all of the frames are drawn, send out the next frames
                 self.sendNextFrame();
 
@@ -74,15 +92,15 @@ class MPEServer(Protocol):
     def sendMessage(self, message):
         self.transport.write(message + "\n")
 
-    # TODO: Don't send a message back to the sender
     def broadcastMessage(self, message):
+        print "Broadcasting message: " + message
         for c in self.factory.clients:
             c.sendMessage(message)
 
 factory = Factory()
 factory.protocol = MPEServer
 factory.clients = []
-portnum = 7777
+portnum = 9002
 reactor.listenTCP(portnum, factory)
 print "MPE Server started on port %i" % portnum
 reactor.run()
