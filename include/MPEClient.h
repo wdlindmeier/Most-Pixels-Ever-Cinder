@@ -8,6 +8,7 @@
 #pragma once
 
 #include <boost/asio.hpp>
+
 #include "cinder/Rect.h"
 #include "MPEMessageHandler.hpp"
 #include "MPEProtocol.hpp"
@@ -17,39 +18,39 @@
 
  MPEClient:
  This class is the interface through which your App communicates with an MPE server.
- 
- Create a pointer to an instance of MPEClient in your Cinder app by passing in the
- settings file. See settings.0.xml for an example.
- 
- The client keeps track of the current frame that should be rendered (see 
+
+ Create an instance of MPEClient in your Cinder app by passing in the path to a settings file.
+ Each client will need it's own settings file. A template can be found at assets/settings.xml.
+
+ The client keeps track of the current frame that should be rendered (see
  MPEMessageHandler::getCurrentRenderFrame) and informs the server when it's complete. Once
  all of the clients have rendered the frame the server will send out the next frame number.
- 
+
  MPEClient uses callbacks for updating, drawing, and sending data to your App.
- 
+
     • FrameUpdateCallback: This is the update callback, called whenever the server sends a new frame.
         App state changes should only happen in this callback, rather than in App::update() so that
         all of the clients stay in sync. This must be set.
- 
+
     • FrameRenderCallback: This is the draw callback. The client will position the viewport before
         calling the callback and tells the server that the frame has been rendered after the callback.
- 
+
     • StringDataCallback: This will be called when string data is received from any of the connected
         clients (including yourself).
- 
-    • IntegerDataCallback & BytesDataCallback: Similar to the above. These formats are not yet 
+
+    • IntegerDataCallback & BytesDataCallback: Similar to the above. These formats are not yet
         supported.
-  
+
 */
 
 namespace mpe
 {
     typedef boost::function<void(bool isNewFrame)> FrameRenderCallback;
     typedef boost::function<void(long serverFrameNumber)> FrameUpdateCallback;
-    typedef boost::function<void( const std::string & message )> StringDataCallback;
-    typedef boost::function<void( const std::vector<int> & integers )> IntegerDataCallback;
-    typedef boost::function<void( const std::vector<char> & bytes )> BytesDataCallback;
-    
+    typedef boost::function<void(const std::string & message)> StringDataCallback;
+    typedef boost::function<void(const std::vector<int> & integers)> IntegerDataCallback;
+    typedef boost::function<void(const std::vector<char> & bytes)> BytesDataCallback;
+
     class MPEClient : public MPEMessageHandler
     {
 
@@ -65,14 +66,14 @@ namespace mpe
         ci::Rectf           getVisibleRect();
         void                setVisibleRect(const ci::Rectf & rect);
         ci::Vec2i           getMasterSize();
-        
+
         // Callbacks
-        void                setFrameUpdateCallback( const FrameUpdateCallback & callback);
-        void                setDrawCallback( const FrameRenderCallback & callback);
+        void                setFrameUpdateCallback(const FrameUpdateCallback & callback);
+        void                setDrawCallback(const FrameRenderCallback & callback);
         void                setStringDataCallback(const StringDataCallback & callback);
         void                setIntegerDataCallback(const IntegerDataCallback & callback);
         void                setBytesDataCallback(const BytesDataCallback & callback);
-        
+
         // 3D Rendering
         bool                getIsRendering3D();
         void                setIsRendering3D(bool is3D);
@@ -102,7 +103,7 @@ namespace mpe
         virtual void        receivedStringMessage(const std::string & dataMessage);
         virtual void        readIncomingIntegers();
         virtual void        readIncomingBytes();
-        
+
     protected:
 
         void                setCurrentRenderFrame(long frameNum);
@@ -124,7 +125,7 @@ namespace mpe
 
         bool                mIsRendering3D;
         long                mLastFrameConfirmed;
-        
+
         // 3D Positioning
         float               mFieldOfView;
         float               mCameraZ;

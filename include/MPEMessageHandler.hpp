@@ -15,46 +15,49 @@
 
 */
 
-class MPEMessageHandler
+namespace mpe
 {
-
-public:
-
-    MPEMessageHandler() : mCurrentRenderFrame(0), mFrameIsReady(false){};
-
-    // The frame that every client should be rendering.
-    // This is set by the protocol and should never by called by your App.
-    virtual void setCurrentRenderFrame(long frameNum)
+    class MPEMessageHandler
     {
-        mCurrentRenderFrame = frameNum;
+
+    public:
+
+        MPEMessageHandler() : mCurrentRenderFrame(0), mFrameIsReady(false){};
+
+        // The frame that every client should be rendering.
+        // This is set by the protocol and should never by called by your App.
+        virtual void setCurrentRenderFrame(long frameNum)
+        {
+            mCurrentRenderFrame = frameNum;
+        };
+
+        long getCurrentRenderFrame()
+        {
+            return mCurrentRenderFrame;
+        };
+
+        // mFrameIsReady is set to true once the incoming server message is ready.
+        void setFrameIsReady(bool isFrameReady)
+        {
+            mFrameIsReady = isFrameReady;
+        };
+
+        // Overload these functions in the subclass to receive data.
+
+        // This will be a broadcast.
+        virtual void receivedStringMessage(const std::string & dataMessage)
+        {};
+        // Integers are waiting in the connection.
+        virtual void readIncomingIntegers()
+        {};
+        // Bytes are waiting in the connection.
+        virtual void readIncomingBytes()
+        {};
+
+    protected:
+
+        long                mCurrentRenderFrame;
+        bool                mFrameIsReady;
+
     };
-
-    long getCurrentRenderFrame()
-    {
-        return mCurrentRenderFrame;
-    };
-
-    // mFrameIsReady is set to true once the incoming server message is ready.
-    void setFrameIsReady(bool isFrameReady)
-    {
-        mFrameIsReady = isFrameReady;
-    };
-
-    // Overload these functions in the subclass to receive data.
-
-    // This will be a broadcast.
-    virtual void receivedStringMessage(const std::string & dataMessage)
-    {};
-    // Integers are waiting in the connection.
-    virtual void readIncomingIntegers()
-    {};
-    // Bytes are waiting in the connection.
-    virtual void readIncomingBytes()
-    {};
-
-protected:
-
-    long                mCurrentRenderFrame;
-    bool                mFrameIsReady;
-
-};
+}

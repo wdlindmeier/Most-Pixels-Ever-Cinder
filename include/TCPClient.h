@@ -34,6 +34,7 @@ namespace mpe
 {
     class TCPClient
     {
+
     public:
 
         TCPClient(const std::string & messageDelimeter);

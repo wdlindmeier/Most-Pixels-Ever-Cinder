@@ -22,7 +22,7 @@
  MPEProtocol:
  This class converts actions to/from strings that the server undertands.
  MPEProtocol can be subclassed to use with other servers, if it's ever updated / modified.
- 
+
  The basic MPE protocol found below is for Shiffman's Java server, which can be found here:
  https://github.com/shiffman/Most-Pixels-Ever/tree/master/server_jar
 
@@ -31,7 +31,7 @@
  or
  $ java -jar mpeServer.jar -framerate60 -screens2
 
- This is used by default, but subclassed protocols can also be used by passing them into 
+ This is used by default, but subclassed protocols can also be used by passing them into
  the MPEClient constructor.
 
 */
@@ -49,14 +49,14 @@ namespace mpe
 
         // S == Start
         // Send the client ID once the connection has been made.
-        virtual std::string setClientID( const int clientID )
+        virtual std::string setClientID(const int clientID)
         {
             return "S" + std::to_string(clientID) + kMessageTerminus;
         };
 
         // T == daTa
         // Send an arbitrary string to every connected client.
-        virtual std::string broadcast( const std::string & msg )
+        virtual std::string broadcast(const std::string & msg)
         {
             return "T" + msg + kMessageTerminus;
         };
