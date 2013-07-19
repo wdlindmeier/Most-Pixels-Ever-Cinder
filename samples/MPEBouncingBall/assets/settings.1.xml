@@ -17,6 +17,5 @@
 		<height>400</height>
 	</master_dimensions>
 	<go_fullscreen>false</go_fullscreen>
-	<offset_window>false</offset_window>
 	<debug>1</debug>
 </settings>

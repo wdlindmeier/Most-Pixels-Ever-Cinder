@@ -286,11 +286,13 @@ void MPEBouncingBallApp::keyDown(KeyEvent event)
         {
             std::vector<int> ints = {1,2,3,4,5};
             mClient->sendIntegerData(ints);
+            return;
         }
         else if (event.getChar() == 'b')
         {
             std::vector<char> bytes = {'a','b','c','d','e'};
             mClient->sendBytesData(bytes);
+            return;
         }
     }
 }

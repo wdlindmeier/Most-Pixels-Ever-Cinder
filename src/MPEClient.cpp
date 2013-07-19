@@ -417,4 +417,19 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     {
         console() << "ERROR: Could not find master dimensions settings" << std::endl;
     }
+
+    try
+    {
+        XmlTree fullscreenNode = settingsDoc.getChild("settings/go_fullscreen");
+        string boolStr = fullscreenNode.getValue<string>();
+        std::transform(boolStr.begin(), boolStr.end(), boolStr.begin(), ::tolower);
+        if (boolStr == "true" && shouldResize)
+        {
+            ci::app::setFullScreen(true);
+        }
+    }
+    catch (XmlTree::ExcChildNotFound e)
+    {
+        console() << "ERROR: Could not find master dimensions settings" << std::endl;
+    }
 }
