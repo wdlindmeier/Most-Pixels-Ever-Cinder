@@ -49,7 +49,7 @@ public:
 
 private:
 
-    void                    tcpConnected(bool didConnect, const boost::system::error_code & error);
+    void                    tcpDidConnect(bool didConnect, const boost::system::error_code & error);
 
     // This lock is to protect the client data that's being updated
     // on one thread (that's communicating with the server)

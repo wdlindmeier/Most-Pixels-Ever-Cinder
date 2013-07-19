@@ -55,40 +55,44 @@ namespace mpe
 
     public:
 
+        // Constructors
         MPEClient(){};
         MPEClient(const std::string & settingsFilename, bool shouldResize = true);
         MPEClient(const std::string & settingsFilename, MPEProtocol protocol, bool shouldResize = true);
         ~MPEClient(){};
 
-        // Accessors
+        // Screen Dimensions
         ci::Rectf           getVisibleRect();
         void                setVisibleRect(const ci::Rectf & rect);
         ci::Vec2i           getMasterSize();
-        bool                getIsRendering3D();
-        void                setIsRendering3D(bool is3D);
         
-        // Callback Accessors
+        // Callbacks
         void                setFrameUpdateCallback( const FrameUpdateCallback & callback);
         void                setDrawCallback( const FrameRenderCallback & callback);
         void                setStringDataCallback(const StringDataCallback & callback);
         void                setIntegerDataCallback(const IntegerDataCallback & callback);
         void                setBytesDataCallback(const BytesDataCallback & callback);
         
-        // Handle Connection
+        // 3D Rendering
+        bool                getIsRendering3D();
+        void                setIsRendering3D(bool is3D);
+        void                set3DFieldOfView(float fov);
+        float               get3DFieldOfView();
+        void                restore3DCamera();
+
+        // Connection
         void                start();
         void                stop();
-        bool                isConnected(){ return mTCPClient && mTCPClient->isConnected(); };
+        bool                isConnected();
 
         // Loop
         virtual void        update();
         virtual void        draw();
 
-        // Sending Messages To Server
-        void                sendClientID();
-        // Send Data functions are called by the App and the values are received by every client.
-        // The sending App will receive its own data, and should act on that data
-        // only once it's received (always as if it came from another client) so the
-        // apps are in sync.
+        // Sending Data
+        // Data sent to the server is broadcast to every client.
+        // The sending App will receive its own data, and should act on it
+        // then (rather than before it's sent) so all of the clients are in sync.
         void                sendStringData(const std::string & message); // née broadcast
         void                sendIntegerData(const std::vector<int> & integers);
         void                sendBytesData(const std::vector<char> & bytes);
@@ -98,17 +102,15 @@ namespace mpe
         virtual void        receivedStringMessage(const std::string & dataMessage);
         virtual void        readIncomingIntegers();
         virtual void        readIncomingBytes();
-
+        
     protected:
 
-        // Overloading MPEMessageHandler for internal purposes.
-        void                setCurrentRenderFrame(long frameNum);        
-
+        void                setCurrentRenderFrame(long frameNum);
         void                doneRendering();
-
         void                positionViewport();
         void                positionViewport3D();
         void                positionViewport2D();
+        void                sendClientID();
 
         // A protocol to convert a given command into a transport string.
         MPEProtocol         mProtocol;
@@ -122,6 +124,10 @@ namespace mpe
 
         bool                mIsRendering3D;
         long                mLastFrameConfirmed;
+        
+        // 3D Positioning
+        float               mFieldOfView;
+        float               mCameraZ;
 
         // Settings loaded from settings.xml
         int                 mPort;
@@ -137,7 +143,7 @@ namespace mpe
 
     private:
 
-        void                tcpConnected();
+        void                tcpDidConnect();
         void                loadSettings(std::string settingsFilename, bool shouldResize);
 
     };

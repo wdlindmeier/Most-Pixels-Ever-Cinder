@@ -2,7 +2,7 @@
 <cinder>
   <block
   	name="Most Pixels Ever"
-  	id="org.wdlindmeier.mpe"
+  	id="com.wdlindmeier.mpe"
   	author="William Lindmeier"
     git="git://github.com/wdlindmeier/Most-Pixels-Ever-Cinder.git"
   	summary="Most Pixels Ever client for Cinder. MPE synchronizes the rendering of an application across multiple screens."

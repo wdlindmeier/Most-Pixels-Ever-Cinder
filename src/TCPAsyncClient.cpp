@@ -46,7 +46,7 @@ void TCPAsyncClient::handleConnect(const boost::system::error_code & error)
     {
         mIsConnected = true;
         boost::asio::async_read_until(mSocket, mBuffer, mMessageDelimiter,
-                                      boost::bind(&TCPAsyncClient::Callbackead, this,
+                                      boost::bind(&TCPAsyncClient::handleRead, this,
                                                   boost::asio::placeholders::error));
     }
     else
@@ -74,7 +74,12 @@ void TCPAsyncClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
 #endif
 }
 
-void TCPAsyncClient::Callbackead(const boost::system::error_code & error)
+void TCPAsyncClient::setIncomingMessageCallback(ServerMessageCallback callback)
+{
+    mReadCallback = callback;
+};
+
+void TCPAsyncClient::handleRead(const boost::system::error_code & error)
 {
     // console() << "handle read\n";
     if (!error)
@@ -87,7 +92,7 @@ void TCPAsyncClient::Callbackead(const boost::system::error_code & error)
             mReadCallback(message);
         }
         boost::asio::async_read_until(mSocket, mBuffer, mMessageDelimiter,
-                                      boost::bind(&TCPAsyncClient::Callbackead, this,
+                                      boost::bind(&TCPAsyncClient::handleRead, this,
                                                   boost::asio::placeholders::error));
     }
     else

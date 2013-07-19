@@ -36,10 +36,10 @@ void MPEAsyncClient::start()
 
     TCPAsyncClient *client = static_cast<TCPAsyncClient *>(mTCPClient);
     client->setIncomingMessageCallback(boost::bind(&MPEAsyncClient::serverMessageReceived, this, _1));
-    client->open(mHostname, mPort, boost::bind(&MPEAsyncClient::tcpConnected, this, _1, _2));
+    client->open(mHostname, mPort, boost::bind(&MPEAsyncClient::tcpDidConnect, this, _1, _2));
 }
 
-void MPEAsyncClient::tcpConnected(bool didConnect, const boost::system::error_code & error)
+void MPEAsyncClient::tcpDidConnect(bool didConnect, const boost::system::error_code & error)
 {
     if (didConnect)
     {

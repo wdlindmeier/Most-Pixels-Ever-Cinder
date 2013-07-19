@@ -110,7 +110,7 @@ void MPEClient::start()
     // Open the client
     if (mTCPClient->open(mHostname, mPort))
     {
-        tcpConnected();
+        tcpDidConnect();
     }
     else
     {
@@ -118,7 +118,8 @@ void MPEClient::start()
     }
 }
 
-void MPEClient::tcpConnected()
+// TCP Connection Callback
+void MPEClient::tcpDidConnect()
 {
     if (mIsDebug)
     {
@@ -137,6 +138,11 @@ void MPEClient::stop()
         delete mTCPClient;
         mTCPClient = NULL;
     }
+}
+
+bool  MPEClient::isConnected()
+{
+    return mTCPClient && mTCPClient->isConnected();
 }
 
 #pragma mark - Update
@@ -206,12 +212,18 @@ void MPEClient::positionViewport()
     }
 }
 
+// 2D Positioning
+
 void MPEClient::positionViewport2D()
 {
     glTranslatef(mLocalViewportRect.getX1() * -1,
                  mLocalViewportRect.getY1() * -1,
                  0);
 }
+
+// 3D Positioning
+// Ported from ofxMostPixelsEver:
+const static float k3DMod = 0.1f; // What is this?
 
 void MPEClient::positionViewport3D()
 {
@@ -222,26 +234,43 @@ void MPEClient::positionViewport3D()
     float xOffset = mLocalViewportRect.getX1();
     float yOffset = mLocalViewportRect.getY1();
 
-    // TMP
-    // TODO: Make this real.
-    // Checkout restoreCamera & setFieldOfView
-    float cameraZ = 0;
-
-    gluLookAt(mWidth/2.f, mHeight/2.f, cameraZ,
+    gluLookAt(mWidth/2.f, mHeight/2.f, mCameraZ,
               mWidth/2.f, mHeight/2.f, 0,
               0, 1, 0);
 
-    // The frustum defines the 3D clipping plane for each Client window!
-    float mod = .1f;
-    float left   = (xOffset - mWidth/2)*mod;
-    float right  = (xOffset + lWidth - mWidth/2)*mod;
-    float top    = (yOffset - mHeight/2)*mod;
-    float bottom = (yOffset + lHeight-mHeight/2)*mod;
-    float near   = cameraZ*mod;
-    float far    = 10000;
+    // Client frustum
+    float left   = (xOffset - mWidth/2)*k3DMod;
+    float right  = (xOffset + lWidth - mWidth/2)*k3DMod;
+    float top    = (yOffset - mHeight/2)*k3DMod;
+    float bottom = (yOffset + lHeight-mHeight/2)*k3DMod;
+    float near   = mCameraZ*k3DMod;
+    float far    = 10000.0f;
     glFrustum(left, right,
               top, bottom,
               near, far);
+}
+
+void MPEClient::set3DFieldOfView(float fov)
+{
+    mFieldOfView = fov;
+    mCameraZ = (mLocalViewportRect.getHeight() / 2.f) / tanf(M_PI * mFieldOfView/360.f);
+}
+
+float MPEClient::get3DFieldOfView()
+{
+    return mFieldOfView;
+}
+
+void MPEClient::restore3DCamera()
+{
+    Vec2f viewSize = mLocalViewportRect.getSize();
+    gluLookAt(viewSize.x/2.f, viewSize.y/2.f, mCameraZ,
+              viewSize.x/2.f, viewSize.y/2.f, 0,
+              0, 1, 0);
+    
+    glFrustum(-(viewSize.x/2.f)*k3DMod, (viewSize.y/2.f)*k3DMod,
+              -(viewSize.x/2.f)*k3DMod, (viewSize.y/2.f)*k3DMod,
+              mCameraZ*k3DMod, 10000.0f);
 }
 
 #pragma mark - Sending Messages

@@ -29,7 +29,7 @@ using namespace mpe;
  Dragging the app windows around the screen will update their positions relative
  to the master dimensions to simulate physical screens.
  
- */
+*/
 
 class MPEBouncingBallApp : public AppNative
 {
