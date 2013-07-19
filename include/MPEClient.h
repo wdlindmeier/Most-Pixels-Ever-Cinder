@@ -91,8 +91,8 @@ namespace mpe
 
         // Sending Data
         // Data sent to the server is broadcast to every client.
-        // The sending App will receive its own data, and should act on it
-        // then (rather than before it's sent) so all of the clients are in sync.
+        // The sending App will receive its own data and should act on it when it's received,
+        // rather than before it's sent, so all of the clients are in sync.
         void                sendStringData(const std::string & message); // née broadcast
         void                sendIntegerData(const std::vector<int> & integers);
         void                sendBytesData(const std::vector<char> & bytes);

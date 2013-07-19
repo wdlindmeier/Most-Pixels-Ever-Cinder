@@ -3,6 +3,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
 #include "ClientSettings.h"
+#include <boost/foreach.hpp>
 
 // Choose the client mode. Generally Async is the way to go.
 #define USE_ASYNC   1
@@ -16,6 +17,7 @@
 using namespace ci;
 using namespace ci::app;
 using std::string;
+using std::vector;
 using namespace mpe;
 
 /*
@@ -29,6 +31,8 @@ using namespace mpe;
  Dragging the app windows around the screen will update their positions relative
  to the master dimensions to simulate physical screens.
  
+ Clicking the mouse adds balls to the scene.
+ 
 */
 
 class MPEBouncingBallApp : public AppNative
@@ -36,9 +40,12 @@ class MPEBouncingBallApp : public AppNative
 public:
     
     // Setup
-    void        prepareSettings( Settings *settings );
+    void        prepareSettings(Settings *settings);
     void        setup();
     void        shutdown();
+    
+    // Balls
+    void        addBallAtPosition(const Vec2f & posBall);
     
     // Update
     void        update();
@@ -51,9 +58,7 @@ public:
     
     // Input Events
     void        mouseDown(MouseEvent event);
-    void        mouseDrag(MouseEvent event);
     void        keyDown(KeyEvent event);
-    void        sendMousePosition();
     
     // Data Callbacks
     void        stringDataReceived(const std::string & message);
@@ -65,26 +70,26 @@ private:
 #if USE_ASYNC
     // NOTE: mutex is not copyable so we must use a pointer otherwise the
     // default constructor is called and we can't reassign this variable.
-    MPEAsyncClient *mClient;
+    MPEAsyncClient  *mClient;
 #else
-    MPEClient   *mClient;
+    MPEClient       *mClient;
 #endif
     
-    bool        mDidMoveFrame;
-    long        mServerFramesProcessed;
-    Rand        mRand;
-    Ball        mBall;
+    bool            mDidMoveFrame;
+    long            mServerFramesProcessed;
+    Rand            mRand;
+    vector<Ball>    mBalls;
     
     // For demonstration purposes:
     // Drag the window around the screen to change the
     // position of the client.
-    Vec2i       mScreenSize;
-    Vec2i       mScreenPos;
+    Vec2i           mScreenSize;
+    Vec2i           mScreenPos;
 };
 
 #pragma mark - Setup
 
-void MPEBouncingBallApp::prepareSettings( Settings *settings )
+void MPEBouncingBallApp::prepareSettings(Settings *settings)
 {
     // NOTE: Initially making the window small to prove that
     // the settings.xml forces a resize.
@@ -103,6 +108,10 @@ void MPEBouncingBallApp::setup()
     mClient = new MPEClient(SettingsFileName);
 #endif
     
+    // Set the client callbacks.
+    // FrameUpdateCallback is required.
+    // DrawCallback is kind of required (see draw()).
+    // The rest are optional.
     mClient->setFrameUpdateCallback(boost::bind(&MPEBouncingBallApp::updateFrame, this, _1));
     mClient->setDrawCallback(boost::bind(&MPEBouncingBallApp::drawViewport, this, _1));
     mClient->setStringDataCallback(boost::bind(&MPEBouncingBallApp::stringDataReceived, this, _1));
@@ -117,11 +126,7 @@ void MPEBouncingBallApp::setup()
     mServerFramesProcessed = 0;
     
     Vec2i sizeMaster = mClient->getMasterSize();
-    Vec2f posBall = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y));
-    Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
-    
-    console() << "Creating ball with master size: " << sizeMaster << std::endl;
-    mBall = Ball(posBall, velBall, sizeMaster);
+    addBallAtPosition(Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y)));
     
     mClient->start();
 }
@@ -130,6 +135,15 @@ void MPEBouncingBallApp::shutdown()
 {
     delete mClient;
     mClient = NULL;
+}
+
+#pragma mark - Balls
+
+void MPEBouncingBallApp::addBallAtPosition(const Vec2f & posBall)
+{
+    Vec2i sizeMaster = mClient->getMasterSize();
+    Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
+    mBalls.push_back(Ball(posBall, velBall, sizeMaster));
 }
 
 #pragma mark - Update
@@ -159,12 +173,15 @@ void MPEBouncingBallApp::update()
 
 void MPEBouncingBallApp::updateFrame(long serverFrameNumber)
 {
-    mBall.manipulateInternalData();
+    mBalls[0].manipulateInternalData();
     
     // This loop forces the app to get up-to-speed if it disconnects and then re-connects.
     while (mServerFramesProcessed < serverFrameNumber)
     {
-        mBall.calc();
+        BOOST_FOREACH(Ball & ball, mBalls)
+        {
+            ball.calc();
+        }
         mServerFramesProcessed++;
     }
 }
@@ -201,7 +218,7 @@ void MPEBouncingBallApp::draw()
     mClient->draw();
     
     // The MPEClient will reposition the viewport in a default way, but if you want to
-    // handle this yourself, just don't set a draw callback.
+    // handle this yourself don't set a draw callback.
     // However, MPEClient::draw() must always be called after you render.
     //
     // E.g.
@@ -213,7 +230,7 @@ void MPEBouncingBallApp::draw()
 void MPEBouncingBallApp::drawViewport(bool isNewFrame)
 {
     // Just for the hell of it to see if we can crash by accessing the same data on different threads.
-    mBall.manipulateInternalData();
+    mBalls[0].manipulateInternalData();
     
     gl::clear(Color(0,0,0));
     
@@ -252,27 +269,27 @@ void MPEBouncingBallApp::drawViewport(bool isNewFrame)
                        Vec2f(myX + 20, myY + 20));
     }
     
-    mBall.draw();
+    BOOST_FOREACH(Ball & ball, mBalls)
+    {
+        ball.draw();
+    }
 }
 
 #pragma mark - Input Events
 
+// We've only got 1 command so this isn't really necessary, but it
+// illustrates how the messages can be formatted.
+const static string kCommandNewBall = "BALL++";
+
 void MPEBouncingBallApp::mouseDown(MouseEvent event)
 {
-    sendMousePosition();
-}
-
-void MPEBouncingBallApp::mouseDrag(MouseEvent event)
-{
-    sendMousePosition();
-}
-
-void MPEBouncingBallApp::sendMousePosition()
-{
+    // Adding a new ball to the scene by sending out a message.
     if (mClient->isConnected())
     {
-        Vec2i pos = getMousePos();
-        mClient->sendStringData(std::to_string(pos.x) + "," + std::to_string(pos.y));
+        Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
+        mClient->sendStringData(kCommandNewBall + "," +
+                                std::to_string(pos.x) + "," +
+                                std::to_string(pos.y));
     }
 }
 
@@ -301,6 +318,12 @@ void MPEBouncingBallApp::keyDown(KeyEvent event)
 
 void MPEBouncingBallApp::stringDataReceived(const std::string & message)
 {
+    // Check if it's a "new ball" command
+    vector<string> tokens = split(message, ",");
+    if (tokens.size() > 0 && tokens[0] == kCommandNewBall)
+    {
+        addBallAtPosition(Vec2f(stoi(tokens[1]),stoi(tokens[2])));
+    }
     console() << "stringDataReceived: " << message << std::endl;
 }
 
