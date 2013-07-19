@@ -28,6 +28,8 @@ class MyCinderApp : public AppNative
 void MyCinderApp::setup()
 {
     // Create the client with your settings file.
+    // A sample settings.xml can be found in the assets folder.
+    // Each client needs a unique settings file.        
     mClient = new MPEAsyncClient("settings.xml");
     
     // Set the event handlers.

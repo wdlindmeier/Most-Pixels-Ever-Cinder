@@ -322,7 +322,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     assert(boost::filesystem::exists(getAssetPath(settingsFilename)));
     
     XmlTree settingsDoc(loadAsset(settingsFilename));
-
+    
     try
     {
         XmlTree debugNode = settingsDoc.getChild( "settings/debug" );
@@ -330,6 +330,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
     }
     catch (XmlTree::ExcChildNotFound e)
     {
+        // Ignore
     }
 
     try
