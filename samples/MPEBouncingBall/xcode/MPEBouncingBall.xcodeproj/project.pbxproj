@@ -1,0 +1,537 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		00A07804D24F487693114872 /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF68419D07B8428680CC8B7D /* TCPAsyncClient.cpp */; };
+		00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		0C740D23CB6D439F9A2C0C73 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FBF715A0297473B90284A79 /* TCPClient.cpp */; };
+		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		844B6B3A5EE84A928C3D583A /* MPEBouncingBallApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 470883335B0049F0BF0CC756 /* MPEBouncingBallApp.cpp */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A9AA2B781798D85800BFA0BC /* ClientSettings.0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AA2B761798D85800BFA0BC /* ClientSettings.0.cpp */; };
+		A9AA2B7F1798D91100BFA0BC /* settings.0.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7C1798D91100BFA0BC /* settings.0.xml */; };
+		A9AA2B841798D99900BFA0BC /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9CD06D563A884CBDB7DB9358 /* CinderApp.icns */; };
+		A9AA2B861798D99900BFA0BC /* settings.1.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7D1798D91100BFA0BC /* settings.1.xml */; };
+		A9AA2B881798D99900BFA0BC /* MPEBouncingBallApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 470883335B0049F0BF0CC756 /* MPEBouncingBallApp.cpp */; };
+		A9AA2B891798D99900BFA0BC /* MPEAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4510E1F256B94E5A9BAD317D /* MPEAsyncClient.cpp */; };
+		A9AA2B8A1798D99900BFA0BC /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E78E7556978B4B0F810B0C28 /* MPEClient.cpp */; };
+		A9AA2B8B1798D99900BFA0BC /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF68419D07B8428680CC8B7D /* TCPAsyncClient.cpp */; };
+		A9AA2B8C1798D99900BFA0BC /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FBF715A0297473B90284A79 /* TCPClient.cpp */; };
+		A9AA2B8E1798D99900BFA0BC /* ClientSettings.1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AA2B771798D85800BFA0BC /* ClientSettings.1.cpp */; };
+		A9AA2B901798D99900BFA0BC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A9AA2B911798D99900BFA0BC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		A9AA2B921798D99900BFA0BC /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		A9AA2B931798D99900BFA0BC /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		A9AA2B941798D99900BFA0BC /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		A9AA2B951798D99900BFA0BC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		A9AA2B961798D99900BFA0BC /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		A9AA2B971798D99900BFA0BC /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		D0C4161BB29546F68D292079 /* MPEAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4510E1F256B94E5A9BAD317D /* MPEAsyncClient.cpp */; };
+		F57E074386E94CBE904B9316 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E78E7556978B4B0F810B0C28 /* MPEClient.cpp */; };
+		FA258AF4AC364A1CB8100D47 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9CD06D563A884CBDB7DB9358 /* CinderApp.icns */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0091D8F80E81B9330029341E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		00B784AF0FF439BC000DE1D7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		00B784B10FF439BC000DE1D7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		14FBE05113AF4BB69ABBBC74 /* TCPAsyncClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCPAsyncClient.h; path = ../../../include/TCPAsyncClient.h; sourceTree = "<group>"; };
+		1F3E2B5E514B45AA89865ADA /* MPEMessageHandler.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEMessageHandler.hpp; path = ../../../include/MPEMessageHandler.hpp; sourceTree = "<group>"; };
+		1FBF715A0297473B90284A79 /* TCPClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPClient.cpp; path = ../../../src/TCPClient.cpp; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4510E1F256B94E5A9BAD317D /* MPEAsyncClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEAsyncClient.cpp; path = ../../../src/MPEAsyncClient.cpp; sourceTree = "<group>"; };
+		470883335B0049F0BF0CC756 /* MPEBouncingBallApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEBouncingBallApp.cpp; path = ../src/MPEBouncingBallApp.cpp; sourceTree = "<group>"; };
+		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
+		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		5A0D568FDAAD4956A5A72BC9 /* MPEClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../../../include/MPEClient.h; sourceTree = "<group>"; };
+		6C297BAF6CCA4B1BB6501601 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* MPEBouncingBall0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBall0.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9151C00500944E978DBB625E /* MPEBouncingBall_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = MPEBouncingBall_Prefix.pch; sourceTree = "<group>"; };
+		97573C8172E649FDA6593D1D /* MPEAsyncClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPEAsyncClient.h; path = ../../../include/MPEAsyncClient.h; sourceTree = "<group>"; };
+		981E8C066B12471FAB25A61B /* TCPClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../../../include/TCPClient.h; sourceTree = "<group>"; };
+		9B432AB0781A4057831DA79A /* MPEProtocol.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol.hpp; path = ../../../include/MPEProtocol.hpp; sourceTree = "<group>"; };
+		9CD06D563A884CBDB7DB9358 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		A9AA2B751798D85000BFA0BC /* ClientSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClientSettings.h; path = ../include/ClientSettings.h; sourceTree = "<group>"; };
+		A9AA2B761798D85800BFA0BC /* ClientSettings.0.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClientSettings.0.cpp; path = ../src/ClientSettings.0.cpp; sourceTree = "<group>"; };
+		A9AA2B771798D85800BFA0BC /* ClientSettings.1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClientSettings.1.cpp; path = ../src/ClientSettings.1.cpp; sourceTree = "<group>"; };
+		A9AA2B7A1798D86300BFA0BC /* Ball.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ball.hpp; path = ../include/Ball.hpp; sourceTree = "<group>"; };
+		A9AA2B7C1798D91100BFA0BC /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
+		A9AA2B7D1798D91100BFA0BC /* settings.1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.1.xml; sourceTree = "<group>"; };
+		A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBall1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF68419D07B8428680CC8B7D /* TCPAsyncClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPAsyncClient.cpp; path = ../../../src/TCPAsyncClient.cpp; sourceTree = "<group>"; };
+		D553A7FF89D04D6CA6EF3D37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E78E7556978B4B0F810B0C28 /* MPEClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClient.cpp; path = ../../../src/MPEClient.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
+				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
+				5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */,
+				00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */,
+				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
+				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
+				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9AA2B8F1798D99900BFA0BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9AA2B901798D99900BFA0BC /* Cocoa.framework in Frameworks */,
+				A9AA2B911798D99900BFA0BC /* OpenGL.framework in Frameworks */,
+				A9AA2B921798D99900BFA0BC /* CoreVideo.framework in Frameworks */,
+				A9AA2B931798D99900BFA0BC /* QTKit.framework in Frameworks */,
+				A9AA2B941798D99900BFA0BC /* Accelerate.framework in Frameworks */,
+				A9AA2B951798D99900BFA0BC /* AudioToolbox.framework in Frameworks */,
+				A9AA2B961798D99900BFA0BC /* AudioUnit.framework in Frameworks */,
+				A9AA2B971798D99900BFA0BC /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01B97315FEAEA392516A2CEA /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				ABD19BF8F559448190010AFB /* Most Pixels Ever */,
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
+		080E96DDFE201D6D7F000001 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				470883335B0049F0BF0CC756 /* MPEBouncingBallApp.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		0F8ABB24107E49F886DD5F66 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				4510E1F256B94E5A9BAD317D /* MPEAsyncClient.cpp */,
+				E78E7556978B4B0F810B0C28 /* MPEClient.cpp */,
+				AF68419D07B8428680CC8B7D /* TCPAsyncClient.cpp */,
+				1FBF715A0297473B90284A79 /* TCPClient.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
+				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
+				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
+				00B784B20FF439BC000DE1D7 /* CoreAudio.framework */,
+				5323E6B50EAFCA7E003A9687 /* QTKit.framework */,
+				5323E6B10EAFCA74003A9687 /* CoreVideo.framework */,
+				0091D8F80E81B9330029341E /* OpenGL.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* MPEBouncingBall0.app */,
+				A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* MPEBouncingBall */ = {
+			isa = PBXGroup;
+			children = (
+				A9AA2B7B1798D91100BFA0BC /* assets */,
+				A9AA2B6A1798D79C00BFA0BC /* Client Settings */,
+				01B97315FEAEA392516A2CEA /* Blocks */,
+				29B97315FDCFA39411CA2CEA /* Headers */,
+				080E96DDFE201D6D7F000001 /* Source */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = MPEBouncingBall;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				A9AA2B7A1798D86300BFA0BC /* Ball.hpp */,
+				6C297BAF6CCA4B1BB6501601 /* Resources.h */,
+				9151C00500944E978DBB625E /* MPEBouncingBall_Prefix.pch */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9CD06D563A884CBDB7DB9358 /* CinderApp.icns */,
+				D553A7FF89D04D6CA6EF3D37 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3E3B6AEE44D04C9DA1039A25 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				97573C8172E649FDA6593D1D /* MPEAsyncClient.h */,
+				5A0D568FDAAD4956A5A72BC9 /* MPEClient.h */,
+				1F3E2B5E514B45AA89865ADA /* MPEMessageHandler.hpp */,
+				9B432AB0781A4057831DA79A /* MPEProtocol.hpp */,
+				14FBE05113AF4BB69ABBBC74 /* TCPAsyncClient.h */,
+				981E8C066B12471FAB25A61B /* TCPClient.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		A9AA2B6A1798D79C00BFA0BC /* Client Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A9AA2B761798D85800BFA0BC /* ClientSettings.0.cpp */,
+				A9AA2B771798D85800BFA0BC /* ClientSettings.1.cpp */,
+				A9AA2B751798D85000BFA0BC /* ClientSettings.h */,
+			);
+			name = "Client Settings";
+			sourceTree = "<group>";
+		};
+		A9AA2B7B1798D91100BFA0BC /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				A9AA2B7C1798D91100BFA0BC /* settings.0.xml */,
+				A9AA2B7D1798D91100BFA0BC /* settings.1.xml */,
+			);
+			name = assets;
+			path = ../assets;
+			sourceTree = "<group>";
+		};
+		ABD19BF8F559448190010AFB /* Most Pixels Ever */ = {
+			isa = PBXGroup;
+			children = (
+				3E3B6AEE44D04C9DA1039A25 /* include */,
+				0F8ABB24107E49F886DD5F66 /* src */,
+			);
+			name = "Most Pixels Ever";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* MPEBouncingBall0 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MPEBouncingBall0" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPEBouncingBall0;
+			productInstallPath = "$(HOME)/Applications";
+			productName = MPEBouncingBall;
+			productReference = 8D1107320486CEB800E47090 /* MPEBouncingBall0.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A9AA2B821798D99900BFA0BC /* MPEBouncingBall1 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9AA2B981798D99900BFA0BC /* Build configuration list for PBXNativeTarget "MPEBouncingBall1" */;
+			buildPhases = (
+				A9AA2B831798D99900BFA0BC /* Resources */,
+				A9AA2B871798D99900BFA0BC /* Sources */,
+				A9AA2B8F1798D99900BFA0BC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPEBouncingBall1;
+			productInstallPath = "$(HOME)/Applications";
+			productName = MPEBouncingBall;
+			productReference = A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MPEBouncingBall" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* MPEBouncingBall */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* MPEBouncingBall0 */,
+				A9AA2B821798D99900BFA0BC /* MPEBouncingBall1 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA258AF4AC364A1CB8100D47 /* CinderApp.icns in Resources */,
+				A9AA2B7F1798D91100BFA0BC /* settings.0.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9AA2B831798D99900BFA0BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9AA2B841798D99900BFA0BC /* CinderApp.icns in Resources */,
+				A9AA2B861798D99900BFA0BC /* settings.1.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				844B6B3A5EE84A928C3D583A /* MPEBouncingBallApp.cpp in Sources */,
+				D0C4161BB29546F68D292079 /* MPEAsyncClient.cpp in Sources */,
+				F57E074386E94CBE904B9316 /* MPEClient.cpp in Sources */,
+				00A07804D24F487693114872 /* TCPAsyncClient.cpp in Sources */,
+				0C740D23CB6D439F9A2C0C73 /* TCPClient.cpp in Sources */,
+				A9AA2B781798D85800BFA0BC /* ClientSettings.0.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9AA2B871798D99900BFA0BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9AA2B881798D99900BFA0BC /* MPEBouncingBallApp.cpp in Sources */,
+				A9AA2B891798D99900BFA0BC /* MPEAsyncClient.cpp in Sources */,
+				A9AA2B8A1798D99900BFA0BC /* MPEClient.cpp in Sources */,
+				A9AA2B8B1798D99900BFA0BC /* TCPAsyncClient.cpp in Sources */,
+				A9AA2B8C1798D99900BFA0BC /* TCPClient.cpp in Sources */,
+				A9AA2B8E1798D99900BFA0BC /* ClientSettings.1.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A9AA2B991798D99900BFA0BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBall_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				PRODUCT_NAME = MPEBouncingBall1;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A9AA2B9A1798D99900BFA0BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBall_Prefix.pch;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				PRODUCT_NAME = MPEBouncingBall1;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBall_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				PRODUCT_NAME = MPEBouncingBall0;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBall_Prefix.pch;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				PRODUCT_NAME = MPEBouncingBall0;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = i386;
+				CINDER_PATH = ../../../../..;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../include";
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = i386;
+				CINDER_PATH = ../../../../..;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../include";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A9AA2B981798D99900BFA0BC /* Build configuration list for PBXNativeTarget "MPEBouncingBall1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9AA2B991798D99900BFA0BC /* Debug */,
+				A9AA2B9A1798D99900BFA0BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MPEBouncingBall0" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MPEBouncingBall" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

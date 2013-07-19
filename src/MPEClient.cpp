@@ -28,7 +28,7 @@ MPEClient(settingsFilename, MPEProtocol(), shouldResize)
 }
 
 MPEClient::MPEClient(const string & settingsFilename, MPEProtocol protocol, bool shouldResize) :
-MPEMessageCallback(),
+MPEMessageHandler(),
 mProtocol(protocol),
 mHostname(""),
 mPort(0),
@@ -277,11 +277,11 @@ void MPEClient::doneRendering()
     }
 }
 
-#pragma mark - MPEMessageCallback
+#pragma mark - MPEMessageHandler
 
 void MPEClient::setCurrentRenderFrame(long frameNum)
 {
-    MPEMessageCallback::setCurrentRenderFrame(frameNum);
+    MPEMessageHandler::setCurrentRenderFrame(frameNum);
     // mLastFrameConfirmed has to reset when the current render frame is.
     mLastFrameConfirmed = mCurrentRenderFrame - 1;
 }

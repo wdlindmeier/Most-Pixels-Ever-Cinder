@@ -15,7 +15,7 @@
 
 #include "cinder/Rect.h"
 #include "cinder/Utilities.h"
-#include "MPEMessageCallback.hpp"
+#include "MPEMessageHandler.hpp"
 
 /*
 
@@ -110,7 +110,7 @@ namespace mpe
             return kIncomingMessageDelimiter;
         }
 
-        virtual void parse(const std::string & serverMessage, MPEMessageCallback *Callback)
+        virtual void parse(const std::string & serverMessage, MPEMessageHandler *handler)
         {
             // Example server messages:
             // 1) IG,19919:blahblahblah
@@ -136,7 +136,7 @@ namespace mpe
             std::string frameCommand = frameInfo[0];
             std::string frameNum = frameInfo[1];
 
-            Callback->setCurrentRenderFrame(stol(frameNum));
+            handler->setCurrentRenderFrame(stol(frameNum));
 
             // Get any additional message that was passed along.
             if (messages.size() > 1)
@@ -145,7 +145,7 @@ namespace mpe
                 for (int i=1;i<messages.size();i++)
                 {
                     std::string dataMessage = messages[i];
-                    Callback->receivedStringMessage(dataMessage);
+                    handler->receivedStringMessage(dataMessage);
                 }
             }
 
@@ -177,7 +177,7 @@ namespace mpe
                 return;
             }
 
-            Callback->setFrameIsReady(true);
+            handler->setFrameIsReady(true);
         }
     };
 }

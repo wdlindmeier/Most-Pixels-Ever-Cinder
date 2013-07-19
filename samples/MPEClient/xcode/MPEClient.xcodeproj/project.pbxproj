@@ -62,9 +62,7 @@
 		A921E177178A4C1F002129E4 /* TCPAsyncClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPAsyncClient.cpp; path = ../src/TCPAsyncClient.cpp; sourceTree = "<group>"; };
 		A921E17B178A4C37002129E4 /* TCPAsyncClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPAsyncClient.h; path = ../include/TCPAsyncClient.h; sourceTree = "<group>"; };
 		A921E17C178A5503002129E4 /* MPEAsyncClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEAsyncClient.cpp; path = ../src/MPEAsyncClient.cpp; sourceTree = "<group>"; };
-		A921E180178A5512002129E4 /* MPEAsyncClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEAsyncClient.h; path = ../include/MPEAsyncClient.h; sourceTree = "<group>"; };
 		A94C184617690AB000F56801 /* MPEClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEClient.cpp; path = ../src/MPEClient.cpp; sourceTree = "<group>"; };
-		A94C184917690AFD00F56801 /* MPEClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../include/MPEClient.h; sourceTree = "<group>"; };
 		A94C184B176912F600F56801 /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
 		A9655FC41768A6B600DD1085 /* TCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPClient.cpp; path = ../src/TCPClient.cpp; sourceTree = "<group>"; };
 		A9655FC71768A6CE00DD1085 /* TCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../include/TCPClient.h; sourceTree = "<group>"; };
@@ -186,8 +184,6 @@
 			isa = PBXGroup;
 			children = (
 				A9E8D0C81775FA9600B6F8CC /* Ball.hpp */,
-				A921E180178A5512002129E4 /* MPEAsyncClient.h */,
-				A94C184917690AFD00F56801 /* MPEClient.h */,
 				D02E465518744D3A967C743D /* MPEClient_Prefix.pch */,
 				A9E8D0C317750BD400B6F8CC /* MPEMessageHandler.hpp */,
 				A91AACBC176E4514002F5DF0 /* MPEProtocol.hpp */,
@@ -444,7 +440,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
-				CINDER_PATH = ../../../../../Tools/cinder_master;
+				CINDER_PATH = ../../../../..;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -452,7 +448,7 @@
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../include";
 			};
 			name = Debug;
 		};
@@ -461,7 +457,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
-				CINDER_PATH = ../../../../../Tools/cinder_master;
+				CINDER_PATH = ../../../../..;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -469,7 +465,7 @@
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../include";
 			};
 			name = Release;
 		};

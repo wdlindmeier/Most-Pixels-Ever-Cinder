@@ -8,9 +8,8 @@
 #pragma once
 
 #include <boost/asio.hpp>
-
 #include "cinder/Rect.h"
-#include "MPEMessageCallback.hpp"
+#include "MPEMessageHandler.hpp"
 #include "MPEProtocol.hpp"
 #include "TCPClient.h"
 
@@ -23,7 +22,7 @@
  settings file. See settings.0.xml for an example.
  
  The client keeps track of the current frame that should be rendered (see 
- MPEMessageCallback::getCurrentRenderFrame) and informs the server when it's complete. Once
+ MPEMessageHandler::getCurrentRenderFrame) and informs the server when it's complete. Once
  all of the clients have rendered the frame the server will send out the next frame number.
  
  MPEClient uses callbacks for updating, drawing, and sending data to your App.
@@ -51,7 +50,7 @@ namespace mpe
     typedef boost::function<void( const std::vector<int> & integers )> IntegerDataCallback;
     typedef boost::function<void( const std::vector<char> & bytes )> BytesDataCallback;
     
-    class MPEClient : public MPEMessageCallback
+    class MPEClient : public MPEMessageHandler
     {
 
     public:
@@ -102,7 +101,7 @@ namespace mpe
 
     protected:
 
-        // Overloading MPEMessageCallback for internal purposes.
+        // Overloading MPEMessageHandler for internal purposes.
         void                setCurrentRenderFrame(long frameNum);        
 
         void                doneRendering();
