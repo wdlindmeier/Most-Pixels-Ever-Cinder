@@ -46,8 +46,7 @@ void MyCinderApp::update()
     // Connect the client if we're not already.
     // Nothing else needs to happen in update().
     
-    if (!mClient->isConnected() &&
-        getElapsedFrames() % 60 == 0)
+    if (!mClient->isConnected() && getElapsedFrames() % 60 == 0)
     {
         // Attempt to reconnect every 60 frames.
         mClient->start();
@@ -58,8 +57,7 @@ void MyCinderApp::updateFrame(long serverFrameNumber)
 {
     // This is where the app state should be modified. 
     // The FrameUpdateCallback is called whenever we get a message from the server,
-    // which may be less frequent than update() or draw() is called.
-    
+    // which may be less frequent than update() or draw() is called.    
     mBall.update();
 }
 
@@ -81,8 +79,7 @@ void MyCinderApp::stringDataReceived(const std::string & message)
     // Apps can broadcast data to the other clients. E.g.:
     //
     // mClient->sendStringData("mouse_pos: 100,200");
-    // 
-    
+    //     
     ci::app::console() << "Received broadcast data: " << message << std::endl;
 }
 ```
