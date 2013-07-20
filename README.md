@@ -20,7 +20,7 @@ class MyCinderApp : public AppNative
     void        updateFrame(long serverFrameNumber);    
     void        draw();
     void        drawViewport(bool isNewFrame);    
-    void        stringDataReceived(const std::string & message);
+    void        stringDataReceived(const std::string & message, const int fromClientID);
     
     private:
     
@@ -38,7 +38,7 @@ void MyCinderApp::setup()
     // Set the event handlers.
     mClient->setFrameUpdateCallback(boost::bind(&MyCinderApp::updateFrame, this, _1));
     mClient->setDrawCallback(boost::bind(&MyCinderApp::drawViewport, this, _1));    
-    mClient->setStringDataCallback(boost::bind(&MyCinderApp::stringDataReceived, this, _1));
+    mClient->setStringDataCallback(boost::bind(&MyCinderApp::stringDataReceived, this, _1, _2));
 }
 
 void MyCinderApp::update()
@@ -74,7 +74,7 @@ void MyCinderApp::drawViewport(bool isNewFrame)
     mBall.draw();
 }
 
-void MyCinderApp::stringDataReceived(const std::string & message)
+void MyCinderApp::stringDataReceived(const std::string & message, const int fromClientID)
 {
     // Apps can broadcast data to the other clients. E.g.:
     //

@@ -26,14 +26,16 @@ using namespace mpe;
  MPEBouncingBallApp:
  A sample Cinder App that uses the Most Pixels Ever client.
  
- After building both targets (MPEBouncingBallApp0 & MPEBouncingBallApp1), you can launch them
- from the finder (right click the product and select "Show in Finder.")
+ Usage:
+ 
+    1) Start the command line server with 2 clients.
+    2) Build and run both targets from XCode (or launch them from the build folder).
  
  Dragging the app windows around the screen will update their positions relative
  to the master dimensions to simulate physical screens.
  
  Clicking the mouse adds balls to the scene.
- 
+
 */
 
 class MPEBouncingBallApp : public AppNative
@@ -195,7 +197,7 @@ void MPEBouncingBallApp::updateLocalViewportFromScreenPosition()
 {
     // Moving the window simulates repositioning the screen.
     Vec2i size = getWindowSize();
-    Vec2i pos = getWindowPos() - Vec2f(200, 200); // Add a margin to the master
+    Vec2i pos = getWindowPos() - Vec2f(100, 100); // Add a margin to the master
     
     if (mScreenSize != size || mScreenPos != pos)
     {
