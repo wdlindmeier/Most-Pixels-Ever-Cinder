@@ -35,21 +35,18 @@
 
 namespace mpe
 {
-
+    const static std::string CONNECT_SYNCHRONOUS = "S";
+    const static std::string DONE_RENDERING = "D";
+    const static std::string DATA_MESSAGE = "T";
+    const static std::string NEXT_FRAME = "G"; // "Go and draw frame"
+    
     class MPEProtocol
     {
-        
-    protected:
-        
-        const std::string CONNECT_SYNCHRONOUS = "S";
-        const std::string DONE_RENDERING = "D";
-        const std::string DATA_MESSAGE = "T";
-        const std::string NEXT_FRAME = "G";
         
     public:
 
 #pragma mark - Outgoing Messages
-
+        
         // Send the client ID once the connection has been made.
         virtual std::string setClientID(const int clientID)
         {
@@ -57,14 +54,38 @@ namespace mpe
                    std::to_string(clientID) +
                    outgoingMessageTerminus();
         };
+        
+        virtual std::string cleanMessage(std::string message)
+        {
+            // Make sure the delimiter isn't in the message
+            if (message.find(dataMessageDelimiter()) != std::string::npos)
+            {
+                ci::app::console() << "WARNING: '" << dataMessageDelimiter()
+                << "' are not allowed in broadcast messages."
+                << " Replacing with an underscore." << std::endl;
+                std::replace(message.begin(), message.end(), dataMessageDelimiter().at(0), '_');
+            }
+            if (message.find(outgoingMessageTerminus()) != std::string::npos)
+            {
+                std::string termID = "Newlines";
+                if (outgoingMessageTerminus() != "\n")
+                {
+                    termID = "'" + outgoingMessageTerminus() + "'";
+                }
+                ci::app::console() << "WARNING: " << termID
+                << " are not allowed in broadcast messages."
+                << " Replacing with an underscore." << std::endl;
+                std::replace(message.begin(), message.end(), dataMessageDelimiter().at(0), '_');
+            }
+            return message;
+        }
 
         // Send an arbitrary string to every connected client.
         virtual std::string broadcast(const std::string & msg)
         {
-            // Make sure the delimiter isn't in the message
-            assert(msg.find(dataMessageDelimiter()) == std::string::npos);
+            std::string sanitizedMessage = cleanMessage(msg);
             return DATA_MESSAGE +
-                   msg +
+                   sanitizedMessage +
                    outgoingMessageTerminus();
         };
 

@@ -42,10 +42,9 @@ namespace mpe
             mFrameIsReady = isFrameReady;
         };
 
-        // Overload these functions in the subclass to receive data.
-
-        virtual void receivedStringMessage(const std::string & dataMessage, int fromClientID = -1)
-        {};
+        // Overload these functions in the subclass to handle data.
+        virtual void receivedStringMessage(const std::string & dataMessage, int fromClientID = -1){};
+        virtual void receivedResetCommand(){};
 
     protected:
 

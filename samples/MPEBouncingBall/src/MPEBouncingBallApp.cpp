@@ -7,7 +7,7 @@
 
 // Choose the client mode. Generally Async is the way to go.
 #define USE_ASYNC   1
-#define USE_VERSION_2   0
+#define USE_VERSION_2   1
 
 #if USE_ASYNC
 #include "MPEAsyncClient.h"
@@ -46,6 +46,7 @@ public:
     void        prepareSettings(Settings *settings);
     void        setup();
     void        shutdown();
+    void        reset();
     
     // Balls
     void        addBallAtPosition(const Vec2f & posBall);
@@ -103,11 +104,11 @@ void MPEBouncingBallApp::setup()
     console() << "Loading settings from " << SettingsFileName << std::endl;
     
 #if USE_VERSION_2
-    MPEProtocol2 protocol;
+    MPEProtocol2 *protocol = new MPEProtocol2();
 #else
-    MPEProtocol protocol;
+    MPEProtocol *protocol = new MPEProtocol();
 #endif
-    
+
 #if USE_ASYNC
     mClient = new MPEAsyncClient(SettingsFileName, protocol);
 #else
@@ -122,17 +123,20 @@ void MPEBouncingBallApp::setup()
     mClient->setDrawCallback(boost::bind(&MPEBouncingBallApp::drawViewport, this, _1));
     mClient->setStringDataCallback(boost::bind(&MPEBouncingBallApp::stringDataReceived, this, _1, _2));
     
-    // The same as the processing sketch.
-    // Does Processing Rand work the same as Cinder Rand as OF Rand?
-    mRand.seed(1);
-    
     mDidMoveFrame = false;
+    mClient->start();
+    reset();
+}
+
+void MPEBouncingBallApp::reset()
+{
+    console() << "RESETTING\n";
+    // The same as the processing sketch.
+    mRand.seed(1);
     mServerFramesProcessed = 0;
-    
+    mBalls.clear();
     Vec2i sizeMaster = mClient->getMasterSize();
     addBallAtPosition(Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y)));
-    
-    mClient->start();
 }
 
 void MPEBouncingBallApp::shutdown()
@@ -177,7 +181,17 @@ void MPEBouncingBallApp::update()
 
 void MPEBouncingBallApp::updateFrame(long serverFrameNumber)
 {
-    mBalls[0].manipulateInternalData();
+    if (mServerFramesProcessed > serverFrameNumber)
+    {
+        // We've been reset
+        // TODO: This should be triggered by receivedResetCommand
+        reset();
+    }
+    
+    if (mBalls.size() > 0)
+    {
+        mBalls[0].manipulateInternalData();
+    }
     
     // This loop forces the app to get up-to-speed if it disconnects and then re-connects.
     while (mServerFramesProcessed < serverFrameNumber)
@@ -234,7 +248,10 @@ void MPEBouncingBallApp::draw()
 void MPEBouncingBallApp::drawViewport(bool isNewFrame)
 {
     // Just for the hell of it to see if we can crash by accessing the same data on different threads.
-    mBalls[0].manipulateInternalData();
+    if (mBalls.size() > 0)
+    {
+        mBalls[0].manipulateInternalData();
+    }
     
     gl::clear(Color(0,0,0));
     

@@ -6,6 +6,7 @@
 //
 
 #include "TCPAsyncClient.h"
+#include "cinder/Utilities.h"
 
 using namespace mpe;
 using std::string;
@@ -62,6 +63,7 @@ void TCPAsyncClient::handleConnect(const boost::system::error_code & error)
 
 void TCPAsyncClient::write(const string & msg)
 {
+//    console() << "WRITE: " << msg << "\n";
     mIOService.post(boost::bind(&TCPAsyncClient::_write, this, msg));
 }
 
@@ -72,15 +74,24 @@ void TCPAsyncClient::setIncomingMessageCallback(ServerMessageCallback callback)
 
 void TCPAsyncClient::handleRead(const boost::system::error_code & error)
 {
-    // console() << "handle read\n";
     if (!error)
     {
         if (mReadCallback)
         {
             std::ostringstream ss;
             ss << &mBuffer;
-            string message = ss.str();
-            mReadCallback(message);
+            string messageData = ss.str();
+            // There may be more than 1 message in the read.
+            std::vector<string> messages = ci::split(messageData, mMessageDelimiter);
+            for (int i = 0; i < messages.size(); ++i)
+            {
+                std::string message = messages[i];
+                if (message.length() > 0)
+                {
+//                    console() << "READ: " << message << "\n";
+                    mReadCallback(message);
+                }
+            }
         }
         boost::asio::async_read_until(mSocket, mBuffer, mMessageDelimiter,
                                       boost::bind(&TCPAsyncClient::handleRead, this,
@@ -131,10 +142,5 @@ void TCPAsyncClient::handleWrite(const boost::system::error_code & error)
 
 void TCPAsyncClient::_close()
 {
-    if (mSocket.is_open())
-    {
-        mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-        mSocket.close();
-    }
-    mIsConnected = false;
+    TCPClient::close();
 }

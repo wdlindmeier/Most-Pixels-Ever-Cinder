@@ -24,14 +24,14 @@ using namespace ci::app;
 using namespace mpe;
 
 MPEClient::MPEClient(const std::string & settingsFilename, bool shouldResize) :
-MPEClient(settingsFilename, MPEProtocol2(), shouldResize)
+MPEClient(settingsFilename, new MPEProtocol2(), shouldResize)
 {
 }
 
-MPEClient::MPEClient(const string & settingsFilename, MPEProtocol protocol, bool shouldResize) :
+MPEClient::MPEClient(const string & settingsFilename, MPEProtocol * protocol, bool shouldResize) :
 MPEMessageHandler(),
-mProtocol(protocol),
 mHostname(""),
+//mProtocol(protocol),
 mPort(0),
 mIsStarted(false),
 mIsRendering3D(false),
@@ -39,6 +39,7 @@ mClientID(-1),
 mIsDebug(false),
 mLastFrameConfirmed(-1)
 {
+    mProtocol = std::shared_ptr<MPEProtocol>(protocol);
     loadSettings(settingsFilename, shouldResize);
 }
 
@@ -96,7 +97,7 @@ void MPEClient::start()
     }
 
     mIsStarted = true;
-    mTCPClient = new TCPClient(mProtocol.incomingMessageDelimiter());
+    mTCPClient = new TCPClient(mProtocol->incomingMessageDelimiter());
 
     // Open the client
     if (mTCPClient->open(mHostname, mPort))
@@ -152,7 +153,17 @@ void MPEClient::update()
             string data = mTCPClient->read(isDataAvailable);
             if (isDataAvailable)
             {
-                mProtocol.parse(data, this);
+                // There may be more than 1 message in the read.
+                std::vector<string> messages = ci::split(data,
+                                                         mProtocol->incomingMessageDelimiter());
+                for (int i = 0; i < messages.size(); ++i)
+                {
+                    std::string message = messages[i];
+                    if (message.length() > 0)
+                    {
+                        mProtocol->parse(message, this);
+                    }
+                }
             }
         }
 
@@ -268,12 +279,12 @@ void MPEClient::restore3DCamera()
 
 void MPEClient::sendClientID()
 {
-    mTCPClient->write(mProtocol.setClientID(mClientID));
+    mTCPClient->write(mProtocol->setClientID(mClientID));
 }
 
 void MPEClient::sendStringData(const std::string & message)
 {
-    mTCPClient->write(mProtocol.broadcast(message));
+    mTCPClient->write(mProtocol->broadcast(message));
 }
 
 void MPEClient::doneRendering()
@@ -282,7 +293,7 @@ void MPEClient::doneRendering()
     // rendered multiple times if the server update is slower than the app loop.
     if (mLastFrameConfirmed < mCurrentRenderFrame)
     {
-        mTCPClient->write(mProtocol.renderIsComplete(mClientID, mCurrentRenderFrame));
+        mTCPClient->write(mProtocol->renderIsComplete(mClientID, mCurrentRenderFrame));
         mLastFrameConfirmed = mCurrentRenderFrame;
     }
 }
@@ -294,6 +305,11 @@ void MPEClient::setCurrentRenderFrame(long frameNum)
     MPEMessageHandler::setCurrentRenderFrame(frameNum);
     // mLastFrameConfirmed has to reset when the current render frame is.
     mLastFrameConfirmed = mCurrentRenderFrame - 1;
+}
+
+void MPEClient::receivedResetCommand()
+{
+    console() << "TODO: Call App reset callback\n";
 }
 
 #pragma mark - Receiving Messages

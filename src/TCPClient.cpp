@@ -87,41 +87,6 @@ string TCPClient::read(bool & isDataAvailable)
     return message;
 }
 
-// TODO: Test that this works
-vector<int> TCPClient::readIntegers()
-{
-    // Read the first 4 bytes to see how long the integer array is.
-    // Then read the rest.
-    int intLength;
-    boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&intLength),
-                                                   sizeof(int)));
-    // console() << "Reading Integer Array of length: %i" << intLength << std::endl;
-    int ints[intLength];
-    boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&ints),
-                                                   sizeof(int) * intLength));
-    vector<int> vecInt;
-    vecInt.assign(ints, ints+intLength);
-    return vecInt;
-}
-
-// TODO: Test that this works
-vector<char> TCPClient::readBytes()
-{
-    // Read the first 4 bytes to see how long the integer array is.
-    // Then read the rest.
-    int byteLength;
-    boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&byteLength),
-                                                   sizeof(int)));
-    // console() << "Reading Byte Array of length: %i" << byteLength << std::endl;
-    char bytes[byteLength];
-    boost::asio::read(mSocket, boost::asio::buffer(reinterpret_cast<char*>(&bytes),
-                                                   sizeof(char) * byteLength));
-
-    vector<char> vecBytes;
-    vecBytes.assign(bytes, bytes+byteLength);
-    return vecBytes;
-}
-
 void TCPClient::write(const string & msg)
 {
     boost::system::error_code error;
@@ -140,11 +105,11 @@ void TCPClient::write(const string & msg)
 
 void TCPClient::close()
 {
-    mIsConnected = false;
+    mIOService.stop();
     if (mSocket.is_open())
     {
         mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
         mSocket.close();
     }
-    mIOService.stop();
+    mIsConnected = false;
 }

@@ -13,11 +13,11 @@ using ci::app::console;
 using namespace mpe;
 
 MPEAsyncClient::MPEAsyncClient(const std::string & settingsFilename, bool shouldResize) :
-MPEAsyncClient(settingsFilename, MPEProtocol2(), shouldResize)
+MPEAsyncClient(settingsFilename, new MPEProtocol2(), shouldResize)
 {
 };
 
-MPEAsyncClient::MPEAsyncClient(const std::string & settingsFilename, MPEProtocol protocol, bool shouldResize) :
+MPEAsyncClient::MPEAsyncClient(const std::string & settingsFilename, MPEProtocol * protocol, bool shouldResize) :
 MPEClient(settingsFilename, protocol, shouldResize)
 {
 };
@@ -33,7 +33,7 @@ void MPEAsyncClient::start()
 
     mIsStarted = true;
     mLastFrameConfirmed = -1;
-    mTCPClient = new TCPAsyncClient(mProtocol.incomingMessageDelimiter());
+    mTCPClient = new TCPAsyncClient(mProtocol->incomingMessageDelimiter());
 
     TCPAsyncClient *client = static_cast<TCPAsyncClient *>(mTCPClient);
     client->setIncomingMessageCallback(boost::bind(&MPEAsyncClient::serverMessageReceived, this, _1));
@@ -63,7 +63,7 @@ void MPEAsyncClient::serverMessageReceived(const std::string & message)
 {
     mFrameIsReady = false;
     // This will set mFrameIsReady
-    mProtocol.parse(message, this);
+    mProtocol->parse(message, this);
     if (mFrameIsReady)
     {
         if (mUpdateCallback)

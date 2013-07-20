@@ -30,7 +30,7 @@ namespace mpe
 
         MPEAsyncClient() : MPEClient(){};
         MPEAsyncClient(const std::string & settingsFilename, bool shouldResize = true);
-        MPEAsyncClient(const std::string & settingsFilename, MPEProtocol protocol, bool shouldResize = true);
+        MPEAsyncClient(const std::string & settingsFilename, MPEProtocol * protocol, bool shouldResize = true);
         ~MPEAsyncClient(){};
 
         // Connection

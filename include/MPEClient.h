@@ -8,7 +8,6 @@
 #pragma once
 
 #include <boost/asio.hpp>
-
 #include "cinder/Rect.h"
 #include "MPEMessageHandler.hpp"
 #include "MPEProtocol.hpp"
@@ -58,7 +57,7 @@ namespace mpe
         // Constructors
         MPEClient(){};
         MPEClient(const std::string & settingsFilename, bool shouldResize = true);
-        MPEClient(const std::string & settingsFilename, MPEProtocol protocol, bool shouldResize = true);
+        MPEClient(const std::string & settingsFilename, MPEProtocol * protocol, bool shouldResize = true);
         ~MPEClient(){};
 
         // Screen Dimensions
@@ -97,6 +96,7 @@ namespace mpe
         
         virtual void        receivedStringMessage(const std::string & dataMessage,
                                                   const int fromClientID = -1);
+        virtual void        receivedResetCommand();
         void                setCurrentRenderFrame(long frameNum);
         void                doneRendering();
         void                positionViewport();
@@ -105,7 +105,7 @@ namespace mpe
         void                sendClientID();
 
         // A protocol to convert a given command into a transport string.
-        MPEProtocol         mProtocol;
+        std::shared_ptr<MPEProtocol> mProtocol;
 
         // Callbacks
         StringDataCallback  mStringDataCallback;
