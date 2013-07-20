@@ -12,6 +12,7 @@
 #include "cinder/Rect.h"
 #include "MPEMessageHandler.hpp"
 #include "MPEProtocol.hpp"
+#include "MPEProtocol2.hpp"
 #include "TCPClient.h"
 
 /*
@@ -47,9 +48,7 @@ namespace mpe
 {
     typedef boost::function<void(bool isNewFrame)> FrameRenderCallback;
     typedef boost::function<void(long serverFrameNumber)> FrameUpdateCallback;
-    typedef boost::function<void(const std::string & message)> StringDataCallback;
-    typedef boost::function<void(const std::vector<int> & integers)> IntegerDataCallback;
-    typedef boost::function<void(const std::vector<char> & bytes)> BytesDataCallback;
+    typedef boost::function<void(const std::string & message, const int fromClientID)> StringDataCallback;
 
     class MPEClient : public MPEMessageHandler
     {
@@ -71,8 +70,6 @@ namespace mpe
         void                setFrameUpdateCallback(const FrameUpdateCallback & callback);
         void                setDrawCallback(const FrameRenderCallback & callback);
         void                setStringDataCallback(const StringDataCallback & callback);
-        void                setIntegerDataCallback(const IntegerDataCallback & callback);
-        void                setBytesDataCallback(const BytesDataCallback & callback);
 
         // 3D Rendering
         bool                getIsRendering3D();
@@ -95,17 +92,11 @@ namespace mpe
         // The sending App will receive its own data and should act on it when it's received,
         // rather than before it's sent, so all of the clients are in sync.
         void                sendStringData(const std::string & message); // née broadcast
-        void                sendIntegerData(const std::vector<int> & integers);
-        void                sendBytesData(const std::vector<char> & bytes);
-
-        // Receiving Messages From Server
-        // These are called by the MPE Message Callback and should not be called by the App.
-        virtual void        receivedStringMessage(const std::string & dataMessage);
-        virtual void        readIncomingIntegers();
-        virtual void        readIncomingBytes();
 
     protected:
-
+        
+        virtual void        receivedStringMessage(const std::string & dataMessage,
+                                                  const int fromClientID = -1);
         void                setCurrentRenderFrame(long frameNum);
         void                doneRendering();
         void                positionViewport();
@@ -118,8 +109,6 @@ namespace mpe
 
         // Callbacks
         StringDataCallback  mStringDataCallback;
-        IntegerDataCallback mIntegerDataCallback;
-        BytesDataCallback   mBytesDataCallback;
         FrameUpdateCallback mUpdateCallback;
         FrameRenderCallback mRenderCallback;
 

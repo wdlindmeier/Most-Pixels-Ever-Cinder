@@ -72,6 +72,7 @@
 		A9AA2B7C1798D91100BFA0BC /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
 		A9AA2B7D1798D91100BFA0BC /* settings.1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.1.xml; sourceTree = "<group>"; };
 		A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBall1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9C7EE56179AEE370090C21F /* MPEProtocol2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocol2.hpp; path = ../../../include/MPEProtocol2.hpp; sourceTree = "<group>"; };
 		AF68419D07B8428680CC8B7D /* TCPAsyncClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPAsyncClient.cpp; path = ../../../src/TCPAsyncClient.cpp; sourceTree = "<group>"; };
 		D553A7FF89D04D6CA6EF3D37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E78E7556978B4B0F810B0C28 /* MPEClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClient.cpp; path = ../../../src/MPEClient.cpp; sourceTree = "<group>"; };
@@ -221,6 +222,7 @@
 				5A0D568FDAAD4956A5A72BC9 /* MPEClient.h */,
 				1F3E2B5E514B45AA89865ADA /* MPEMessageHandler.hpp */,
 				9B432AB0781A4057831DA79A /* MPEProtocol.hpp */,
+				A9C7EE56179AEE370090C21F /* MPEProtocol2.hpp */,
 				14FBE05113AF4BB69ABBBC74 /* TCPAsyncClient.h */,
 				981E8C066B12471FAB25A61B /* TCPClient.h */,
 			);

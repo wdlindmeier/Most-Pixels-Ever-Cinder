@@ -7,12 +7,13 @@
 
 #include "MPEAsyncClient.h"
 #include "TCPAsyncClient.h"
+#include "MPEProtocol2.hpp"
 
 using ci::app::console;
 using namespace mpe;
 
 MPEAsyncClient::MPEAsyncClient(const std::string & settingsFilename, bool shouldResize) :
-MPEAsyncClient(settingsFilename, MPEProtocol(), shouldResize)
+MPEAsyncClient(settingsFilename, MPEProtocol2(), shouldResize)
 {
 };
 
@@ -73,22 +74,10 @@ void MPEAsyncClient::serverMessageReceived(const std::string & message)
     }
 }
 
-void MPEAsyncClient::receivedStringMessage(const std::string & dataMessage)
+void MPEAsyncClient::receivedStringMessage(const std::string & dataMessage, const int fromClientID)
 {
     std::lock_guard<std::mutex> lock(mClientDataMutex);
-    MPEClient::receivedStringMessage(dataMessage);
-}
-
-void MPEAsyncClient::readIncomingIntegers()
-{
-    std::lock_guard<std::mutex> lock(mClientDataMutex);
-    MPEClient::readIncomingIntegers();
-}
-
-void MPEAsyncClient::readIncomingBytes()
-{
-    std::lock_guard<std::mutex> lock(mClientDataMutex);
-    MPEClient::readIncomingBytes();
+    MPEClient::receivedStringMessage(dataMessage, fromClientID);
 }
 
 #pragma mark - Update

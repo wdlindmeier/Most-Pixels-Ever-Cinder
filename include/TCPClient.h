@@ -14,14 +14,6 @@
 #include <deque>
 #include <iostream>
 
-// TEST
-// Use String Queue rather than buffer queue.
-// Having some issues sending a bunch of data (as a buffer) to the server,
-// but not sure what it is yet.
-// I was using a buffer queue rather than string to facilitate sending
-// int and byte arrays, but it looks like that's not supported anyway.
-#define USE_STRING_QUEUE    1
-
 /*
 
  TCPClient:
@@ -43,7 +35,6 @@ namespace mpe
         virtual void                    close();
         virtual bool                    isConnected(){ return mIsConnected; }
         virtual void                    write(const std::string & msg);
-        virtual void                    writeBuffer(const boost::asio::const_buffers_1 & buffer);
         std::string                     read(bool & isDataAvailable);
         std::vector<int>                readIntegers();
         std::vector<char>               readBytes();

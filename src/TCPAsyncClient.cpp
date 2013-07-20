@@ -65,15 +65,6 @@ void TCPAsyncClient::write(const string & msg)
     mIOService.post(boost::bind(&TCPAsyncClient::_write, this, msg));
 }
 
-void TCPAsyncClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
-{
-#if USE_STRING_QUEUE
-    console() << "ALERT: Not using writeBuffer. Ignoring message.\n";
-#else
-    mIOService.post(boost::bind(&TCPAsyncClient::_writeBuffer, this, buffer));
-#endif
-}
-
 void TCPAsyncClient::setIncomingMessageCallback(ServerMessageCallback callback)
 {
     mReadCallback = callback;
@@ -102,25 +93,8 @@ void TCPAsyncClient::handleRead(const boost::system::error_code & error)
     }
 }
 
-void TCPAsyncClient::_writeBuffer(const boost::asio::const_buffers_1 & buffer)
-{
-#if USE_STRING_QUEUE
-    printf("ERROR not using _writeBuffer. Ignoring message.\n");
-#else
-    bool write_in_progress = !mWriteMessages.empty();
-    mWriteMessages.push_back(buffer);
-    if (!write_in_progress)
-    {
-        boost::asio::async_write(mSocket, mWriteMessages.front(),
-                                 boost::bind(&TCPAsyncClient::handleWrite, this,
-                                             boost::asio::placeholders::error));
-    }
-#endif
-}
-
 void TCPAsyncClient::_write(const string & msg)
 {
-#if USE_STRING_QUEUE
     bool write_in_progress = !mWriteMessages.empty();
     mWriteMessages.push_back(msg);
     if (!write_in_progress)
@@ -131,9 +105,6 @@ void TCPAsyncClient::_write(const string & msg)
                                  boost::bind(&TCPAsyncClient::handleWrite, this,
                                              boost::asio::placeholders::error));
     }
-#else
-    _writeBuffer(boost::asio::buffer(msg, msg.length()));
-#endif
 }
 
 void TCPAsyncClient::handleWrite(const boost::system::error_code & error)
@@ -144,17 +115,11 @@ void TCPAsyncClient::handleWrite(const boost::system::error_code & error)
         if (!mWriteMessages.empty())
         {
             //Send another
-#if USE_STRING_QUEUE
             boost::asio::async_write(mSocket,
                                      boost::asio::buffer(mWriteMessages.front(),
                                                          mWriteMessages.front().length()),
                                      boost::bind(&TCPAsyncClient::handleWrite, this,
                                                  boost::asio::placeholders::error));
-#else
-            boost::asio::async_write(mSocket, mWriteMessages.front(),
-                                     boost::bind(&TCPAsyncClient::handleWrite, this,
-                                                 boost::asio::placeholders::error));
-#endif
         }
     }
     else

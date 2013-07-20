@@ -42,7 +42,8 @@ namespace mpe
 
         // Recieving Messages
         void                    serverMessageReceived(const std::string & message);
-        void                    receivedStringMessage(const std::string & dataMessage);
+        void                    receivedStringMessage(const std::string & dataMessage,
+                                                      const int fromClientID = -1);
         void                    readIncomingIntegers();
         void                    readIncomingBytes();
 

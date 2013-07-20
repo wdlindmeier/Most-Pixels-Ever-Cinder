@@ -15,6 +15,7 @@
 #include "cinder/Vector.h"
 #include "cinder/Xml.h"
 #include "MPEClient.h"
+#include "MPEProtocol2.hpp"
 
 using std::string;
 using std::vector;
@@ -23,7 +24,7 @@ using namespace ci::app;
 using namespace mpe;
 
 MPEClient::MPEClient(const std::string & settingsFilename, bool shouldResize) :
-MPEClient(settingsFilename, MPEProtocol(), shouldResize)
+MPEClient(settingsFilename, MPEProtocol2(), shouldResize)
 {
 }
 
@@ -73,16 +74,6 @@ void MPEClient::setIsRendering3D(bool is3D)
 void MPEClient::setStringDataCallback(const StringDataCallback & callback)
 {
     mStringDataCallback = callback;
-}
-
-void MPEClient::setIntegerDataCallback(const IntegerDataCallback & callback)
-{
-    mIntegerDataCallback = callback;
-}
-
-void MPEClient::setBytesDataCallback(const BytesDataCallback & callback)
-{
-    mBytesDataCallback = callback;
 }
 
 void MPEClient::setFrameUpdateCallback( const FrameUpdateCallback & callback)
@@ -285,16 +276,6 @@ void MPEClient::sendStringData(const std::string & message)
     mTCPClient->write(mProtocol.broadcast(message));
 }
 
-void MPEClient::sendIntegerData(const std::vector<int> & integers)
-{
-    mTCPClient->writeBuffer(mProtocol.sendInts(integers));
-}
-
-void MPEClient::sendBytesData(const std::vector<char> & bytes)
-{
-    mTCPClient->writeBuffer(mProtocol.sendBytes(bytes));
-}
-
 void MPEClient::doneRendering()
 {
     // Only inform the server if this is a new frame. It's possible that a given frame is
@@ -317,29 +298,11 @@ void MPEClient::setCurrentRenderFrame(long frameNum)
 
 #pragma mark - Receiving Messages
 
-void MPEClient::receivedStringMessage(const std::string & dataMessage)
+void MPEClient::receivedStringMessage(const std::string & dataMessage, const int fromClientID)
 {
     if (mStringDataCallback)
     {
-        mStringDataCallback(dataMessage);
-    }
-}
-
-void MPEClient::readIncomingIntegers()
-{
-    vector<int> ints = mTCPClient->readIntegers();
-    if (mIntegerDataCallback)
-    {
-        mIntegerDataCallback(ints);
-    }
-}
-
-void MPEClient::readIncomingBytes()
-{
-    vector<char> bytes = mTCPClient->readBytes();
-    if (mBytesDataCallback)
-    {
-        mBytesDataCallback(bytes);
+        mStringDataCallback(dataMessage, fromClientID);
     }
 }
 

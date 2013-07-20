@@ -7,6 +7,7 @@
 
 // Choose the client mode. Generally Async is the way to go.
 #define USE_ASYNC   1
+#define USE_VERSION_2   0
 
 #if USE_ASYNC
 #include "MPEAsyncClient.h"
@@ -58,12 +59,9 @@ public:
     
     // Input Events
     void        mouseDown(MouseEvent event);
-    void        keyDown(KeyEvent event);
     
     // Data Callbacks
-    void        stringDataReceived(const std::string & message);
-    void        integerDataReceived(const std::vector<int> & integers);
-    void        bytesDataReceived(const std::vector<char> & bytes);
+    void        stringDataReceived(const std::string & message, const int fromClientID);
     
 private:
     
@@ -93,7 +91,7 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
 {
     // NOTE: Initially making the window small to prove that
     // the settings.xml forces a resize.
-    settings->setWindowSize( 100, 100 );
+    settings->setWindowSize(100, 100);
 }
 
 void MPEBouncingBallApp::setup()
@@ -102,10 +100,16 @@ void MPEBouncingBallApp::setup()
     // TODO: What's the best cross-platform way of storing these?
     console() << "Loading settings from " << SettingsFileName << std::endl;
     
-#if USE_ASYNC
-    mClient = new MPEAsyncClient(SettingsFileName);
+#if USE_VERSION_2
+    MPEProtocol2 protocol;
 #else
-    mClient = new MPEClient(SettingsFileName);
+    MPEProtocol protocol;
+#endif
+    
+#if USE_ASYNC
+    mClient = new MPEAsyncClient(SettingsFileName, protocol);
+#else
+    mClient = new MPEClient(SettingsFileName, protocol);
 #endif
     
     // Set the client callbacks.
@@ -114,9 +118,7 @@ void MPEBouncingBallApp::setup()
     // The rest are optional.
     mClient->setFrameUpdateCallback(boost::bind(&MPEBouncingBallApp::updateFrame, this, _1));
     mClient->setDrawCallback(boost::bind(&MPEBouncingBallApp::drawViewport, this, _1));
-    mClient->setStringDataCallback(boost::bind(&MPEBouncingBallApp::stringDataReceived, this, _1));
-    mClient->setIntegerDataCallback(boost::bind(&MPEBouncingBallApp::integerDataReceived, this, _1));
-    mClient->setBytesDataCallback(boost::bind(&MPEBouncingBallApp::bytesDataReceived, this, _1));
+    mClient->setStringDataCallback(boost::bind(&MPEBouncingBallApp::stringDataReceived, this, _1, _2));
     
     // The same as the processing sketch.
     // Does Processing Rand work the same as Cinder Rand as OF Rand?
@@ -293,30 +295,9 @@ void MPEBouncingBallApp::mouseDown(MouseEvent event)
     }
 }
 
-void MPEBouncingBallApp::keyDown(KeyEvent event)
-{
-    // NOTE:
-    // Int/Byte arrays are not yet supported
-    if (mClient->isConnected())
-    {
-        if (event.getChar() == 'i')
-        {
-            std::vector<int> ints = {1,2,3,4,5};
-            mClient->sendIntegerData(ints);
-            return;
-        }
-        else if (event.getChar() == 'b')
-        {
-            std::vector<char> bytes = {'a','b','c','d','e'};
-            mClient->sendBytesData(bytes);
-            return;
-        }
-    }
-}
-
 #pragma mark - Data
 
-void MPEBouncingBallApp::stringDataReceived(const std::string & message)
+void MPEBouncingBallApp::stringDataReceived(const std::string & message, const int fromClientID)
 {
     // Check if it's a "new ball" command
     vector<string> tokens = split(message, ",");
@@ -325,26 +306,6 @@ void MPEBouncingBallApp::stringDataReceived(const std::string & message)
         addBallAtPosition(Vec2f(stoi(tokens[1]),stoi(tokens[2])));
     }
     console() << "stringDataReceived: " << message << std::endl;
-}
-
-void MPEBouncingBallApp::integerDataReceived(const std::vector<int> & integers)
-{
-    string outp = "";
-    for (int i = 0; i < integers.size(); ++i)
-    {
-        outp += std::to_string(integers[i]);
-    }
-    console() << "integerDataReceived: " << outp << std::endl;
-}
-
-void MPEBouncingBallApp::bytesDataReceived(const std::vector<char> & bytes)
-{
-    string outp = "";
-    for (int i = 0; i < bytes.size(); ++i)
-    {
-        outp += std::to_string(bytes[i]);
-    }
-    console() << "bytesDataReceived: " << outp << std::endl;
 }
 
 CINDER_APP_NATIVE( MPEBouncingBallApp, RendererGl )

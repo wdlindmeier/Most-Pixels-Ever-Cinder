@@ -122,31 +122,8 @@ vector<char> TCPClient::readBytes()
     return vecBytes;
 }
 
-void TCPClient::writeBuffer(const boost::asio::const_buffers_1 & buffer)
-{
-#if USE_STRING_QUEUE
-    console() << "ALERT: Not using write buffer. Message Ignored." << std::endl;
-#else
-    boost::system::error_code error;
-    // TODO: Guarantee that all of the data has been sent.
-    // write_some doesn't make that promise.
-    size_t len = mSocket.write_some(buffer, error);
-    if (error)
-    {
-        console() << "ERROR: Couldn't write. " << error.message() << std::endl;
-        return;
-    }
-    else if (len == 0)
-    {
-        console() << "ALERT: Wrote 0 bytes." << std::endl;
-        return;
-    }
-#endif
-}
-
 void TCPClient::write(const string & msg)
 {
-#if USE_STRING_QUEUE
     boost::system::error_code error;
     // TODO: Guarantee that all of the data has been sent.
     // write_some doesn't make that promise.
@@ -159,9 +136,6 @@ void TCPClient::write(const string & msg)
     {
         console() << "ALERT: Wrote 0 bytes.\n";
     }
-#else
-    writeBuffer(boost::asio::buffer(msg));
-#endif
 }
 
 void TCPClient::close()

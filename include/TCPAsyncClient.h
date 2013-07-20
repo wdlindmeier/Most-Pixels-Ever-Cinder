@@ -29,11 +29,7 @@ namespace mpe
     class TCPAsyncClient : public TCPClient
     {
 
-#if USE_STRING_QUEUE
     typedef std::deque<const std::string> MessageQueue;
-#else
-    typedef std::deque<const boost::asio::const_buffers_1> MessageQueue;
-#endif
     typedef boost::function<void (bool didConnect, const boost::system::error_code & error)> OpenedCallback;
     typedef boost::function<void (const std::string & message)> ServerMessageCallback;
 
@@ -47,7 +43,6 @@ namespace mpe
                                              const OpenedCallback &callback);
         void                            close();
         void                            write(const std::string & msg);
-        void                            writeBuffer(const boost::asio::const_buffers_1 & buffer);
         void                            setIncomingMessageCallback(ServerMessageCallback callback);
 
     private:
@@ -59,7 +54,6 @@ namespace mpe
         // Internal versions of the public interface.
         // These happen on a different thread.
         void                            _write(const std::string & msg);
-        void                            _writeBuffer(const boost::asio::const_buffers_1 & buffer);
         void                            _close();
 
         MessageQueue                    mWriteMessages;

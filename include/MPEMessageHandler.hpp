@@ -44,14 +44,7 @@ namespace mpe
 
         // Overload these functions in the subclass to receive data.
 
-        // This will be a broadcast.
-        virtual void receivedStringMessage(const std::string & dataMessage)
-        {};
-        // Integers are waiting in the connection.
-        virtual void readIncomingIntegers()
-        {};
-        // Bytes are waiting in the connection.
-        virtual void readIncomingBytes()
+        virtual void receivedStringMessage(const std::string & dataMessage, int fromClientID = -1)
         {};
 
     protected:
