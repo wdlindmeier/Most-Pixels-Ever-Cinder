@@ -28,13 +28,15 @@ using namespace mpe;
  
  Usage:
  
-    1) Start the command line server with 2 clients.
+    1) Start the command line server with 2 clients, or don't pass in a client number for dynamic-mode.
     2) Build and run both targets from XCode (or launch them from the build folder).
  
  Dragging the app windows around the screen will update their positions relative
  to the master dimensions to simulate physical screens.
  
  Clicking the mouse adds balls to the scene.
+ 
+ Dragging the mouse will send messages to client 1, but not client 0.
 
 */
 
@@ -63,6 +65,7 @@ public:
     // Input Events
     void        mouseDown(MouseEvent event);
     void        mouseDrag(MouseEvent event);
+    void        keyDown(KeyEvent event);
     
     // Data Callbacks
     void        stringDataReceived(const std::string & message, const int fromClientID);
@@ -324,6 +327,11 @@ void MPEBouncingBallApp::mouseDrag(MouseEvent event)
         vector<int> toClientIDs = {1};
         mClient->sendStringData(std::to_string(pos.x) + "," + std::to_string(pos.y), toClientIDs);
     }
+}
+
+void MPEBouncingBallApp::keyDown(KeyEvent event)
+{
+    // char key = event.getChar();
 }
 
 #pragma mark - Data

@@ -90,8 +90,6 @@ string TCPClient::read(bool & isDataAvailable)
 void TCPClient::write(const string & msg)
 {
     boost::system::error_code error;
-    // TODO: Guarantee that all of the data has been sent.
-    // write_some doesn't make that promise.
     size_t len = mSocket.write_some(boost::asio::buffer(msg), error);
     if (error)
     {
@@ -101,15 +99,14 @@ void TCPClient::write(const string & msg)
     {
         console() << "ALERT: Wrote 0 bytes.\n";
     }
+    else if (len < msg.length())
+    {
+        console() << "ALERT: Only sent " << len << " of " << msg.length() << " message bytes." << std::endl;
+    }
 }
 
 void TCPClient::close()
 {
     mIOService.stop();
-    if (mSocket.is_open())
-    {
-        mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-        mSocket.close();
-    }
     mIsConnected = false;
 }
