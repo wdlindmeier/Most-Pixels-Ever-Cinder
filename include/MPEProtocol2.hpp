@@ -87,14 +87,13 @@ namespace mpe
 
         virtual std::string broadcast(const std::string & msg)
         {
-            std::string sanitizedMessage = cleanMessage(msg);
-            return broadcast(sanitizedMessage, std::vector<int>());
+            return broadcast(msg, std::vector<int>());
         };
 
         virtual std::string broadcast(const std::string & msg, const std::vector<int> & toClientIDs)
         {
-            assert(msg.find(dataMessageDelimiter()) == std::string::npos);
-            std::string sendMessage = DATA_MESSAGE + dataMessageDelimiter() + msg;
+            std::string sanitizedMessage = cleanMessage(msg);
+            std::string sendMessage = DATA_MESSAGE + dataMessageDelimiter() + sanitizedMessage;
             for (int i = 0; i < toClientIDs.size(); ++i)
             {
                 sendMessage += dataMessageDelimiter() + std::to_string(toClientIDs[i]);

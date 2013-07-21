@@ -60,6 +60,9 @@ namespace mpe
         MPEClient(const std::string & settingsFilename, MPEProtocol * protocol, bool shouldResize = true);
         ~MPEClient(){};
 
+        // Misc Accessors
+        int                 getClientID();
+        
         // Screen Dimensions
         ci::Rectf           getVisibleRect();
         void                setVisibleRect(const ci::Rectf & rect);
@@ -91,6 +94,9 @@ namespace mpe
         // The sending App will receive its own data and should act on it when it's received,
         // rather than before it's sent, so all of the clients are in sync.
         void                sendStringData(const std::string & message); // née broadcast
+        // Send data to specific client IDs
+        void                sendStringData(const std::string & message,
+                                           const std::vector<int> & clientIds);
 
     protected:
         

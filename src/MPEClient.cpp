@@ -45,6 +45,11 @@ mLastFrameConfirmed(-1)
 
 #pragma mark - Accessors
 
+int MPEClient::getClientID()
+{
+    return mClientID;
+}
+
 ci::Rectf MPEClient::getVisibleRect()
 {
     return mLocalViewportRect;
@@ -285,6 +290,21 @@ void MPEClient::sendClientID()
 void MPEClient::sendStringData(const std::string & message)
 {
     mTCPClient->write(mProtocol->broadcast(message));
+}
+
+void MPEClient::sendStringData(const std::string & message, const std::vector<int> & clientIds)
+{
+    std::shared_ptr<MPEProtocol2> protocol = std::dynamic_pointer_cast<MPEProtocol2>(mProtocol);
+    if (protocol != NULL)
+    {
+        mTCPClient->write(protocol->broadcast(message, clientIds));
+    }
+    else
+    {
+        console() << "WARNING: Sending data to specific clients is not supported prior to MEP 2.0."
+                  << std::endl << "Sending to all clients instead." << std::endl;
+        sendStringData(message);
+    }
 }
 
 void MPEClient::doneRendering()

@@ -62,6 +62,7 @@ public:
     
     // Input Events
     void        mouseDown(MouseEvent event);
+    void        mouseDrag(MouseEvent event);
     
     // Data Callbacks
     void        stringDataReceived(const std::string & message, const int fromClientID);
@@ -314,6 +315,17 @@ void MPEBouncingBallApp::mouseDown(MouseEvent event)
     }
 }
 
+void MPEBouncingBallApp::mouseDrag(MouseEvent event)
+{
+    if (mClient->isConnected())
+    {
+        Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
+        // For testing purposes. Only send drag data to client 1.
+        vector<int> toClientIDs = {1};
+        mClient->sendStringData(std::to_string(pos.x) + "," + std::to_string(pos.y), toClientIDs);
+    }
+}
+
 #pragma mark - Data
 
 void MPEBouncingBallApp::stringDataReceived(const std::string & message, const int fromClientID)
@@ -324,7 +336,8 @@ void MPEBouncingBallApp::stringDataReceived(const std::string & message, const i
     {
         addBallAtPosition(Vec2f(stoi(tokens[1]),stoi(tokens[2])));
     }
-    console() << "stringDataReceived: " << message << std::endl;
+    console() << mClient->getClientID() << ") data from client #"
+              << fromClientID << ": " << message << std::endl;
 }
 
 CINDER_APP_NATIVE( MPEBouncingBallApp, RendererGl )

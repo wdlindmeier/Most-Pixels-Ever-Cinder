@@ -3,8 +3,7 @@
 #
 #  simple_server.py
 #  A simple Most-Pixels-Ever compatable server.
-#  Used for testing purposes. This may not have 100%
-#  feature parody with the Java server.
+#  Conforms to the MPE 2.0 protocol.
 #
 #  Created by William Lindmeier.
 #  https://github.com/wdlindmeier/Most-Pixels-Ever-Cinder
@@ -61,64 +60,81 @@ class MPEServer(Protocol):
     def dataReceived(self, data):
         global num_clients_drawn
         global framecount
-        tokens = data[:-1].split("|")
-        cmd = tokens[0]
+        # There may be more than 1 message in the mix
+        messages = data.split("\n")
+        for message in messages:
+            if len(message) < 1:
+                return
 
-        if cmd == CMD_DID_DRAW:
-            # Format
-            # D|client_id|last_frame_rendered
-            client = int(tokens[1])
-            frame_id = int(tokens[2])
-            if frame_id >= framecount:
-                num_clients_drawn += 1
-                if MPEServer.isNextFrameReady():
-                    # all of the frames are drawn, send out the next frames
-                    MPEServer.sendNextFrame()
+            tokens = message.split("|")
+            token_count = len(tokens)
+            cmd = tokens[0]
 
-        elif (cmd == CMD_SYNC_CLIENT_CONNECT) or (cmd == CMD_ASYNC_CLIENT_CONNECT):
-            # Formats 
-            # "S|client_id|client_name"
-            # "A|client_id|client_name|should_receive_broadcasts"
-            self.client_id = int(tokens[1])
-            self.client_name = tokens[2]
-            MPEServer.clients[self.client_id] = self
+            if cmd == CMD_DID_DRAW:
+                # Format
+                # D|client_id|last_frame_rendered
+                if token_count != 3:
+                    print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens
+                client = int(tokens[1])
+                frame_id = int(tokens[2])
+                if frame_id >= framecount:
+                    num_clients_drawn += 1
+                    if MPEServer.isNextFrameReady():
+                        # all of the frames are drawn, send out the next frames
+                        MPEServer.sendNextFrame()
 
-            client_receives_messages = True
-            if cmd == CMD_ASYNC_CLIENT_CONNECT:
-                MPEServer.rendering_clients.append(self)
-            elif cmd == CMD_ASYNC_CLIENT_CONNECT:
-                client_receives_messages = tokens[3].lower() == 'true'
+            elif (cmd == CMD_SYNC_CLIENT_CONNECT) or (cmd == CMD_ASYNC_CLIENT_CONNECT):
+                # Formats 
+                # "S|client_id|client_name"
+                # "A|client_id|client_name|should_receive_broadcasts"
+                if token_count < 3 or token_count > 4:
+                    print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens
+                self.client_id = int(tokens[1])
+                self.client_name = tokens[2]
+                MPEServer.clients[self.client_id] = self
+
+                client_receives_messages = True
+                if cmd == CMD_ASYNC_CLIENT_CONNECT:
+                    MPEServer.rendering_clients.append(self)
+                elif cmd == CMD_ASYNC_CLIENT_CONNECT:
+                    client_receives_messages = tokens[3].lower() == 'true'
                                 
-            if client_receives_messages:
-                MPEServer.receiving_clients.append(self)         
+                if client_receives_messages:
+                    MPEServer.receiving_clients.append(self)         
                 
-            MPEServer.handleClientAdd(self.client_id)
+                MPEServer.handleClientAdd(self.client_id)
 
-        elif cmd == CMD_BROADCAST:
-            # Formats: 
-            # "T|message message message"
-            # "T|message message message|toID_1,toID_2,toID_3"
-            to_client_ids = []
-            if len(tokens) < 3:
-                to_client_ids = [c.client_id for c in MPEServer.receiving_clients]  
+            elif cmd == CMD_BROADCAST:
+                # Formats: 
+                # "T|message message message"
+                # "T|message message message|toID_1,toID_2,toID_3"
+                if token_count < 2 or token_count > 3:
+                    print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens
+                to_client_ids = []
+                if token_count == 2:
+                    to_client_ids = [c.client_id for c in MPEServer.receiving_clients]            
+                elif token_count == 3:
+                    to_client_ids = tokens[2].split(",")
+                    to_client_ids = [int(client_id) for client_id in to_client_ids]
+                
+                MPEServer.broadcastMessage(tokens[1], self.client_id, to_client_ids)
+
+            elif cmd == CMD_PAUSE:    
+                # Format:
+                # P
+                if token_count > 1:
+                    print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens                                    
+                MPEServer.togglePause()
+            
+            elif cmd == CMD_RESET:
+                # Format:
+                # R
+                if token_count > 1:
+                    print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens
+                MPEServer.reset()
+            
             else:
-                to_client_ids = tokens[2].split(",")
-                to_client_ids = [int(client_id) for client_id in to_client_ids]
-                
-            MPEServer.broadcastMessage(tokens[1], self.client_id, to_client_ids)
-
-        elif cmd == CMD_PAUSE:    
-            # Format:
-            # P
-            MPEServer.togglePause()
-            
-        elif cmd == CMD_RESET:
-            # Format:
-            # R
-            MPEServer.reset()
-            
-        else:
-            print "Unknown message: " + data
+                print "Unknown message: " + message
 
         # print "Received message: ", data, "FROM", self.client_id
 
@@ -188,7 +204,7 @@ class MPEServer(Protocol):
         
     @staticmethod
     def broadcastMessage(message, from_client_id, to_client_ids):
-        print "Broadcasting message: " + message
+        # print "Broadcasting message: " + message + " to client IDs: ", to_client_ids
         m = BroadcastMessage(message, from_client_id, to_client_ids)
         MPEServer.message_queue.append(m)
             
