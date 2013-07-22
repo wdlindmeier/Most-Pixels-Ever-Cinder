@@ -113,6 +113,19 @@ void MPEClient::stop()
     }
 }
 
+void MPEClient::togglePause()
+{
+    std::shared_ptr<MPEProtocol2> protocol = std::dynamic_pointer_cast<MPEProtocol2>(mProtocol);
+    if (protocol != NULL)
+    {
+        mTCPClient->write(protocol->togglePause());
+    }
+    else
+    {
+        console() << "WARNING: Pausing is not supported prior to MEP 2.0." << std::endl;
+    }
+}
+
 bool  MPEClient::isConnected()
 {
     return mIsStarted && mTCPClient && mTCPClient->isConnected();

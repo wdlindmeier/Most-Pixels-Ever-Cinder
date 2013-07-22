@@ -20,7 +20,7 @@ namespace mpe
 {    
     const static std::string CONNECT_ASYNCHRONOUS = "A";
     const static std::string RESET_ALL = "R";
-    const static std::string PAUSE_ALL = "P";
+    const static std::string TOGGLE_PAUSE = "P";
 
     class MPEProtocol2 : public MPEProtocol
     {
@@ -79,9 +79,9 @@ namespace mpe
                    outgoingMessageTerminus();
         };
 
-        virtual std::string pauseAll()
+        virtual std::string togglePause()
         {
-            return PAUSE_ALL +
+            return TOGGLE_PAUSE +
                    outgoingMessageTerminus();
         };
 

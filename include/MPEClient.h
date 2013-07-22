@@ -58,6 +58,7 @@ namespace mpe
         // Connection
         void                start();
         void                stop();
+        void                togglePause();
         bool                isConnected();
 
         // Loop

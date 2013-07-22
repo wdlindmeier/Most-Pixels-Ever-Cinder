@@ -1,4 +1,4 @@
-![MPE](https://raw.github.com/wdlindmeier/Most-Pixels-Ever-Cinder/master/assets/MPEIcon.gif) #Most-Pixels-Ever for Cinder
+#Most-Pixels-Ever for Cinder
 
 A Cinder block client for Most Pixels Ever.
 

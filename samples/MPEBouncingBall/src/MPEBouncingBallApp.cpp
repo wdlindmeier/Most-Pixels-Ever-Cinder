@@ -39,12 +39,16 @@ const static string kCommandNewBall = "BALL++";
  
     2) Build and run both targets from XCode (or launch them from the build folder).
  
- Dragging the app windows around the screen will update their positions relative
- to the master dimensions to simulate physical screens.
+ Behavior:
  
- Clicking the mouse adds balls to the scene.
+    • Dragging the app windows around the screen will update their positions relative to the master 
+      dimensions to simulate physical screens.
  
- Dragging the mouse will send messages to client 1, but not client 0. Messages are simply logged.
+    • Clicking the mouse adds balls to the scene.
+ 
+    • Dragging the mouse will send messages to client 1, but not client 0. Messages are just logged.
+ 
+    • Pressing 'p' will pause the server.
 
 */
 
@@ -352,7 +356,11 @@ void MPEBouncingBallApp::mouseDrag(MouseEvent event)
 
 void MPEBouncingBallApp::keyDown(KeyEvent event)
 {
-    // char key = event.getChar();
+    char key = event.getChar();
+    if (key == 'p' && mClient->isConnected())
+    {
+        mClient->togglePause();
+    }
 }
 
 CINDER_APP_NATIVE( MPEBouncingBallApp, RendererGl )

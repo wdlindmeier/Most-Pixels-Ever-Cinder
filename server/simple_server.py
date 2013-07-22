@@ -144,10 +144,13 @@ class MPEServer(Protocol):
     @staticmethod
     def reset():
         global framecount        
+        global is_paused
         framecount = 0
         num_clients_drawn = 0
         MPEServer.message_queue = []
         MPEServer.sendReset()
+        if is_paused:
+            print "INFO: Reset was called when server is paused."
         MPEServer.sendNextFrame()
     
     @staticmethod   
