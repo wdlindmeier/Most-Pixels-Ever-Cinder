@@ -1,4 +1,4 @@
-#Most-Pixels-Ever for Cinder
+![MPE](https://raw.github.com/wdlindmeier/Most-Pixels-Ever-Cinder/master/assets/MPEIcon.gif) #Most-Pixels-Ever for Cinder
 
 A Cinder block client for Most Pixels Ever.
 
@@ -12,7 +12,7 @@ https://github.com/shiffman/Most-Pixels-Ever
 
 #####The Server
 
-A simple MPE 2.0 server is included with the block. Run like so:
+A basic MPE 2.0 server is included with the block. Run like so:
 
 `$ python server/simple_server.py`
 
@@ -83,8 +83,8 @@ void MyCinderApp::mpeReset()
     // This will create the same "random" position each reset because the 
     // seed is hardcoded to 1.
     Vec2i sizeMaster = mClient->getMasterSize();
-    mBall.velocity = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
     mBall.position = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y))
+    mBall.velocity = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
 }
 
 void MyCinderApp::mpeFrameUpdate(long serverFrameNumber)
@@ -111,6 +111,7 @@ void MyCinderApp::mpeMessageReceived(const std::string & message, const int from
     //
     // mClient->sendMessage("mouse_pos: 100,200");
 
-    ci::app::console() << "Client " << fromClientID << " sent broadcast message: " << message << std::endl;
+    ci::app::console() << "Client " << fromClientID 
+                       << " sent broadcast message: " << message << std::endl;
 }
 ```
