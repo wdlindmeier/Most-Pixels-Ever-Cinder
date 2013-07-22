@@ -30,8 +30,8 @@ parser.add_argument('--num-clients', dest='num_clients', default=-1, help='The n
 parser.add_argument('--port', dest='port_num', default=9002, help='The port number that the clients connect to.')
 args = parser.parse_args()
 
-portnum = args.port_num
-num_clients_required = args.num_clients
+portnum = int(args.port_num)
+num_clients_required = int(args.num_clients)
 framecount = 0
 num_clients_drawn = 0
 is_paused = False
@@ -94,7 +94,7 @@ class MPEServer(Protocol):
                 MPEServer.clients[self.client_id] = self
 
                 client_receives_messages = True
-                if cmd == CMD_ASYNC_CLIENT_CONNECT:
+                if cmd == CMD_SYNC_CLIENT_CONNECT:
                     MPEServer.rendering_clients.append(self)
                 elif cmd == CMD_ASYNC_CLIENT_CONNECT:
                     client_receives_messages = tokens[3].lower() == 'true'
@@ -166,19 +166,23 @@ class MPEServer(Protocol):
     def handleClientAdd(client_id):
         global num_clients
         global framecount
+        global num_clients_required
         print "Added client %i (%s)" % (client_id, MPEServer.clients[client_id].client_name)
-        if num_clients_required == -1 or len(MPEServer.rendering_clients) == num_clients_required:
+        num_sync_clients = len(MPEServer.rendering_clients)
+        if num_clients_required == -1 or num_sync_clients == num_clients_required:
             MPEServer.reset()
-        elif len(MPEServer.rendering_clients) < num_clients_required:
-            print "Waiting for more clients."
-        elif len(MPEServer.rendering_clients) > num_clients_required:
+        elif num_sync_clients < num_clients_required:
+            print "Waiting for %i more clients." % (num_clients_required - num_sync_clients)
+        elif num_sync_clients > num_clients_required:
             print "ERROR: More than MAX clients have connected."
             
     @staticmethod
     def isNextFrameReady():
         global num_clients_drawn
+        global num_clients_required
         global is_paused
-        return num_clients_drawn >= len(MPEServer.rendering_clients) and not is_paused
+        num_sync_clients = len(MPEServer.rendering_clients)
+        return num_clients_drawn >= num_sync_clients and not is_paused and num_sync_clients >= num_clients_required
         
     @staticmethod
     def sendNextFrame():

@@ -109,8 +109,8 @@ void MyCinderApp::mpeMessageReceived(const std::string & message, const int from
 {
     // Apps can broadcast data to the other clients. E.g.:
     //
-    // mClient->sendStringData("mouse_pos: 100,200");
+    // mClient->sendMessage("mouse_pos: 100,200");
 
-    ci::app::console() << "Received broadcast data: " << message << std::endl;
+    ci::app::console() << "Client " << fromClientID << " sent broadcast message: " << message << std::endl;
 }
 ```

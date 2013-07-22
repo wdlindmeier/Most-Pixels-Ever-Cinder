@@ -78,6 +78,9 @@ public:
     void        mpeMessageReceived(const std::string & message, const int fromClientID);
     void        mpeReset();
     std::string mpeSettingsFilename();
+#if !USE_VERSION_2
+    std::shared_ptr<MPEProtocol> mpeProtocol();
+#endif
     
 private:
     
@@ -119,6 +122,11 @@ void MPEBouncingBallApp::setup()
 #endif
     
     mDidMoveFrame = false;
+    
+#if !USE_VERSION_2
+    mpeReset();
+#endif
+    
 }
 
 void MPEBouncingBallApp::shutdown()
@@ -154,8 +162,15 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
     {
         addBallAtPosition(Vec2f(stoi(tokens[1]),stoi(tokens[2])));
     }
-    console() << mClient->getClientID() << ") data from client #"
+    
+#if USE_VERSION_2
+    console() << mClient->getClientID() << ") Message from client #"
               << fromClientID << ": " << message << std::endl;
+#else
+    // MPE v 1 didn't support broadcast client IDs
+    console() << "Received message : " << message << std::endl;
+#endif
+    
 }
 
 #if !USE_VERSION_2
