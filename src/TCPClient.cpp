@@ -59,30 +59,23 @@ string TCPClient::read(bool & isDataAvailable)
     std::size_t bytes_readable = command.get();
     isDataAvailable = bytes_readable > 0;
 
-    if (isDataAvailable)
+    boost::system::error_code error;
+    boost::asio::streambuf buffer;
+    boost::asio::read_until(mSocket, buffer, mMessageDelimiter, error);
+
+    // When the server closes the connection, the ip::tcp::socket::read_some()
+    // function will exit with the boost::asio::error::eof error,
+    // which is how we know to exit the loop.
+    if (error)
     {
-
-        boost::system::error_code error;
-        boost::asio::streambuf buffer;
-        boost::asio::read_until(mSocket, buffer, mMessageDelimiter, error);
-
-        // When the server closes the connection, the ip::tcp::socket::read_some()
-        // function will exit with the boost::asio::error::eof error,
-        // which is how we know to exit the loop.
-        if (error == boost::asio::error::eof)
-        {
-            close();
-            return "";
-        }
-        else if (error)
-        {
-            console() << "ERROR: " << error.message() << std::endl;
-            throw boost::system::system_error(error); // Some other error.
-        }
-
-        std::istream str(&buffer);
-        std::getline(str, message);
+        console() << "ERROR: " << error.message() << std::endl;
+        close();
+        return message;
     }
+
+    std::ostringstream ss;
+    ss << &buffer;
+    message = ss.str();
 
     return message;
 }

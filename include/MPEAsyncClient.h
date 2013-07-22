@@ -29,8 +29,7 @@ namespace mpe
     public:
 
         MPEAsyncClient() : MPEClient(){};
-        MPEAsyncClient(const std::string & settingsFilename, bool shouldResize = true);
-        MPEAsyncClient(const std::string & settingsFilename, MPEProtocol * protocol, bool shouldResize = true);
+        MPEAsyncClient(MPEApp *cinderApp);
         ~MPEAsyncClient(){};
 
         // Connection
@@ -44,13 +43,15 @@ namespace mpe
         void                    serverMessageReceived(const std::string & message);
         void                    receivedStringMessage(const std::string & dataMessage,
                                                       const int fromClientID = -1);
-        void                    readIncomingIntegers();
-        void                    readIncomingBytes();
+
+    protected:
+        
+        void                    receivedResetCommand();
 
     private:
 
         void                    tcpDidConnect(bool didConnect, const boost::system::error_code & error);
-
+        
         // This lock is to protect the client data that's being updated
         // on one thread (that's communicating with the server)
         // and accessed for drawing on another thread.

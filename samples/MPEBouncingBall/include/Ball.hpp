@@ -42,7 +42,7 @@ public:
     // This is just here to prove that the thread locks are working.
     void manipulateInternalData()
     {
-        for (int i = 0; i < 10000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             if (mTestVector.size() > i)
             {
@@ -53,7 +53,7 @@ public:
                 mTestVector.push_back(std::to_string(i));
             }
         }
-        for (int i = 0; i < 10000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             std::string vi = mTestVector[i];
             assert(vi == std::to_string(i));

@@ -24,27 +24,30 @@ namespace mpe
 
         MPEMessageHandler() : mCurrentRenderFrame(0), mFrameIsReady(false){};
 
+        // The current frame that each client is rendering.
+        // This is the only MPEMessageHandler function that the App should ever call.
+        long                getCurrentRenderFrame()
+        {
+            return mCurrentRenderFrame;
+        };
+        
         // The frame that every client should be rendering.
         // This is set by the protocol and should never by called by your App.
-        virtual void setCurrentRenderFrame(long frameNum)
+        virtual void        setCurrentRenderFrame(long frameNum)
         {
             mCurrentRenderFrame = frameNum;
         };
 
-        long getCurrentRenderFrame()
-        {
-            return mCurrentRenderFrame;
-        };
-
         // mFrameIsReady is set to true once the incoming server message is ready.
-        void setFrameIsReady(bool isFrameReady)
+        // This is set by the protocol and should never by called by your App.
+        void                setFrameIsReady(bool isFrameReady)
         {
             mFrameIsReady = isFrameReady;
         };
 
-        // Overload these functions in the subclass to handle data.
-        virtual void receivedStringMessage(const std::string & dataMessage, int fromClientID = -1){};
-        virtual void receivedResetCommand(){};
+        // These are overloaded in the MPEClient to handle data.
+        virtual void        receivedStringMessage(const std::string & dataMessage, int fromClientID = -1){};
+        virtual void        receivedResetCommand(){};
 
     protected:
 

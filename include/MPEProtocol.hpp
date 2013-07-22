@@ -23,13 +23,7 @@
  This class converts actions to/from strings that the server undertands.
  MPEProtocol can be subclassed to use with other servers, if it's ever updated / modified.
 
- The MPE protocol suppored below is for Shiffman's Java server, which can be found here:
- https://github.com/shiffman/Most-Pixels-Ever/tree/master/server_jar
-
- To start the server:
- $ java -jar mpeServer.jar -debug1 -framerate30 -screens2
- or
- $ java -jar mpeServer.jar -framerate60 -screens2
+ The protocol below is MPE version 1, which is now depreciated.
 
 */
 

@@ -23,15 +23,9 @@ using namespace ci;
 using namespace ci::app;
 using namespace mpe;
 
-MPEClient::MPEClient(const std::string & settingsFilename, bool shouldResize) :
-MPEClient(settingsFilename, new MPEProtocol2(), shouldResize)
-{
-}
-
-MPEClient::MPEClient(const string & settingsFilename, MPEProtocol * protocol, bool shouldResize) :
+MPEClient::MPEClient(MPEApp *cinderApp) :
 MPEMessageHandler(),
 mHostname(""),
-//mProtocol(protocol),
 mPort(0),
 mIsStarted(false),
 mIsRendering3D(false),
@@ -39,8 +33,9 @@ mClientID(-1),
 mIsDebug(false),
 mLastFrameConfirmed(-1)
 {
-    mProtocol = std::shared_ptr<MPEProtocol>(protocol);
-    loadSettings(settingsFilename, shouldResize);
+    mApp = cinderApp;
+    mProtocol = std::shared_ptr<MPEProtocol>(mApp->mpeProtocol());
+    loadSettings(mApp->mpeSettingsFilename());
 }
 
 #pragma mark - Accessors
@@ -75,23 +70,6 @@ void MPEClient::setIsRendering3D(bool is3D)
     mIsRendering3D = is3D;
 }
 
-#pragma mark - Callbacks
-
-void MPEClient::setStringDataCallback(const StringDataCallback & callback)
-{
-    mStringDataCallback = callback;
-}
-
-void MPEClient::setFrameUpdateCallback( const FrameUpdateCallback & callback)
-{
-    mUpdateCallback = callback;
-}
-
-void MPEClient::setDrawCallback( const FrameRenderCallback & callback)
-{
-    mRenderCallback = callback;
-}
-
 #pragma mark - Connection
 
 void MPEClient::start()
@@ -104,7 +82,6 @@ void MPEClient::start()
     mIsStarted = true;
     mTCPClient = new TCPClient(mProtocol->incomingMessageDelimiter());
 
-    // Open the client
     if (mTCPClient->open(mHostname, mPort))
     {
         tcpDidConnect();
@@ -115,7 +92,6 @@ void MPEClient::start()
     }
 }
 
-// TCP Connection Callback
 void MPEClient::tcpDidConnect()
 {
     if (mIsDebug)
@@ -139,7 +115,7 @@ void MPEClient::stop()
 
 bool  MPEClient::isConnected()
 {
-    return mTCPClient && mTCPClient->isConnected();
+    return mIsStarted && mTCPClient && mTCPClient->isConnected();
 }
 
 #pragma mark - Update
@@ -153,32 +129,26 @@ void MPEClient::update()
     if (mIsStarted && isConnected())
     {
         bool isDataAvailable = true;
-        while (isDataAvailable)
+
+        string data = mTCPClient->read(isDataAvailable);
+        if (isDataAvailable)
         {
-            string data = mTCPClient->read(isDataAvailable);
-            if (isDataAvailable)
+            // There may be more than 1 message in the read.
+            std::vector<string> messages = ci::split(data,
+                                                     mProtocol->incomingMessageDelimiter());
+            for (int i = 0; i < messages.size(); ++i)
             {
-                // There may be more than 1 message in the read.
-                std::vector<string> messages = ci::split(data,
-                                                         mProtocol->incomingMessageDelimiter());
-                for (int i = 0; i < messages.size(); ++i)
+                std::string message = messages[i];
+                if (message.length() > 0)
                 {
-                    std::string message = messages[i];
-                    if (message.length() > 0)
-                    {
-                        mProtocol->parse(message, this);
-                    }
+                    mProtocol->parse(message, this);
                 }
             }
         }
 
-        if (mFrameIsReady && mUpdateCallback)
+        if (mFrameIsReady)
         {
-            mUpdateCallback(this->getCurrentRenderFrame());
-        }
-        else if (!mUpdateCallback)
-        {
-            console() << "WARNING: The FrameUpdateCallback has not been set." << std::endl;
+            mApp->mpeFrameUpdate(this->getCurrentRenderFrame());
         }
     }
 }
@@ -187,18 +157,15 @@ void MPEClient::update()
 
 void MPEClient::draw()
 {
-    if (mRenderCallback)
-    {
-        glPushMatrix();
+    glPushMatrix();
 
-        // Only show the area of the view we're interested in.
-        positionViewport();
+    // Only show the area of the view we're interested in.
+    positionViewport();
 
-        // Tell the app to draw.
-        mRenderCallback(mFrameIsReady);
+    // Tell the app to draw.
+    mApp->mpeFrameRender(mFrameIsReady);
 
-        glPopMatrix();
-    }
+    glPopMatrix();
 
     if (isConnected())
     {
@@ -329,22 +296,19 @@ void MPEClient::setCurrentRenderFrame(long frameNum)
 
 void MPEClient::receivedResetCommand()
 {
-    console() << "TODO: Call App reset callback\n";
+    mApp->mpeReset();
 }
 
 #pragma mark - Receiving Messages
 
 void MPEClient::receivedStringMessage(const std::string & dataMessage, const int fromClientID)
 {
-    if (mStringDataCallback)
-    {
-        mStringDataCallback(dataMessage, fromClientID);
-    }
+    mApp->mpeDataReceived(dataMessage, fromClientID);
 }
 
 #pragma mark - Settings
 
-void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
+void MPEClient::loadSettings(string settingsFilename)
 {
     // Make sure the settings file exists.
     assert(boost::filesystem::exists(getAssetPath(settingsFilename)));
@@ -395,9 +359,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         mLocalViewportRect = Rectf( x, y, x+width, y+height );
 
         // Force the window size based on the settings XML.
-        if (shouldResize){
-            ci::app::setWindowSize(width, height);
-        }
+        ci::app::setWindowSize(width, height);
     }
     catch (XmlTree::ExcChildNotFound e)
     {
@@ -422,7 +384,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         XmlTree fullscreenNode = settingsDoc.getChild("settings/go_fullscreen");
         string boolStr = fullscreenNode.getValue<string>();
         std::transform(boolStr.begin(), boolStr.end(), boolStr.begin(), ::tolower);
-        if (boolStr == "true" && shouldResize)
+        if (boolStr == "true")
         {
             ci::app::setFullScreen(true);
         }
@@ -437,7 +399,7 @@ void MPEClient::loadSettings(string settingsFilename, bool shouldResize)
         XmlTree fullscreenNode = settingsDoc.getChild("settings/offset_window");
         string boolStr = fullscreenNode.getValue<string>();
         std::transform(boolStr.begin(), boolStr.end(), boolStr.begin(), ::tolower);
-        if (boolStr == "true" && shouldResize)
+        if (boolStr == "true")
         {
             // Reposition the screen
             ci::app::setWindowPos(Vec2i(mLocalViewportRect.x1, mLocalViewportRect.y1));

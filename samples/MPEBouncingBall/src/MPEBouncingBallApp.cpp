@@ -2,7 +2,7 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
-#include "ClientSettings.h"
+#include "MPEApp.hpp"
 #include <boost/foreach.hpp>
 
 // Choose the client mode. Generally Async is the way to go.
@@ -21,6 +21,8 @@ using std::string;
 using std::vector;
 using namespace mpe;
 
+const static string kCommandNewBall = "BALL++";
+
 /*
  
  MPEBouncingBallApp:
@@ -28,7 +30,13 @@ using namespace mpe;
  
  Usage:
  
-    1) Start the command line server with 2 clients, or don't pass in a client number for dynamic-mode.
+    1) Start the server (one is located in server/ of the MPE Cinder block) by running:
+        
+            $ python simple_server.py
+ 
+       Passing in `--num-clients N` will wait to start the loop until N clients have connected.
+       Otherwise, the server will reset the loop whenever a new client joins.
+ 
     2) Build and run both targets from XCode (or launch them from the build folder).
  
  Dragging the app windows around the screen will update their positions relative
@@ -36,11 +44,11 @@ using namespace mpe;
  
  Clicking the mouse adds balls to the scene.
  
- Dragging the mouse will send messages to client 1, but not client 0.
+ Dragging the mouse will send messages to client 1, but not client 0. Messages are simply logged.
 
 */
 
-class MPEBouncingBallApp : public AppNative
+class MPEBouncingBallApp : public AppNative, public MPEApp
 {
 public:
     
@@ -48,27 +56,28 @@ public:
     void        prepareSettings(Settings *settings);
     void        setup();
     void        shutdown();
-    void        reset();
     
     // Balls
     void        addBallAtPosition(const Vec2f & posBall);
     
     // Update
     void        update();
-    void        updateFrame(long serverFrameNumber);
+    void        mpeFrameUpdate(long serverFrameNumber);
     void        updateLocalViewportFromScreenPosition();
     
     // Draw
     void        draw();
-    void        drawViewport(bool isNewFrame);
+    void        mpeFrameRender(bool isNewFrame);
     
     // Input Events
     void        mouseDown(MouseEvent event);
     void        mouseDrag(MouseEvent event);
     void        keyDown(KeyEvent event);
     
-    // Data Callbacks
-    void        stringDataReceived(const std::string & message, const int fromClientID);
+    // MPE App
+    void        mpeDataReceived(const std::string & message, const int fromClientID);
+    void        mpeReset();
+    std::string mpeSettingsFilename();
     
 private:
     
@@ -103,36 +112,24 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
 
 void MPEBouncingBallApp::setup()
 {
-    // NOTE: SettingsFileName can be found in ClientSettings.[n].cpp
-    // TODO: What's the best cross-platform way of storing these?
-    console() << "Loading settings from " << SettingsFileName << std::endl;
-    
-#if USE_VERSION_2
-    MPEProtocol2 *protocol = new MPEProtocol2();
-#else
-    MPEProtocol *protocol = new MPEProtocol();
-#endif
-
 #if USE_ASYNC
-    mClient = new MPEAsyncClient(SettingsFileName, protocol);
+    mClient = new MPEAsyncClient(this);
 #else
-    mClient = new MPEClient(SettingsFileName, protocol);
+    mClient = new MPEClient(this);
 #endif
-    
-    // Set the client callbacks.
-    // FrameUpdateCallback is required.
-    // DrawCallback is kind of required (see draw()).
-    // The rest are optional.
-    mClient->setFrameUpdateCallback(boost::bind(&MPEBouncingBallApp::updateFrame, this, _1));
-    mClient->setDrawCallback(boost::bind(&MPEBouncingBallApp::drawViewport, this, _1));
-    mClient->setStringDataCallback(boost::bind(&MPEBouncingBallApp::stringDataReceived, this, _1, _2));
     
     mDidMoveFrame = false;
-    mClient->start();
-    reset();
 }
 
-void MPEBouncingBallApp::reset()
+void MPEBouncingBallApp::shutdown()
+{
+    delete mClient;
+    mClient = NULL;
+}
+
+#pragma mark - MPE
+
+void MPEBouncingBallApp::mpeReset()
 {
     console() << "RESETTING\n";
     // The same as the processing sketch.
@@ -143,11 +140,32 @@ void MPEBouncingBallApp::reset()
     addBallAtPosition(Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y)));
 }
 
-void MPEBouncingBallApp::shutdown()
+std::string MPEBouncingBallApp::mpeSettingsFilename()
 {
-    delete mClient;
-    mClient = NULL;
+    // CLIENT_ID is a preprocessor macro defined in the Target build settings
+    return "settings." + std::to_string(CLIENT_ID) + ".xml";
 }
+
+void MPEBouncingBallApp::mpeDataReceived(const std::string & message, const int fromClientID)
+{
+    // Check if it's a "new ball" command
+    vector<string> tokens = split(message, ",");
+    if (tokens.size() > 0 && tokens[0] == kCommandNewBall)
+    {
+        addBallAtPosition(Vec2f(stoi(tokens[1]),stoi(tokens[2])));
+    }
+    console() << mClient->getClientID() << ") data from client #"
+              << fromClientID << ": " << message << std::endl;
+}
+
+#if !USE_VERSION_2
+
+std::shared_ptr<MPEProtocol> MPEBouncingBallApp::mpeProtocol()
+{
+    return std::shared_ptr<MPEProtocol>(new MPEProtocol());
+}
+
+#endif
 
 #pragma mark - Balls
 
@@ -178,20 +196,12 @@ void MPEBouncingBallApp::update()
     }
 }
 
-// updateFrame is where any state/data changes should be happen (rather than update).
+// mpeFrameUpdate is where any state/data changes should be happen (rather than update).
 // It's only called when the server has a new frame, which may be less often
 // than update() is called by the App loop.
-// This is the equivalent to frameEvent in the Processing / OF clients.
 
-void MPEBouncingBallApp::updateFrame(long serverFrameNumber)
+void MPEBouncingBallApp::mpeFrameUpdate(long serverFrameNumber)
 {
-    if (mServerFramesProcessed > serverFrameNumber)
-    {
-        // We've been reset
-        // TODO: This should be triggered by receivedResetCommand
-        reset();
-    }
-    
     if (mBalls.size() > 0)
     {
         mBalls[0].manipulateInternalData();
@@ -240,7 +250,7 @@ void MPEBouncingBallApp::draw()
     mClient->draw();
     
     // The MPEClient will reposition the viewport in a default way, but if you want to
-    // handle this yourself don't set a draw callback.
+    // handle this yourself don't override mpeFrameRender().
     // However, MPEClient::draw() must always be called after you render.
     //
     // E.g.
@@ -249,7 +259,7 @@ void MPEBouncingBallApp::draw()
     //      mClient->draw();
 }
 
-void MPEBouncingBallApp::drawViewport(bool isNewFrame)
+void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
 {
     // Just for the hell of it to see if we can crash by accessing the same data on different threads.
     if (mBalls.size() > 0)
@@ -302,10 +312,6 @@ void MPEBouncingBallApp::drawViewport(bool isNewFrame)
 
 #pragma mark - Input Events
 
-// We've only got 1 command so this isn't really necessary, but it
-// illustrates how the messages can be formatted.
-const static string kCommandNewBall = "BALL++";
-
 void MPEBouncingBallApp::mouseDown(MouseEvent event)
 {
     // Adding a new ball to the scene by sending out a message.
@@ -332,20 +338,6 @@ void MPEBouncingBallApp::mouseDrag(MouseEvent event)
 void MPEBouncingBallApp::keyDown(KeyEvent event)
 {
     // char key = event.getChar();
-}
-
-#pragma mark - Data
-
-void MPEBouncingBallApp::stringDataReceived(const std::string & message, const int fromClientID)
-{
-    // Check if it's a "new ball" command
-    vector<string> tokens = split(message, ",");
-    if (tokens.size() > 0 && tokens[0] == kCommandNewBall)
-    {
-        addBallAtPosition(Vec2f(stoi(tokens[1]),stoi(tokens[2])));
-    }
-    console() << mClient->getClientID() << ") data from client #"
-              << fromClientID << ": " << message << std::endl;
 }
 
 CINDER_APP_NATIVE( MPEBouncingBallApp, RendererGl )

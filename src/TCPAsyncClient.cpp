@@ -18,6 +18,11 @@ TCPClient(messageDelimeter)
 {
 };
 
+TCPAsyncClient::~TCPAsyncClient()
+{
+    mClientThread.detach();
+};
+
 void TCPAsyncClient::open(const string & hostname,
                           const int port,
                           const OpenedCallback &callback)
@@ -88,7 +93,6 @@ void TCPAsyncClient::handleRead(const boost::system::error_code & error)
                 std::string message = messages[i];
                 if (message.length() > 0)
                 {
-//                    console() << "READ: " << message << "\n";
                     mReadCallback(message);
                 }
             }

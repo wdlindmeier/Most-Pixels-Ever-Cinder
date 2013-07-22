@@ -13,42 +13,24 @@
 #include "MPEProtocol.hpp"
 #include "MPEProtocol2.hpp"
 #include "TCPClient.h"
+#include "MPEApp.hpp"
 
 /*
 
  MPEClient:
  This class is the interface through which your App communicates with an MPE server.
 
- Create an instance of MPEClient in your Cinder app by passing in the path to a settings file.
- Each client will need it's own settings file. A template can be found at assets/settings.xml.
-
+ Once you've subclassed your Cinder App from MPEApp, you construct a client by passing
+ it a pointer to your app. It uses that pointer to call update/reset/etc.
+ 
  The client keeps track of the current frame that should be rendered (see
  MPEMessageHandler::getCurrentRenderFrame) and informs the server when it's complete. Once
  all of the clients have rendered the frame the server will send out the next frame number.
-
- MPEClient uses callbacks for updating, drawing, and sending data to your App.
-
-    • FrameUpdateCallback: This is the update callback, called whenever the server sends a new frame.
-        App state changes should only happen in this callback, rather than in App::update() so that
-        all of the clients stay in sync. This must be set.
-
-    • FrameRenderCallback: This is the draw callback. The client will position the viewport before
-        calling the callback and tells the server that the frame has been rendered after the callback.
-
-    • StringDataCallback: This will be called when string data is received from any of the connected
-        clients (including yourself).
-
-    • IntegerDataCallback & BytesDataCallback: Similar to the above. These formats are not yet
-        supported.
 
 */
 
 namespace mpe
 {
-    typedef boost::function<void(bool isNewFrame)> FrameRenderCallback;
-    typedef boost::function<void(long serverFrameNumber)> FrameUpdateCallback;
-    typedef boost::function<void(const std::string & message, const int fromClientID)> StringDataCallback;
-
     class MPEClient : public MPEMessageHandler
     {
 
@@ -56,9 +38,7 @@ namespace mpe
 
         // Constructors
         MPEClient(){};
-        MPEClient(const std::string & settingsFilename, bool shouldResize = true);
-        MPEClient(const std::string & settingsFilename, MPEProtocol * protocol, bool shouldResize = true);
-        ~MPEClient(){};
+        MPEClient(MPEApp *cinderApp);
 
         // Misc Accessors
         int                 getClientID();
@@ -67,11 +47,6 @@ namespace mpe
         ci::Rectf           getVisibleRect();
         void                setVisibleRect(const ci::Rectf & rect);
         ci::Vec2i           getMasterSize();
-
-        // Callbacks
-        void                setFrameUpdateCallback(const FrameUpdateCallback & callback);
-        void                setDrawCallback(const FrameRenderCallback & callback);
-        void                setStringDataCallback(const StringDataCallback & callback);
 
         // 3D Rendering
         bool                getIsRendering3D();
@@ -110,13 +85,9 @@ namespace mpe
         void                positionViewport2D();
         void                sendClientID();
 
-        // A protocol to convert a given command into a transport string.
+        // A pointer to your Cinder app
+        MPEApp              *mApp;
         std::shared_ptr<MPEProtocol> mProtocol;
-
-        // Callbacks
-        StringDataCallback  mStringDataCallback;
-        FrameUpdateCallback mUpdateCallback;
-        FrameRenderCallback mRenderCallback;
 
         bool                mIsRendering3D;
         long                mLastFrameConfirmed;
@@ -140,7 +111,7 @@ namespace mpe
     private:
 
         void                tcpDidConnect();
-        void                loadSettings(std::string settingsFilename, bool shouldResize);
+        void                loadSettings(std::string settingsFilename);
 
     };
 }

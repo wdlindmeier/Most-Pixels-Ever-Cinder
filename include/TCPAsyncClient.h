@@ -36,7 +36,7 @@ namespace mpe
     public:
 
         TCPAsyncClient(const std::string & messageDelimeter);
-        ~TCPAsyncClient(){};
+        ~TCPAsyncClient();
 
         void                            open(const std::string & hostname,
                                              const int port,

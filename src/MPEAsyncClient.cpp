@@ -12,13 +12,8 @@
 using ci::app::console;
 using namespace mpe;
 
-MPEAsyncClient::MPEAsyncClient(const std::string & settingsFilename, bool shouldResize) :
-MPEAsyncClient(settingsFilename, new MPEProtocol2(), shouldResize)
-{
-};
-
-MPEAsyncClient::MPEAsyncClient(const std::string & settingsFilename, MPEProtocol * protocol, bool shouldResize) :
-MPEClient(settingsFilename, protocol, shouldResize)
+MPEAsyncClient::MPEAsyncClient(MPEApp *cinderApp) :
+MPEClient(cinderApp)
 {
 };
 
@@ -66,11 +61,8 @@ void MPEAsyncClient::serverMessageReceived(const std::string & message)
     mProtocol->parse(message, this);
     if (mFrameIsReady)
     {
-        if (mUpdateCallback)
-        {
-            std::lock_guard<std::mutex> lock(mClientDataMutex);
-            mUpdateCallback(this->getCurrentRenderFrame());
-        }
+        std::lock_guard<std::mutex> lock(mClientDataMutex);
+        mApp->mpeFrameUpdate(this->getCurrentRenderFrame());
     }
 }
 
@@ -78,6 +70,12 @@ void MPEAsyncClient::receivedStringMessage(const std::string & dataMessage, cons
 {
     std::lock_guard<std::mutex> lock(mClientDataMutex);
     MPEClient::receivedStringMessage(dataMessage, fromClientID);
+}
+
+void MPEAsyncClient::receivedResetCommand()
+{
+    std::lock_guard<std::mutex> lock(mClientDataMutex);
+    MPEClient::receivedResetCommand();
 }
 
 #pragma mark - Update
