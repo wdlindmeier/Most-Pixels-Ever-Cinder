@@ -75,7 +75,7 @@ public:
     void        keyDown(KeyEvent event);
     
     // MPE App
-    void        mpeDataReceived(const std::string & message, const int fromClientID);
+    void        mpeMessageReceived(const std::string & message, const int fromClientID);
     void        mpeReset();
     std::string mpeSettingsFilename();
     
@@ -146,7 +146,7 @@ std::string MPEBouncingBallApp::mpeSettingsFilename()
     return "settings." + std::to_string(CLIENT_ID) + ".xml";
 }
 
-void MPEBouncingBallApp::mpeDataReceived(const std::string & message, const int fromClientID)
+void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const int fromClientID)
 {
     // Check if it's a "new ball" command
     vector<string> tokens = split(message, ",");
@@ -318,7 +318,7 @@ void MPEBouncingBallApp::mouseDown(MouseEvent event)
     if (mClient->isConnected())
     {
         Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
-        mClient->sendStringData(kCommandNewBall + "," +
+        mClient->sendMessage(kCommandNewBall + "," +
                                 std::to_string(pos.x) + "," +
                                 std::to_string(pos.y));
     }
@@ -331,7 +331,7 @@ void MPEBouncingBallApp::mouseDrag(MouseEvent event)
         Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
         // For testing purposes. Only send drag data to client 1.
         vector<int> toClientIDs = {1};
-        mClient->sendStringData(std::to_string(pos.x) + "," + std::to_string(pos.y), toClientIDs);
+        mClient->sendMessage(std::to_string(pos.x) + "," + std::to_string(pos.y), toClientIDs);
     }
 }
 

@@ -48,7 +48,7 @@ namespace mpe
          This will be called when string data is received from any of the connected
          clients (including yourself). The sender's client ID is also passed in.
          */
-        virtual void mpeDataReceived(const std::string & message, const int fromClientID)
+        virtual void mpeMessageReceived(const std::string & message, const int fromClientID)
         {
         }
         

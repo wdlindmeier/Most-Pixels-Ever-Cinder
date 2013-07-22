@@ -31,7 +31,7 @@ namespace mpe
         
         virtual std::string setClientID(const int clientID)
         {
-            return setClientID(clientID, "Sync Client " + std::to_string(clientID));
+            return setClientID(clientID, "Rendering Client " + std::to_string(clientID));
         };
         
         virtual std::string setClientID(const int clientID, const std::string & name)
@@ -46,7 +46,7 @@ namespace mpe
 
         virtual std::string setAsyncClientID(const int clientID)
         {
-            return setAsyncClientID(clientID, "Async Client " + std::to_string(clientID));
+            return setAsyncClientID(clientID, "Non-Rendering Client " + std::to_string(clientID));
         }
         
         virtual std::string setAsyncClientID(const int clientID,

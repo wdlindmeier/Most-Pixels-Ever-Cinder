@@ -254,12 +254,12 @@ void MPEClient::sendClientID()
     mTCPClient->write(mProtocol->setClientID(mClientID));
 }
 
-void MPEClient::sendStringData(const std::string & message)
+void MPEClient::sendMessage(const std::string & message)
 {
     mTCPClient->write(mProtocol->broadcast(message));
 }
 
-void MPEClient::sendStringData(const std::string & message, const std::vector<int> & clientIds)
+void MPEClient::sendMessage(const std::string & message, const std::vector<int> & clientIds)
 {
     std::shared_ptr<MPEProtocol2> protocol = std::dynamic_pointer_cast<MPEProtocol2>(mProtocol);
     if (protocol != NULL)
@@ -270,7 +270,7 @@ void MPEClient::sendStringData(const std::string & message, const std::vector<in
     {
         console() << "WARNING: Sending data to specific clients is not supported prior to MEP 2.0."
                   << std::endl << "Sending to all clients instead." << std::endl;
-        sendStringData(message);
+        sendMessage(message);
     }
 }
 
@@ -303,7 +303,7 @@ void MPEClient::receivedResetCommand()
 
 void MPEClient::receivedStringMessage(const std::string & dataMessage, const int fromClientID)
 {
-    mApp->mpeDataReceived(dataMessage, fromClientID);
+    mApp->mpeMessageReceived(dataMessage, fromClientID);
 }
 
 #pragma mark - Settings

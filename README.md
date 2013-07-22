@@ -31,7 +31,7 @@ class MyCinderApp : public AppNative, public MPEApp
     void        mpeReset();
     void        mpeFrameUpdate(long serverFrameNumber);
     void        mpeFrameRender(bool isNewFrame);
-    void        mpeDataReceived(const std::string & message, const int fromClientID);
+    void        mpeMessageReceived(const std::string & message, const int fromClientID);
     
     private:
     
@@ -83,16 +83,15 @@ void MyCinderApp::mpeReset()
     // This will create the same "random" position each reset because the 
     // seed is hardcoded to 1.
     Vec2i sizeMaster = mClient->getMasterSize();
-    Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
-    posBall = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y))
-    mBall.position = posBall;    
+    mBall.velocity = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
+    mBall.position = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y))
 }
 
 void MyCinderApp::mpeFrameUpdate(long serverFrameNumber)
 {
     // This is where the app state should be modified. 
     // The FrameUpdateCallback is called whenever we get a message from the server,
-    // which may be less frequent than update() or draw() is called.    
+    // which may be less frequently than update() or draw() is called.    
     
     mBall.update();
 }
@@ -106,7 +105,7 @@ void MyCinderApp::mpeFrameRender(bool isNewFrame)
     mBall.draw();
 }
 
-void MyCinderApp::mpeDataReceived(const std::string & message, const int fromClientID)
+void MyCinderApp::mpeMessageReceived(const std::string & message, const int fromClientID)
 {
     // Apps can broadcast data to the other clients. E.g.:
     //
