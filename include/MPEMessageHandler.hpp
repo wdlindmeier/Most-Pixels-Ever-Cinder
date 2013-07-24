@@ -25,9 +25,9 @@ namespace mpe
         MPEMessageHandler() :
         mCurrentRenderFrame(0),
         mFrameIsReady(false),
-        mAvgFrameDuration(0),
+        mAvgUpdateDuration(0),
         mTimeLastMessage(0),
-        mDFPSSampleInterval(5)
+        mUpdateSampleInterval(5)
         {};
 
         // The current frame that each client is rendering.
@@ -50,7 +50,7 @@ namespace mpe
         {
             mFrameIsReady = isFrameReady;
 
-            if (mCurrentRenderFrame % mDFPSSampleInterval == 0)
+            if (mCurrentRenderFrame % mUpdateSampleInterval == 0)
             {
                 calculateDFPS();
             }
@@ -61,9 +61,9 @@ namespace mpe
         virtual void        receivedResetCommand(){};
         
         // Average Data Frames Per Second. The number of server updates per second.
-        float               getDataFramesPerSecond()
+        float               getUpdatesPerSecond()
         {
-            return 1.0f / mAvgFrameDuration;
+            return 1.0f / mAvgUpdateDuration;
         }
         
     protected:
@@ -76,22 +76,22 @@ namespace mpe
         void calculateDFPS()
         {
             double now = ci::app::getElapsedSeconds();
-            double frameDuration = (now - mTimeLastMessage) / mDFPSSampleInterval;
+            double frameDuration = (now - mTimeLastMessage) / mUpdateSampleInterval;
             if(frameDuration > 0)
             {
-                mAvgFrameDuration = (mAvgFrameDuration * 0.9) + (frameDuration * 0.1);
+                mAvgUpdateDuration = (mAvgUpdateDuration * 0.9) + (frameDuration * 0.1);
             }
             else
             {
-                mAvgFrameDuration = frameDuration;
+                mAvgUpdateDuration = frameDuration;
             }
             
             mTimeLastMessage = now;
         }
         
-        float               mAvgFrameDuration;
+        float               mAvgUpdateDuration;
         double              mTimeLastMessage;
-        int                 mDFPSSampleInterval;
+        int                 mUpdateSampleInterval;
 
     };
 }

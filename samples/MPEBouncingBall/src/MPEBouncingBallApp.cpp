@@ -314,7 +314,7 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
                    Vec2f(100, 100));
     gl::drawString("FPS: " + std::to_string((int)getAverageFps()),
                    Vec2f(100, 130));
-    gl::drawString("Updates Per Second: " + std::to_string((int)mClient->getDataFramesPerSecond()),
+    gl::drawString("Updates Per Second: " + std::to_string((int)mClient->getUpdatesPerSecond()),
                    Vec2f(100, 160));
 
     float myX = mClient->getVisibleRect().x1;
