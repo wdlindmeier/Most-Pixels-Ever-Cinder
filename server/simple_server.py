@@ -2,7 +2,7 @@
 
 #
 #  simple_server.py
-#  A simple Most-Pixels-Ever compatable server.
+#  A basic Most-Pixels-Ever compatable server.
 #  Conforms to the MPE 2.0 protocol.
 #
 #  Created by William Lindmeier.

@@ -19,6 +19,8 @@ A basic MPE 2.0 server is included with the block. Run like so:
 #####Your Cinder App
 
 ```c++
+// Subclass your Cinder app from MPEApp
+
 class MyCinderApp : public AppNative, public MPEApp
 {
     public:      

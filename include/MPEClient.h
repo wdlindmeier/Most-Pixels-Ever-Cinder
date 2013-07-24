@@ -54,6 +54,12 @@ namespace mpe
         void                set3DFieldOfView(float fov);
         float               get3DFieldOfView();
         void                restore3DCamera();
+        
+        // Hit testing
+        bool                isOnScreen(float x, float y);
+        bool                isOnScreen(const ci::Vec2f & pos);
+        bool                isOnScreen(float x, float y, float w, float h);
+        bool                isOnScreen(const ci::Rectf & rect);
 
         // Connection
         void                start();

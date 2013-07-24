@@ -260,6 +260,38 @@ void MPEClient::restore3DCamera()
               mCameraZ*k3DMod, 10000.0f);
 }
 
+#pragma mark - Hit Testing
+
+bool MPEClient::isOnScreen(const Vec2f & pos)
+{
+    return isOnScreen(pos.x, pos.y);
+}
+
+bool MPEClient::isOnScreen(float x, float y)
+{
+    float lWidth = mLocalViewportRect.getWidth();
+    float lHeight = mLocalViewportRect.getHeight();
+    float xOffset = mLocalViewportRect.getX1();
+    float yOffset = mLocalViewportRect.getY1();
+    return (x > xOffset &&
+            x < (xOffset + lWidth) &&
+            y > yOffset &&
+            y < (yOffset + lHeight));
+}
+
+bool MPEClient::isOnScreen(const Rectf & rect)
+{
+    return isOnScreen(rect.x1, rect.y1, rect.getWidth(), rect.getHeight());
+}
+
+bool MPEClient::isOnScreen(float x, float y, float w, float h)
+{
+    return (isOnScreen(x, y) ||
+            isOnScreen(x + w, y) ||
+            isOnScreen(x + w, y + h) ||
+            isOnScreen(x, y + h));
+}
+
 #pragma mark - Sending Messages
 
 void MPEClient::sendClientID()

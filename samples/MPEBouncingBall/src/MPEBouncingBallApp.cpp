@@ -164,7 +164,10 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
     vector<string> tokens = split(message, ",");
     if (tokens.size() > 0 && tokens[0] == kCommandNewBall)
     {
-        addBallAtPosition(Vec2f(stoi(tokens[1]),stoi(tokens[2])));
+        Vec2f posNewBall = Vec2f(stoi(tokens[1]),stoi(tokens[2]));
+        addBallAtPosition(posNewBall);
+        console() << "Adding a ball to " << posNewBall << ". Is on screen? "
+                  << mClient->isOnScreen(posNewBall) << std::endl;
     }
     
 #if USE_VERSION_2
@@ -338,8 +341,8 @@ void MPEBouncingBallApp::mouseDown(MouseEvent event)
     {
         Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
         mClient->sendMessage(kCommandNewBall + "," +
-                                std::to_string(pos.x) + "," +
-                                std::to_string(pos.y));
+                             std::to_string(pos.x) + "," +
+                             std::to_string(pos.y));
     }
 }
 

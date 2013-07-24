@@ -45,7 +45,7 @@ namespace mpe
             mFrameIsReady = isFrameReady;
         };
 
-        // These are overloaded in the MPEClient to handle data.
+        // These are overridden in the MPEClient to handle data.
         virtual void        receivedStringMessage(const std::string & dataMessage, int fromClientID = -1){};
         virtual void        receivedResetCommand(){};
 
