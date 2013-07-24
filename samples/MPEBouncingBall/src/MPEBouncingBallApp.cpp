@@ -130,7 +130,7 @@ void MPEBouncingBallApp::setup()
 #if !USE_VERSION_2
     mpeReset();
 #endif
-    
+
 }
 
 void MPEBouncingBallApp::shutdown()
@@ -310,9 +310,13 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
     gl::drawSolidRect(masterFrame);
     
     gl::color(0,0,0);
-    gl::drawString("Frame Num: " + std::to_string(mClient->getCurrentRenderFrame()), Vec2f(100, 100));
-    gl::drawString("FPS: " + std::to_string(getAverageFps()), Vec2f(100, 130));
-    
+    gl::drawString("Frame Num: " + std::to_string(mClient->getCurrentRenderFrame()),
+                   Vec2f(100, 100));
+    gl::drawString("FPS: " + std::to_string((int)getAverageFps()),
+                   Vec2f(100, 130));
+    gl::drawString("Updates Per Second: " + std::to_string((int)mClient->getDataFramesPerSecond()),
+                   Vec2f(100, 160));
+
     float myX = mClient->getVisibleRect().x1;
     float myY = mClient->getVisibleRect().y1;
     if (!mDidMoveFrame)
@@ -359,10 +363,14 @@ void MPEBouncingBallApp::mouseDrag(MouseEvent event)
 
 void MPEBouncingBallApp::keyDown(KeyEvent event)
 {
-    char key = event.getChar();
-    if (key == 'p' && mClient->isConnected())
+    switch (event.getChar())
     {
-        mClient->togglePause();
+        case 'p':
+            mClient->togglePause();
+            break;
+        case 'f':
+            setFullScreen(!isFullScreen());
+            break;
     }
 }
 

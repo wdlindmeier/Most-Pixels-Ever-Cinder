@@ -22,7 +22,13 @@ namespace mpe
 
     public:
 
-        MPEMessageHandler() : mCurrentRenderFrame(0), mFrameIsReady(false){};
+        MPEMessageHandler() :
+        mCurrentRenderFrame(0),
+        mFrameIsReady(false),
+        mAvgFrameDuration(0),
+        mTimeLastMessage(0),
+        mDFPSSampleInterval(5)
+        {};
 
         // The current frame that each client is rendering.
         // This is the only MPEMessageHandler function that the App should ever call.
@@ -43,16 +49,49 @@ namespace mpe
         void                setFrameIsReady(bool isFrameReady)
         {
             mFrameIsReady = isFrameReady;
-        };
 
+            if (mCurrentRenderFrame % mDFPSSampleInterval == 0)
+            {
+                calculateDFPS();
+            }
+        };
+ 
         // These are overridden in the MPEClient to handle data.
         virtual void        receivedStringMessage(const std::string & dataMessage, int fromClientID = -1){};
         virtual void        receivedResetCommand(){};
-
+        
+        // Average Data Frames Per Second. The number of server updates per second.
+        float               getDataFramesPerSecond()
+        {
+            return 1.0f / mAvgFrameDuration;
+        }
+        
     protected:
-
+        
         long                mCurrentRenderFrame;
         bool                mFrameIsReady;
+    
+    private:
+                
+        void calculateDFPS()
+        {
+            double now = ci::app::getElapsedSeconds();
+            double frameDuration = (now - mTimeLastMessage) / mDFPSSampleInterval;
+            if(frameDuration > 0)
+            {
+                mAvgFrameDuration = (mAvgFrameDuration * 0.9) + (frameDuration * 0.1);
+            }
+            else
+            {
+                mAvgFrameDuration = frameDuration;
+            }
+            
+            mTimeLastMessage = now;
+        }
+        
+        float               mAvgFrameDuration;
+        double              mTimeLastMessage;
+        int                 mDFPSSampleInterval;
 
     };
 }
