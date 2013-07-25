@@ -37,25 +37,27 @@ num_clients_drawn = 0
 is_paused = False
 
 class BroadcastMessage:
-    
+
     def __init__(self, body, from_client_id, to_client_ids = []):
         self.body = body
         self.from_client_id = from_client_id
         self.to_client_ids = to_client_ids
-        
+
 class MPEServer(Protocol):
 
     client_id = -1
     client_name = ""
-    
+
     def connectionMade(self):
         print "Client connected. Total Clients: %i" % (len(MPEServer.clients) + 1)
 
     def connectionLost(self, reason):
         print "Client disconnected"
         del MPEServer.clients[self.client_id]
-        if self in MPEServer.rendering_clients:
-            MPEServer.rendering_clients.remove(self)
+        if self.client_id in MPEServer.rendering_client_ids:
+            MPEServer.rendering_client_ids.remove(self.client_id)
+        if self.client_id in MPEServer.receiving_client_ids:
+            MPEServer.receiving_client_ids.remove(self.client_id)
 
     def dataReceived(self, data):
         global num_clients_drawn
@@ -84,7 +86,7 @@ class MPEServer(Protocol):
                         MPEServer.sendNextFrame()
 
             elif (cmd == CMD_SYNC_CLIENT_CONNECT) or (cmd == CMD_ASYNC_CLIENT_CONNECT):
-                # Formats 
+                # Formats
                 # "S|client_id|client_name"
                 # "A|client_id|client_name|should_receive_broadcasts"
                 if token_count < 3 or token_count > 4:
@@ -95,44 +97,45 @@ class MPEServer(Protocol):
 
                 client_receives_messages = True
                 if cmd == CMD_SYNC_CLIENT_CONNECT:
-                    MPEServer.rendering_clients.append(self)
+                    MPEServer.rendering_client_ids.append(self.client_id)
                 elif cmd == CMD_ASYNC_CLIENT_CONNECT:
                     client_receives_messages = tokens[3].lower() == 'true'
-                                
+
                 if client_receives_messages:
-                    MPEServer.receiving_clients.append(self)         
-                
+                    print "New client will receive data"
+                    MPEServer.receiving_client_ids.append(self.client_id)
+
                 MPEServer.handleClientAdd(self.client_id)
 
             elif cmd == CMD_BROADCAST:
-                # Formats: 
+                # Formats:
                 # "T|message message message"
                 # "T|message message message|toID_1,toID_2,toID_3"
                 if token_count < 2 or token_count > 3:
                     print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens
                 to_client_ids = []
                 if token_count == 2:
-                    to_client_ids = [c.client_id for c in MPEServer.receiving_clients]            
+                    to_client_ids = MPEServer.receiving_client_ids
                 elif token_count == 3:
                     to_client_ids = tokens[2].split(",")
                     to_client_ids = [int(client_id) for client_id in to_client_ids]
-                
+
                 MPEServer.broadcastMessage(tokens[1], self.client_id, to_client_ids)
 
-            elif cmd == CMD_PAUSE:    
+            elif cmd == CMD_PAUSE:
                 # Format:
                 # P
                 if token_count > 1:
-                    print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens                                    
+                    print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens
                 MPEServer.togglePause()
-            
+
             elif cmd == CMD_RESET:
                 # Format:
                 # R
                 if token_count > 1:
                     print "ERROR: Incorrect param count for CMD %s. " % cmd, data, tokens
                 MPEServer.reset()
-            
+
             else:
                 print "Unknown message: " + message
 
@@ -143,7 +146,7 @@ class MPEServer(Protocol):
 
     @staticmethod
     def reset():
-        global framecount        
+        global framecount
         global is_paused
         framecount = 0
         num_clients_drawn = 0
@@ -152,41 +155,43 @@ class MPEServer(Protocol):
         if is_paused:
             print "INFO: Reset was called when server is paused."
         MPEServer.sendNextFrame()
-    
-    @staticmethod   
+
+    @staticmethod
     def sendReset():
-        for c in MPEServer.receiving_clients:
-            c.sendMessage(CMD_RESET)
-        
+        for n in MPEServer.receiving_client_ids:
+            MPEServer.clients[n].sendMessage(CMD_RESET)
+
     @staticmethod
     def togglePause():
         global is_paused
         is_paused = not is_paused
         if MPEServer.isNextFrameReady():
             MPEServer.sendNextFrame()
-        
+
     @staticmethod
     def handleClientAdd(client_id):
         global num_clients
         global framecount
         global num_clients_required
         print "Added client %i (%s)" % (client_id, MPEServer.clients[client_id].client_name)
-        num_sync_clients = len(MPEServer.rendering_clients)
+        num_sync_clients = len(MPEServer.rendering_client_ids)
         if num_clients_required == -1 or num_sync_clients == num_clients_required:
-            MPEServer.reset()
+            # NOTE: We don't reset when an async client connects
+            if client_id in MPEServer.rendering_client_ids:
+                MPEServer.reset()
         elif num_sync_clients < num_clients_required:
             print "Waiting for %i more clients." % (num_clients_required - num_sync_clients)
         elif num_sync_clients > num_clients_required:
             print "ERROR: More than MAX clients have connected."
-            
+
     @staticmethod
     def isNextFrameReady():
         global num_clients_drawn
         global num_clients_required
         global is_paused
-        num_sync_clients = len(MPEServer.rendering_clients)
+        num_sync_clients = len(MPEServer.rendering_client_ids)
         return num_clients_drawn >= num_sync_clients and not is_paused and num_sync_clients >= num_clients_required
-        
+
     @staticmethod
     def sendNextFrame():
         if is_paused:
@@ -194,34 +199,36 @@ class MPEServer(Protocol):
         global num_clients_drawn
         global framecount
         num_clients_drawn = 0
-        framecount += 1        
+        framecount += 1
         send_message = CMD_GO + "|%i" % framecount
         for client_id in MPEServer.clients:
             c = MPEServer.clients[client_id]
-            client_messages = []
-            for m in MPEServer.message_queue:
-                if len(m.to_client_ids) == 0 or c.client_id in m.to_client_ids:
-                    client_messages.append(str(m.from_client_id) + "," + m.body)
-            if len(client_messages) > 0:
-                c.sendMessage(send_message + "|" + "|".join(client_messages))
-            else:
-                c.sendMessage(send_message)
-                
+            if c.client_id in MPEServer.receiving_client_ids:
+                client_messages = []
+                for m in MPEServer.message_queue:
+                    if len(m.to_client_ids) == 0 or c.client_id in m.to_client_ids:
+                        client_messages.append(str(m.from_client_id) + "," + m.body)
+
+                if len(client_messages) > 0:
+                    c.sendMessage(send_message + "|" + "|".join(client_messages))
+                else:
+                    c.sendMessage(send_message)
+
         MPEServer.message_queue = []
-        
+
     @staticmethod
     def broadcastMessage(message, from_client_id, to_client_ids):
-        # print "Broadcasting message: " + message + " to client IDs: ", to_client_ids
+        #print "Broadcasting message: " + message + " to client IDs: ", to_client_ids
         m = BroadcastMessage(message, from_client_id, to_client_ids)
         MPEServer.message_queue.append(m)
-            
+
 # Start the server
 factory = Factory()
 factory.protocol = MPEServer
 
 MPEServer.clients = {}
-MPEServer.rendering_clients = []
-MPEServer.receiving_clients = []
+MPEServer.rendering_client_ids = []
+MPEServer.receiving_client_ids = []
 MPEServer.message_queue = []
 
 reactor.listenTCP(portnum, factory)

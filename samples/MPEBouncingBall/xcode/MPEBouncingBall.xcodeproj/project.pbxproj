@@ -18,6 +18,21 @@
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		844B6B3A5EE84A928C3D583A /* MPEBouncingBallApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 470883335B0049F0BF0CC756 /* MPEBouncingBallApp.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A97B189017A19A9700409BB3 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9CD06D563A884CBDB7DB9358 /* CinderApp.icns */; };
+		A97B189117A19A9700409BB3 /* settings.1.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7D1798D91100BFA0BC /* settings.1.xml */; };
+		A97B189317A19A9700409BB3 /* MPEBouncingBallApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 470883335B0049F0BF0CC756 /* MPEBouncingBallApp.cpp */; };
+		A97B189417A19A9700409BB3 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E78E7556978B4B0F810B0C28 /* MPEClient.cpp */; };
+		A97B189517A19A9700409BB3 /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF68419D07B8428680CC8B7D /* TCPAsyncClient.cpp */; };
+		A97B189617A19A9700409BB3 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FBF715A0297473B90284A79 /* TCPClient.cpp */; };
+		A97B189817A19A9700409BB3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A97B189917A19A9700409BB3 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		A97B189A17A19A9700409BB3 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		A97B189B17A19A9700409BB3 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		A97B189C17A19A9700409BB3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		A97B189D17A19A9700409BB3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		A97B189E17A19A9700409BB3 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		A97B189F17A19A9700409BB3 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		A97B18A617A19AEF00409BB3 /* settings.555.xml in Resources */ = {isa = PBXBuildFile; fileRef = A97B18A517A19AEF00409BB3 /* settings.555.xml */; };
 		A9AA2B7F1798D91100BFA0BC /* settings.0.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7C1798D91100BFA0BC /* settings.0.xml */; };
 		A9AA2B841798D99900BFA0BC /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9CD06D563A884CBDB7DB9358 /* CinderApp.icns */; };
 		A9AA2B861798D99900BFA0BC /* settings.1.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7D1798D91100BFA0BC /* settings.1.xml */; };
@@ -59,6 +74,9 @@
 		981E8C066B12471FAB25A61B /* TCPClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../../../include/TCPClient.h; sourceTree = "<group>"; };
 		9B432AB0781A4057831DA79A /* MPEProtocol.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol.hpp; path = ../../../include/MPEProtocol.hpp; sourceTree = "<group>"; };
 		9CD06D563A884CBDB7DB9358 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		A97B18A317A19A9700409BB3 /* MPEBouncingBallAsync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBallAsync.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A97B18A417A19A9700409BB3 /* MPEBouncingBall1 copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MPEBouncingBall1 copy-Info.plist"; path = "/Users/bill/Tools/cinder_master/blocks/Most-Pixels-Ever/samples/MPEBouncingBall/xcode/MPEBouncingBall1 copy-Info.plist"; sourceTree = "<absolute>"; };
+		A97B18A517A19AEF00409BB3 /* settings.555.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.555.xml; sourceTree = "<group>"; };
 		A9AA2B7A1798D86300BFA0BC /* Ball.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ball.hpp; path = ../include/Ball.hpp; sourceTree = "<group>"; };
 		A9AA2B7C1798D91100BFA0BC /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
 		A9AA2B7D1798D91100BFA0BC /* settings.1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.1.xml; sourceTree = "<group>"; };
@@ -83,6 +101,21 @@
 				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
 				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
 				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A97B189717A19A9700409BB3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A97B189817A19A9700409BB3 /* Cocoa.framework in Frameworks */,
+				A97B189917A19A9700409BB3 /* OpenGL.framework in Frameworks */,
+				A97B189A17A19A9700409BB3 /* CoreVideo.framework in Frameworks */,
+				A97B189B17A19A9700409BB3 /* QTKit.framework in Frameworks */,
+				A97B189C17A19A9700409BB3 /* Accelerate.framework in Frameworks */,
+				A97B189D17A19A9700409BB3 /* AudioToolbox.framework in Frameworks */,
+				A97B189E17A19A9700409BB3 /* AudioUnit.framework in Frameworks */,
+				A97B189F17A19A9700409BB3 /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,6 +192,7 @@
 			children = (
 				8D1107320486CEB800E47090 /* MPEBouncingBall0.app */,
 				A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */,
+				A97B18A317A19A9700409BB3 /* MPEBouncingBallAsync.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -173,6 +207,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				A97B18A417A19A9700409BB3 /* MPEBouncingBall1 copy-Info.plist */,
 			);
 			name = MPEBouncingBall;
 			sourceTree = "<group>";
@@ -224,6 +259,7 @@
 			children = (
 				A9AA2B7C1798D91100BFA0BC /* settings.0.xml */,
 				A9AA2B7D1798D91100BFA0BC /* settings.1.xml */,
+				A97B18A517A19AEF00409BB3 /* settings.555.xml */,
 			);
 			name = assets;
 			path = ../assets;
@@ -257,6 +293,24 @@
 			productInstallPath = "$(HOME)/Applications";
 			productName = MPEBouncingBall;
 			productReference = 8D1107320486CEB800E47090 /* MPEBouncingBall0.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A97B188E17A19A9700409BB3 /* MPEBouncingBallAsync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A97B18A017A19A9700409BB3 /* Build configuration list for PBXNativeTarget "MPEBouncingBallAsync" */;
+			buildPhases = (
+				A97B188F17A19A9700409BB3 /* Resources */,
+				A97B189217A19A9700409BB3 /* Sources */,
+				A97B189717A19A9700409BB3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPEBouncingBallAsync;
+			productInstallPath = "$(HOME)/Applications";
+			productName = MPEBouncingBall;
+			productReference = A97B18A317A19A9700409BB3 /* MPEBouncingBallAsync.app */;
 			productType = "com.apple.product-type.application";
 		};
 		A9AA2B821798D99900BFA0BC /* MPEBouncingBall1 */ = {
@@ -298,6 +352,7 @@
 			targets = (
 				8D1107260486CEB800E47090 /* MPEBouncingBall0 */,
 				A9AA2B821798D99900BFA0BC /* MPEBouncingBall1 */,
+				A97B188E17A19A9700409BB3 /* MPEBouncingBallAsync */,
 			);
 		};
 /* End PBXProject section */
@@ -309,6 +364,16 @@
 			files = (
 				FA258AF4AC364A1CB8100D47 /* CinderApp.icns in Resources */,
 				A9AA2B7F1798D91100BFA0BC /* settings.0.xml in Resources */,
+				A97B18A617A19AEF00409BB3 /* settings.555.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A97B188F17A19A9700409BB3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A97B189017A19A9700409BB3 /* CinderApp.icns in Resources */,
+				A97B189117A19A9700409BB3 /* settings.1.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +400,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A97B189217A19A9700409BB3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A97B189317A19A9700409BB3 /* MPEBouncingBallApp.cpp in Sources */,
+				A97B189417A19A9700409BB3 /* MPEClient.cpp in Sources */,
+				A97B189517A19A9700409BB3 /* TCPAsyncClient.cpp in Sources */,
+				A97B189617A19A9700409BB3 /* TCPClient.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A9AA2B871798D99900BFA0BC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -349,6 +425,56 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		A97B18A117A19A9700409BB3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBall_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"CLIENT_ID=555",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "MPEBouncingBall1 copy-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				PRODUCT_NAME = MPEBouncingBallAsync;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A97B18A217A19A9700409BB3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBall_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "CLIENT_ID=555";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = "MPEBouncingBall1 copy-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				PRODUCT_NAME = MPEBouncingBallAsync;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		A9AA2B991798D99900BFA0BC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -486,6 +612,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A97B18A017A19A9700409BB3 /* Build configuration list for PBXNativeTarget "MPEBouncingBallAsync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A97B18A117A19A9700409BB3 /* Debug */,
+				A97B18A217A19A9700409BB3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A9AA2B981798D99900BFA0BC /* Build configuration list for PBXNativeTarget "MPEBouncingBall1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

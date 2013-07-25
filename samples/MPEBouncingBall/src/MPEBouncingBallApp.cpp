@@ -17,7 +17,7 @@
 // Generally Threaded is the way to go, but if find your app crashing
 // because you're making GL calls on a different thread, use the non-threaded client.
 // Threaded is used by default. This switch is for demo purposes.
-#define USE_THREADED   0
+#define USE_THREADED   1
 
 // Choose the protocol version. MPE 2.0 is the latest and greatest.
 // 2.0 is used by default. This switch is for demo purposes.
@@ -32,6 +32,7 @@ using std::vector;
 using namespace mpe;
 
 const static string kCommandNewBall = "BALL++";
+const static string kCommandLightsOut = "LIGHTSOUT";
 
 /*
 
@@ -47,18 +48,26 @@ const static string kCommandNewBall = "BALL++";
        Passing in `--num-clients N` will wait to start the loop until N clients have connected.
        Otherwise, the server will reset the loop whenever a new client joins.
 
-    2) Build and run both targets from XCode (or launch them from the build folder).
+    2) Build and run all 3 targets from XCode (or launch them from the build folder).
+       There are 2 Synchronous (i.e. frame rendering) clients and 1 Async controller.
 
  Behavior:
 
     • Dragging the app windows around the screen will update their positions relative to the master
       dimensions to simulate physical screens.
 
-    • Clicking the mouse adds balls to the scene.
+    • Clicking the mouse in a Sync window adds balls to the scene.
 
-    • Dragging the mouse will send messages to client 1, but not client 0. Messages are just logged.
+    • Dragging the mouse will send messages to client 1, and 555 but not client 0.
+
+    • Clicking in the Async controller window will make the backgrounds black.
 
     • Pressing 'p' will pause the server.
+
+ Notes:
+
+    For this demo all of the clients are built from the same source, but in pratice the Asynchronous
+    controller should be it's own app since the behavior is different than the Sync clients.
 
 */
 
@@ -80,11 +89,13 @@ public:
 
     // Draw
     void        draw();
+    void        drawAsyncClient();
     void        mpeFrameRender(bool isNewFrame);
 
     // Input Events
     void        mouseDown(MouseEvent event);
     void        mouseDrag(MouseEvent event);
+    void        mouseUp(MouseEvent event);
     void        keyDown(KeyEvent event);
 
     // MPE App
@@ -105,6 +116,9 @@ private:
     vector<Ball>    mBalls;
     Vec2i           mScreenSize;
     Vec2i           mScreenPos;
+    bool            mLightsOut;
+    string          mLastMessage;
+
 };
 
 #pragma mark - Setup
@@ -113,14 +127,23 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
 {
     // NOTE: Initially making the window small to prove that
     // the settings.xml forces a resize.
-    settings->setWindowSize(100, 100);
+    settings->setWindowSize(150, 150);
 }
 
 void MPEBouncingBallApp::setup()
 {
     mClient = MPEClient::New(this, USE_THREADED);
 
+#if !USE_VERSION_2
+    if (mClient->isAsynchronous())
+    {
+        console() << "ERROR: MPE Version 1 doesn't support Asynchronous clients." << endl;
+        exit();
+    }
+#endif
+
     mDidMoveFrame = false;
+    mLightsOut = false;
 
 #if !USE_VERSION_2
     // MPE 1.0 doesn't send out a reset command when a connection is made.
@@ -157,14 +180,23 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
 {
     vector<string> tokens = split(message, ",");
 
-    // Check if it's a "new ball" command
-    if (tokens.size() > 0 && tokens[0] == kCommandNewBall)
+    if (tokens.size() > 0)
     {
-        Vec2f posNewBall = Vec2f(stoi(tokens[1]),stoi(tokens[2]));
-        addBallAtPosition(posNewBall);
-        console() << "Adding a ball to " << posNewBall << ". Is on screen? "
-                  << mClient->isOnScreen(posNewBall) << std::endl;
+        string command = tokens[0];
+        if (command == kCommandNewBall)
+        {
+            Vec2f posNewBall = Vec2f(stoi(tokens[1]),stoi(tokens[2]));
+            addBallAtPosition(posNewBall);
+            console() << "Adding a ball to " << posNewBall << ". Is on screen? "
+                      << mClient->isOnScreen(posNewBall) << std::endl;
+        }
+        else if (command == kCommandLightsOut)
+        {
+            mLightsOut = !mLightsOut;
+        }
     }
+
+    mLastMessage = message;
 
 #if USE_VERSION_2
 
@@ -273,6 +305,16 @@ void MPEBouncingBallApp::updateLocalViewportFromScreenPosition()
 
 void MPEBouncingBallApp::draw()
 {
+    if (mClient->isAsynchronousClient())
+    {
+        // NOTE: Async draw doesn't happen in mpeFrameRender for a couple of reasons:
+        // 1) They don't sync their render frames with the server.
+        // 2) They don't fall within the view space as the Sync clients and don't need a reposition.
+
+        drawAsyncClient();
+        return;
+    }
+
     mClient->draw();
 
     // The MPEClient will reposition the viewport in a default way, but if you want to
@@ -295,23 +337,26 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
 
     gl::clear(Color(0,0,0));
 
-    // Paint the Master drawable region red if we're in step with the server, or magenta if our
-    // draw loop is ahead of the server.
-    // The App's loop will continue at the normal speed even if we're waiting for data from the
-    // server, we just don't update the state.
-    // A flickering background means the FPS is faster than the server data-rate.
-    if (isNewFrame)
+    if (!mLightsOut)
     {
-        gl::color(Color(1, 0, 0));
-    }
-    else
-    {
-        gl::color(Color(1, 0, 1));
-    }
+        // Paint the Master drawable region red if we're in step with the server, or magenta if our
+        // draw loop is ahead of the server.
+        // The App's loop will continue at the normal speed even if we're waiting for data from the
+        // server, we just don't update the state.
+        // A flickering background means the FPS is faster than the server data-rate.
+        if (isNewFrame)
+        {
+            gl::color(Color(1, 0, 0));
+        }
+        else
+        {
+            gl::color(Color(1, 0, 1));
+        }
 
-    Vec2i masterSize = mClient->getMasterSize();
-    Rectf masterFrame = Rectf(0,0,masterSize.x,masterSize.y);
-    gl::drawSolidRect(masterFrame);
+        Vec2i masterSize = mClient->getMasterSize();
+        Rectf masterFrame = Rectf(0,0,masterSize.x,masterSize.y);
+        gl::drawSolidRect(masterFrame);
+    }
 
     gl::color(0,0,0);
     gl::drawString("Frame Num: " + std::to_string(mClient->getCurrentRenderFrame()),
@@ -340,6 +385,25 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
     }
 }
 
+void MPEBouncingBallApp::drawAsyncClient()
+{
+    if (mLightsOut)
+    {
+        gl::clear(Color(0,0,0));
+    }
+    else
+    {
+        gl::clear(Color(0,1,0));
+    }
+    gl::color(1,1,1);
+    gl::drawString("Async Lightswitch.", Vec2f(10, 20));
+
+    // NOTE: Async will only receive messages if the settings.xml is configured
+    // with asyncreceive = true
+    gl::drawString("Last Message: ", Vec2f(10, 40));
+    gl::drawString(mLastMessage, Vec2f(10, 55));
+}
+
 #pragma mark - Input Events
 
 void MPEBouncingBallApp::mouseDown(MouseEvent event)
@@ -347,10 +411,17 @@ void MPEBouncingBallApp::mouseDown(MouseEvent event)
     // Adding a new ball to the scene by sending out a message.
     if (mClient->isConnected())
     {
-        Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
-        mClient->sendMessage(kCommandNewBall + "," +
-                             std::to_string(pos.x) + "," +
-                             std::to_string(pos.y));
+        if (mClient->isAsynchronousClient())
+        {
+            mClient->sendMessage(kCommandLightsOut);
+        }
+        else
+        {
+            Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
+            mClient->sendMessage(kCommandNewBall + "," +
+                                 std::to_string(pos.x) + "," +
+                                 std::to_string(pos.y));
+        }
     }
 }
 
@@ -358,10 +429,24 @@ void MPEBouncingBallApp::mouseDrag(MouseEvent event)
 {
     if (mClient->isConnected())
     {
-        Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
-        // For testing purposes. Only send drag data to client 1.
-        vector<int> toClientIDs = {1};
-        mClient->sendMessage(std::to_string(pos.x) + "," + std::to_string(pos.y), toClientIDs);
+        if (!mClient->isAsynchronousClient())
+        {
+            Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
+            // For testing purposes. Only send drag data to client 1.
+            vector<int> toClientIDs = {1,555};
+            mClient->sendMessage(std::to_string(pos.x) + "," + std::to_string(pos.y), toClientIDs);
+        }
+    }
+}
+
+void MPEBouncingBallApp::mouseUp(MouseEvent event)
+{
+    if (mClient->isConnected())
+    {
+        if (mClient->isAsynchronousClient())
+        {
+            mClient->sendMessage(kCommandLightsOut);
+        }
     }
 }
 

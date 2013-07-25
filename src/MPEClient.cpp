@@ -31,27 +31,30 @@ class MPENonThreadedClient : public MPEClient
 protected:
 
     // A pointer to your Cinder app
-    MPEApp              *mApp;
+    MPEApp                          *mApp;
 
     // The version of MPE you're using.
-    boost::shared_ptr<MPEProtocol> mProtocol;
+    boost::shared_ptr<MPEProtocol>  mProtocol;
 
-    bool                mIsRendering3D;
-    long                mLastFrameConfirmed;
+    bool                            mIsRendering3D;
+    long                            mLastFrameConfirmed;
 
     // 3D Positioning
-    const float         k3DMod = 0.1f; // What is this?
-    float               mFieldOfView;
-    float               mCameraZ;
+    const float                     k3DMod = 0.1f; // What is this?
+    float                           mFieldOfView;
+    float                           mCameraZ;
 
     // Settings loaded from settings.xml
-    int                 mPort;
-    std::string         mHostname;
-    bool                mIsStarted;
-    ci::Rectf           mLocalViewportRect;
-    ci::Vec2i           mMasterSize;
-    int                 mClientID;
-    bool                mIsDebug;
+    int                             mPort;
+    std::string                     mHostname;
+    bool                            mIsStarted;
+    ci::Rectf                       mLocalViewportRect;
+    ci::Vec2i                       mMasterSize;
+    int                             mClientID;
+    bool                            mIsDebug;
+    bool                            mIsAsync;
+    std::string                     mClientName;
+    bool                            mAsyncReceivesData;
 
     // A connection to the server.
     boost::shared_ptr<TCPClient> mTCPClient;
@@ -68,7 +71,10 @@ public:
     mIsRendering3D(false),
     mClientID(-1),
     mIsDebug(false),
-    mLastFrameConfirmed(-1)
+    mLastFrameConfirmed(-1),
+    mIsAsync(false),
+    mAsyncReceivesData(false),
+    mClientName("")
     {
         mApp = cinderApp;
         mProtocol = mApp->mpeProtocol();
@@ -87,6 +93,11 @@ public:
     int getClientID()
     {
         return mClientID;
+    }
+
+    string getClientName()
+    {
+        return mClientName;
     }
 
     ci::Rectf getVisibleRect()
@@ -112,6 +123,11 @@ public:
     void setIsRendering3D(bool is3D)
     {
         mIsRendering3D = is3D;
+    }
+
+    bool isAsynchronousClient()
+    {
+        return mIsAsync;
     }
 
     #pragma mark - Connection
@@ -184,8 +200,6 @@ public:
     {
         mFrameIsReady = false;
 
-        // This will just stall the loop until we get
-        // a message from the server.
         if (mIsStarted && isConnected())
         {
             bool isDataAvailable = true;
@@ -227,9 +241,10 @@ public:
 
         glPopMatrix();
 
-        if (isConnected())
+        if (isConnected() && !mIsAsync)
         {
             // Tell the server we're ready for the next.
+            // NOTE: Async clients must not report their render progress to the server.
             doneRendering();
         }
     }
@@ -344,7 +359,25 @@ protected:
 
     void sendClientID()
     {
-        mTCPClient->write(mProtocol->setClientID(mClientID));
+        boost::shared_ptr<MPEProtocol2> protocol = boost::dynamic_pointer_cast<MPEProtocol2>(mProtocol);
+        if (protocol != NULL)
+        {
+            if (mIsAsync)
+            {
+                mTCPClient->write(protocol->setAsyncClientID(mClientID,
+                                                             mClientName,
+                                                             mAsyncReceivesData));
+            }
+            else
+            {
+                mTCPClient->write(protocol->setClientID(mClientID, mClientName));
+            }
+        }
+        else
+        {
+            // NOTE: MPE V.1 doesn't accept names.
+            mTCPClient->write(mProtocol->setClientID(mClientID));
+        }
     }
 
 public:
@@ -411,10 +444,66 @@ private:
 
     void loadSettings(string settingsFilename)
     {
+        console() << "Loading settings from " << settingsFilename << std::endl;
+
         // Make sure the settings file exists.
         assert(boost::filesystem::exists(getAssetPath(settingsFilename)));
 
         XmlTree settingsDoc(loadAsset(settingsFilename));
+
+        try
+        {
+            XmlTree node = settingsDoc.getChild( "settings/asynchronous" );
+            string boolStr = node.getValue<string>();
+            std::transform(boolStr.begin(), boolStr.end(), boolStr.begin(), ::tolower);
+            mIsAsync = (boolStr == "true");
+        }
+        catch (XmlTree::ExcChildNotFound e)
+        {
+            // Ignore
+            mIsAsync = false;
+        }
+
+        if (mIsAsync)
+        {
+            try
+            {
+                XmlTree node = settingsDoc.getChild( "settings/asynchreceive" );
+                string boolStr = node.getValue<string>();
+                std::transform(boolStr.begin(), boolStr.end(), boolStr.begin(), ::tolower);
+                mAsyncReceivesData = (boolStr == "true");
+            }
+            catch (XmlTree::ExcChildNotFound e)
+            {
+            }
+        }
+
+        try
+        {
+            XmlTree ipNode = settingsDoc.getChild( "settings/client_id" );
+            mClientID = ipNode.getValue<int>();
+        }
+        catch (XmlTree::ExcChildNotFound e)
+        {
+            console() << "ERROR: Could not find client ID." << std::endl;
+        }
+
+        try
+        {
+            XmlTree node = settingsDoc.getChild( "settings/name" );
+            mClientName = node.getValue<string>();
+        }
+        catch (XmlTree::ExcChildNotFound e)
+        {
+            if (mIsAsync)
+            {
+                mClientName = "Async client " + std::to_string(mClientID);
+            }
+            else
+            {
+                mClientName = "Sync client " + std::to_string(mClientID);
+            }
+        }
 
         try
         {
@@ -435,16 +524,6 @@ private:
         catch (XmlTree::ExcChildNotFound e)
         {
             console() << "ERROR: Could not find server and port settings." << std::endl;
-        }
-
-        try
-        {
-            XmlTree ipNode = settingsDoc.getChild( "settings/client_id" );
-            mClientID = ipNode.getValue<int>();
-        }
-        catch (XmlTree::ExcChildNotFound e)
-        {
-            console() << "ERROR: Could not find client ID." << std::endl;
         }
 
         try

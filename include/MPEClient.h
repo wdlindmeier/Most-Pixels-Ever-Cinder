@@ -52,6 +52,12 @@ namespace mpe
         // Misc Accessors
         virtual int                 getClientID() = 0;
         virtual bool                isThreaded() = 0;
+        virtual std::string         getClientName() = 0;
+
+        // Async vs Sync
+        // async == doesn't sync frames
+        // sync == renders frames in-step
+        virtual bool                isAsynchronousClient() = 0;
 
         // Screen Dimensions
         virtual ci::Rectf           getVisibleRect() = 0;

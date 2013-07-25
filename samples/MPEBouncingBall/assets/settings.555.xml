@@ -1,0 +1,10 @@
+<settings>
+	<client_id>555</client_id>
+    <name>My Async Controller</name>
+	<server>
+		<ip>127.0.0.1</ip>
+		<port>9002</port>
+	</server>
+	<asynchronous>true</asynchronous>
+	<asynchreceive>true</asynchreceive>
+</settings>
