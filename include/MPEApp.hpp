@@ -1,9 +1,8 @@
 //
 //  MPEApp.hpp
-//  MPEBouncingBall
+//  Unknown Project
 //
-//  Created by William Lindmeier on 7/21/13.
-//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
 #pragma once
@@ -11,20 +10,20 @@
 #include "MPEProtocol2.hpp"
 
 /*
- 
+
  MPEApp:
  Add MPEApp as a superclass to your Cinder App. The MPEClient takes an MPEApp in it's constructor
- and will call the methods below. Your Cinder app should override these methods as appropriate.
- 
+ and will call the functions below. Your Cinder app should override these functions as appropriate.
+
 */
 
 namespace mpe
 {
     class MPEApp
     {
-     
+
     public:
-        
+
         /*
          REQUIRED
          This is the update callback, called whenever the server sends a new frame.
@@ -32,7 +31,7 @@ namespace mpe
          App::update(), so that all of the clients stay in sync.
          */
         virtual void mpeFrameUpdate(long serverFrameNumber) = 0;
-        
+
         /*
          RECOMMENDED
          This is the draw callback. The client will position the viewport before
@@ -42,7 +41,7 @@ namespace mpe
         virtual void mpeFrameRender(bool isNewFrame)
         {
         }
-        
+
         /*
          OPTIONAL
          This will be called when string data is received from any of the connected
@@ -51,7 +50,7 @@ namespace mpe
         virtual void mpeMessageReceived(const std::string & message, const int fromClientID)
         {
         }
-        
+
         /*
          REQUIRED
          Called whenever a new client joins or the server resets the simulation for
@@ -59,15 +58,15 @@ namespace mpe
          to frame 0.
          */
         virtual void mpeReset() = 0;
-        
+
         /*
          The version of the protocol that you're using. Defaults to MPE 2.0.
         */
-        virtual std::shared_ptr<MPEProtocol> mpeProtocol()
+        virtual boost::shared_ptr<MPEProtocol> mpeProtocol()
         {
-            return std::shared_ptr<MPEProtocol>(new MPEProtocol2());
+            return boost::shared_ptr<MPEProtocol>(new MPEProtocol2());
         };
-        
+
         /*
          The name of the Settings xml file found in assets/
         */

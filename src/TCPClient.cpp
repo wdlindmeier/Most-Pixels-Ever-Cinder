@@ -19,7 +19,9 @@ TCPClient::TCPClient(const std::string & messageDelimeter) :
 mMessageDelimiter(messageDelimeter),
 mIOService(),
 mSocket(mIOService),
-mIsConnected(false)
+mIsConnected(false),
+mNumDatalessFrames(0),
+mNumDatalessFramesTimeout(60)
 {
 }
 
@@ -59,23 +61,36 @@ string TCPClient::read(bool & isDataAvailable)
     std::size_t bytes_readable = command.get();
     isDataAvailable = bytes_readable > 0;
 
-    boost::system::error_code error;
-    boost::asio::streambuf buffer;
-    boost::asio::read_until(mSocket, buffer, mMessageDelimiter, error);
-
-    // When the server closes the connection, the ip::tcp::socket::read_some()
-    // function will exit with the boost::asio::error::eof error,
-    // which is how we know to exit the loop.
-    if (error)
+    if (isDataAvailable)
     {
-        console() << "ERROR: " << error.message() << std::endl;
-        close();
-        return message;
-    }
+        mNumDatalessFrames = 0;
 
-    std::ostringstream ss;
-    ss << &buffer;
-    message = ss.str();
+        boost::system::error_code error;
+        boost::asio::streambuf buffer;
+        boost::asio::read_until(mSocket, buffer, mMessageDelimiter, error);
+
+        // When the server closes the connection, the ip::tcp::socket::read_some()
+        // function will (sometimes) exit with the boost::asio::error::eof error.
+        if (error)
+        {
+            console() << "ERROR: " << error.message() << std::endl;
+            close();
+            return message;
+        }
+
+        std::ostringstream ss;
+        ss << &buffer;
+        message = ss.str();
+    }
+    else
+    {
+        mNumDatalessFrames++;
+        if (mNumDatalessFrames > mNumDatalessFramesTimeout)
+        {
+            close();
+            return message;
+        }
+    }
 
     return message;
 }

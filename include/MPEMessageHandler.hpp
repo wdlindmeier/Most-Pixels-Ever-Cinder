@@ -36,7 +36,7 @@ namespace mpe
         {
             return mCurrentRenderFrame;
         };
-        
+
         // The frame that every client should be rendering.
         // This is set by the protocol and should never by called by your App.
         virtual void        setCurrentRenderFrame(long frameNum)
@@ -55,29 +55,29 @@ namespace mpe
                 calculateDFPS();
             }
         };
- 
+
         // These are overridden in the MPEClient to handle data.
         virtual void        receivedStringMessage(const std::string & dataMessage, int fromClientID = -1){};
         virtual void        receivedResetCommand(){};
-        
-        // Average Data Frames Per Second. The number of server updates per second.
+
+        // Average data FPS (i.e. the number of server updates per second).
         float               getUpdatesPerSecond()
         {
-            return 1.0f / mAvgUpdateDuration;
+            return mAvgUpdateDuration > 0 ? (1.0f / mAvgUpdateDuration) : 0;
         }
-        
+
     protected:
-        
+
         long                mCurrentRenderFrame;
         bool                mFrameIsReady;
-    
+
     private:
-                
+
         void calculateDFPS()
         {
             double now = ci::app::getElapsedSeconds();
             double frameDuration = (now - mTimeLastMessage) / mUpdateSampleInterval;
-            if(frameDuration > 0)
+            if (frameDuration > 0)
             {
                 mAvgUpdateDuration = (mAvgUpdateDuration * 0.9) + (frameDuration * 0.1);
             }
@@ -85,10 +85,10 @@ namespace mpe
             {
                 mAvgUpdateDuration = frameDuration;
             }
-            
+
             mTimeLastMessage = now;
         }
-        
+
         float               mAvgUpdateDuration;
         double              mTimeLastMessage;
         int                 mUpdateSampleInterval;

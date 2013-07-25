@@ -37,7 +37,7 @@ class MyCinderApp : public AppNative, public MPEApp
     
     private:
     
-    MPEAsyncClient *mClient;      
+    MPEClient::Ptr  mClient;      
     Rand            mRand;
     BouncyBall      mBall;
 }
@@ -49,7 +49,7 @@ void MyCinderApp::setup()
     // Each client needs a unique settings file.
     // Pass a pointer to an MPEApp (e.g. MyCinderApp) into the client constructor.
     
-    mClient = new MPEAsyncClient(this);
+    mClient = MPEClient::New(this);
 }
 
 void MyCinderApp::update()

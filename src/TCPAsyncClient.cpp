@@ -5,8 +5,8 @@
 //  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
-#include "TCPAsyncClient.h"
 #include "cinder/Utilities.h"
+#include "TCPAsyncClient.h"
 
 using namespace mpe;
 using std::string;
@@ -68,7 +68,6 @@ void TCPAsyncClient::handleConnect(const boost::system::error_code & error)
 
 void TCPAsyncClient::write(const string & msg)
 {
-//    console() << "WRITE: " << msg << "\n";
     mIOService.post(boost::bind(&TCPAsyncClient::_write, this, msg));
 }
 

@@ -8,15 +8,15 @@
 #pragma once
 
 #include "cinder/Cinder.h"
-#include "cinder/gl/gl.h"
 #include "cinder/CinderMath.h"
+#include "cinder/gl/gl.h"
 
 /*
 
  Ball:
- A simple ball that bounces around the screen. 
+ A simple ball that bounces around the screen.
  Ball also has some meaningless internal data that's manipulated every frame
- so we can ensure that the Async client is thread-safe. 
+ so we can ensure that the Async client is thread-safe.
 
 */
 
@@ -27,7 +27,7 @@ class Ball
 
 public:
 
-    Ball(){};    
+    Ball(){};
     Ball(const ci::Vec2f & randPosition,
          const ci::Vec2f & randVelocity,
          const ci::Vec2i & sizeClient) :
@@ -38,7 +38,7 @@ public:
     mSizeClient(sizeClient)
     {};
 
-    // This method performs internal data read/write to try and trigger a crash.
+    // This function performs internal data read/write to try and trigger a crash.
     // This is just here to prove that the thread locks are working.
     void manipulateInternalData()
     {
@@ -59,11 +59,11 @@ public:
             assert(vi == std::to_string(i));
         }
     }
-    
+
     void calc()
     {
         float radius = mDiameter * 0.5;
-        
+
         if (mPosition.x < radius || mPosition.x > (mSizeClient.x - radius))
         {
             mVelocity.x = mVelocity.x * -1;
@@ -72,7 +72,7 @@ public:
         {
             mVelocity.y = mVelocity.y * -1;
         }
-        
+
         mPosition += mVelocity;
     }
 

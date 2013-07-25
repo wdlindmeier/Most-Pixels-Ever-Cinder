@@ -8,12 +8,14 @@
 #pragma once
 
 #include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include "cinder/Rect.h"
+#include "MPEApp.hpp"
 #include "MPEMessageHandler.hpp"
 #include "MPEProtocol.hpp"
 #include "MPEProtocol2.hpp"
 #include "TCPClient.h"
-#include "MPEApp.hpp"
 
 /*
 
@@ -21,8 +23,10 @@
  This class is the interface through which your App communicates with an MPE server.
 
  Once you've subclassed your Cinder App from MPEApp, you construct a client by passing
- it a pointer to your app. It uses that pointer to call update/reset/etc.
- 
+ it a pointer to your app like so:
+
+ MPEClient::New(this); // <-- called from your Cinder app setup()
+
  The client keeps track of the current frame that should be rendered (see
  MPEMessageHandler::getCurrentRenderFrame) and informs the server when it's complete. Once
  all of the clients have rendered the frame the server will send out the next frame number.
@@ -36,89 +40,55 @@ namespace mpe
 
     public:
 
-        // Constructors
-        MPEClient(){};
-        MPEClient(MPEApp *cinderApp);
+        typedef boost::shared_ptr<MPEClient> Ptr;
+
+        static Ptr                  New(MPEApp *app, bool isThreaded = true);
+
+                                    MPEClient() :
+                                    MPEMessageHandler(){};
+
+                                    ~MPEClient(){};
 
         // Misc Accessors
-        int                 getClientID();
-        
+        virtual int                 getClientID() = 0;
+        virtual bool                isThreaded() = 0;
+
         // Screen Dimensions
-        ci::Rectf           getVisibleRect();
-        void                setVisibleRect(const ci::Rectf & rect);
-        ci::Vec2i           getMasterSize();
+        virtual ci::Rectf           getVisibleRect() = 0;
+        virtual void                setVisibleRect(const ci::Rectf & rect) = 0;
+        virtual ci::Vec2i           getMasterSize() = 0;
 
         // 3D Rendering
-        bool                getIsRendering3D();
-        void                setIsRendering3D(bool is3D);
-        void                set3DFieldOfView(float fov);
-        float               get3DFieldOfView();
-        void                restore3DCamera();
-        
+        virtual bool                getIsRendering3D() = 0;
+        virtual void                setIsRendering3D(bool is3D) = 0;
+        virtual void                set3DFieldOfView(float fov) = 0;
+        virtual float               get3DFieldOfView() = 0;
+        virtual void                restore3DCamera() = 0;
+
         // Hit testing
-        bool                isOnScreen(float x, float y);
-        bool                isOnScreen(const ci::Vec2f & pos);
-        bool                isOnScreen(float x, float y, float w, float h);
-        bool                isOnScreen(const ci::Rectf & rect);
+        virtual bool                isOnScreen(float x, float y) = 0;
+        virtual bool                isOnScreen(const ci::Vec2f & pos) = 0;
+        virtual bool                isOnScreen(float x, float y, float w, float h) = 0;
+        virtual bool                isOnScreen(const ci::Rectf & rect) = 0;
 
         // Connection
-        void                start();
-        void                stop();
-        void                togglePause();
-        bool                isConnected();
+        virtual void                start() = 0;
+        virtual void                stop() = 0;
+        virtual void                togglePause() = 0;
+        virtual bool                isConnected() = 0;
 
         // Loop
-        virtual void        update();
-        virtual void        draw();
+        virtual void                update() = 0;
+        virtual void                draw() = 0;
 
         // Sending Data
         // Data sent to the server is broadcast to every client.
         // The sending App will receive its own data and should act on it when it's received,
         // rather than before it's sent, so all of the clients are in sync.
-        void                sendMessage(const std::string & message); // née broadcast
+        virtual void                sendMessage(const std::string & message) = 0; // née broadcast
         // Send data to specific client IDs
-        void                sendMessage(const std::string & message,
-                                        const std::vector<int> & clientIds);
-
-    protected:
-        
-        virtual void        receivedStringMessage(const std::string & dataMessage,
-                                                  const int fromClientID = -1);
-        virtual void        receivedResetCommand();
-        void                setCurrentRenderFrame(long frameNum);
-        void                doneRendering();
-        void                positionViewport();
-        void                positionViewport3D();
-        void                positionViewport2D();
-        void                sendClientID();
-
-        // A pointer to your Cinder app
-        MPEApp              *mApp;
-        std::shared_ptr<MPEProtocol> mProtocol;
-
-        bool                mIsRendering3D;
-        long                mLastFrameConfirmed;
-
-        // 3D Positioning
-        float               mFieldOfView;
-        float               mCameraZ;
-
-        // Settings loaded from settings.xml
-        int                 mPort;
-        std::string         mHostname;
-        bool                mIsStarted;
-        ci::Rectf           mLocalViewportRect;
-        ci::Vec2i           mMasterSize;
-        int                 mClientID;
-        bool                mIsDebug;
-
-        // A connection to the server.
-        TCPClient           *mTCPClient;
-
-    private:
-
-        void                tcpDidConnect();
-        void                loadSettings(std::string settingsFilename);
+        virtual void                sendMessage(const std::string & message,
+                                                const std::vector<int> & clientIds) = 0;
 
     };
 }

@@ -39,12 +39,18 @@ namespace mpe
         std::vector<int>                readIntegers();
         std::vector<char>               readBytes();
 
+        // NOTE: There's no real support for asking a TCP socket "Are you connected"?
+        // http://stackoverflow.com/questions/1511129/boostasioiptcpsocket-is-connected
+        // So we'll just disconnect after N frames of no data.
+        int                             mNumDatalessFramesTimeout;
+
     protected:
 
         std::string                     mMessageDelimiter;
         boost::asio::io_service         mIOService;
         boost::asio::ip::tcp::socket    mSocket;
         bool                            mIsConnected;
+        int                             mNumDatalessFrames;
 
     };
 }
