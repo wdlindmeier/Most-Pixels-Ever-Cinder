@@ -17,7 +17,7 @@
 // Generally Threaded is the way to go, but if find your app crashing
 // because you're making GL calls on a different thread, use the non-threaded client.
 // Threaded is used by default. This switch is for demo purposes.
-#define USE_THREADED   1
+#define USE_THREADED   0
 
 // Choose the protocol version. MPE 2.0 is the latest and greatest.
 // 2.0 is used by default. This switch is for demo purposes.
@@ -118,7 +118,7 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
 
 void MPEBouncingBallApp::setup()
 {
-    mClient = MPEClient::New(this);
+    mClient = MPEClient::New(this, USE_THREADED);
 
     mDidMoveFrame = false;
 
