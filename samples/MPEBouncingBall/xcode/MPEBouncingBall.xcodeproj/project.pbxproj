@@ -75,7 +75,6 @@
 		9B432AB0781A4057831DA79A /* MPEProtocol.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol.hpp; path = ../../../include/MPEProtocol.hpp; sourceTree = "<group>"; };
 		9CD06D563A884CBDB7DB9358 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		A97B18A317A19A9700409BB3 /* MPEBouncingBallAsync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBallAsync.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A97B18A417A19A9700409BB3 /* MPEBouncingBall1 copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MPEBouncingBall1 copy-Info.plist"; path = "/Users/bill/Tools/cinder_master/blocks/Most-Pixels-Ever/samples/MPEBouncingBall/xcode/MPEBouncingBall1 copy-Info.plist"; sourceTree = "<absolute>"; };
 		A97B18A517A19AEF00409BB3 /* settings.555.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.555.xml; sourceTree = "<group>"; };
 		A9AA2B7A1798D86300BFA0BC /* Ball.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ball.hpp; path = ../include/Ball.hpp; sourceTree = "<group>"; };
 		A9AA2B7C1798D91100BFA0BC /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
@@ -207,7 +206,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				A97B18A417A19A9700409BB3 /* MPEBouncingBall1 copy-Info.plist */,
 			);
 			name = MPEBouncingBall;
 			sourceTree = "<group>";
@@ -442,7 +440,7 @@
 					"CLIENT_ID=555",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INFOPLIST_FILE = "MPEBouncingBall1 copy-Info.plist";
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
 				PRODUCT_NAME = MPEBouncingBallAsync;
@@ -465,7 +463,7 @@
 				GCC_PREFIX_HEADER = MPEBouncingBall_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "CLIENT_ID=555";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INFOPLIST_FILE = "MPEBouncingBall1 copy-Info.plist";
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
 				PRODUCT_NAME = MPEBouncingBallAsync;
