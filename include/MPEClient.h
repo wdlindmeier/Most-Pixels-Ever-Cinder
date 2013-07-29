@@ -55,8 +55,8 @@ namespace mpe
         virtual std::string         getClientName() = 0;
 
         // Async vs Sync
-        // async == doesn't sync frames
-        // sync == renders frames in-step
+        // async == doesn't sync frames with other clients
+        // sync == renders frames in-step with other clients
         virtual bool                isAsynchronousClient() = 0;
 
         // Screen Dimensions

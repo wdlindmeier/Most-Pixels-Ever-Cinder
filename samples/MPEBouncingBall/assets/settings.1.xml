@@ -1,5 +1,6 @@
 <settings>
 	<client_id>1</client_id>
+    <name>Synchronous Client 1</name>
 	<server>
 		<ip>127.0.0.1</ip>
 		<port>9002</port>

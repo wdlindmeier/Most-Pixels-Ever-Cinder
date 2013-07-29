@@ -12,6 +12,8 @@
 from twisted.internet.protocol import Factory, Protocol
 from twisted.internet import reactor
 from math import *
+from datetime import *
+from copy import copy
 import sys
 import argparse
 
@@ -28,13 +30,17 @@ CMD_GO = "G"
 parser = argparse.ArgumentParser(description='Most Pixels Ever Server, conforms to protocol version 2.0')
 parser.add_argument('--num-clients', dest='num_clients', default=-1, help='The number of clients. The server won\'t start the draw loop until all of the clients are connected.')
 parser.add_argument('--port', dest='port_num', default=9002, help='The port number that the clients connect to.')
+parser.add_argument('--framerate', dest='framerate', default=60, help='The target framerate.')
 args = parser.parse_args()
 
 portnum = int(args.port_num)
 num_clients_required = int(args.num_clients)
+framerate = int(args.framerate)
+microseconds_per_frame = (1.0 / framerate) * 1000000
 framecount = 0
 num_clients_drawn = 0
 is_paused = False
+last_frame_time = datetime.now()
 
 class BroadcastMessage:
 
@@ -58,6 +64,10 @@ class MPEServer(Protocol):
             MPEServer.rendering_client_ids.remove(self.client_id)
         if self.client_id in MPEServer.receiving_client_ids:
             MPEServer.receiving_client_ids.remove(self.client_id)
+        # It's possible that isNextFrameReady is true after the client disconnects
+        # if they were the last client to render and hadn't informed the server.
+        if MPEServer.isNextFrameReady():
+            MPEServer.sendNextFrame()
 
     def dataReceived(self, data):
         global num_clients_drawn
@@ -194,19 +204,32 @@ class MPEServer(Protocol):
 
     @staticmethod
     def sendNextFrame():
-        if is_paused:
-            return
+        global last_frame_time
         global num_clients_drawn
         global framecount
+        global is_paused
+        global framerate
+        global microseconds_per_frame
+
+        if is_paused:
+            return
+
+        # Slow down if we've exceeded the target FPS
+        delta = datetime.now() - last_frame_time
+        while delta.seconds < 1 and delta.microseconds < microseconds_per_frame:
+            delta = datetime.now() - last_frame_time
+
         num_clients_drawn = 0
         framecount += 1
         send_message = CMD_GO + "|%i" % framecount
-        for client_id in MPEServer.clients:
-            c = MPEServer.clients[client_id]
-            if c.client_id in MPEServer.receiving_client_ids:
+        # Copy the clients so in case one disconnects during the loop
+        clients = copy(MPEServer.clients)
+        for client_id in clients:
+            c = clients[client_id]
+            if client_id in MPEServer.receiving_client_ids:
                 client_messages = []
                 for m in MPEServer.message_queue:
-                    if len(m.to_client_ids) == 0 or c.client_id in m.to_client_ids:
+                    if len(m.to_client_ids) == 0 or client_id in m.to_client_ids:
                         client_messages.append(str(m.from_client_id) + "," + m.body)
 
                 if len(client_messages) > 0:
@@ -215,6 +238,7 @@ class MPEServer(Protocol):
                     c.sendMessage(send_message)
 
         MPEServer.message_queue = []
+        last_frame_time = datetime.now()
 
     @staticmethod
     def broadcastMessage(message, from_client_id, to_client_ids):
@@ -233,6 +257,7 @@ MPEServer.message_queue = []
 
 reactor.listenTCP(portnum, factory)
 print "MPE Server started on port %i" % portnum
+print "Running at max %i FPS" % framerate
 if num_clients_required > 0:
     print "Waiting for %i clients." % num_clients_required
 reactor.run()
