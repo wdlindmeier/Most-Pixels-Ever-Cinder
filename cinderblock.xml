@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <cinder>
   <block
-  	name="Most Pixels Ever"
+  	name="Most-Pixels-Ever"
   	id="com.wdlindmeier.mpe"
   	author="William Lindmeier"
     git="git://github.com/wdlindmeier/Most-Pixels-Ever-Cinder.git"
@@ -11,13 +11,13 @@
   	<supports os="msw" />
   	<supports os="macosx" />
     <includePath>include</includePath>
-  	<header>include/MPEAsyncClient.h</header>
+    <header>include/MPEApp.hpp</header>
     <header>include/MPEClient.h</header>
     <header>include/MPEMessageHandler.hpp</header>
     <header>include/MPEProtocol.hpp</header>
+    <header>include/MPEProtocol2.hpp</header>
     <header>include/TCPAsyncClient.h</header>
     <header>include/TCPClient.h</header>
-    <source>src/MPEAsyncClient.cpp</source>
     <source>src/MPEClient.cpp</source>
     <source>src/TCPAsyncClient.cpp</source>
     <source>src/TCPClient.cpp</source>
