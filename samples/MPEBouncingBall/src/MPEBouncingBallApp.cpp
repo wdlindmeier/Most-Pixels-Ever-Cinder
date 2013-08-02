@@ -12,6 +12,8 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
 #include "MPEApp.hpp"
+#include "MPEClient.h"
+#include "SimpleGUI.h"
 
 // Choose the threading mode.
 // Generally Threaded is the way to go, but if find your app crashing
@@ -23,16 +25,15 @@
 // 2.0 is used by default. This switch is for demo purposes.
 #define USE_VERSION_2   1
 
-#include "MPEClient.h"
-
 using namespace ci;
 using namespace ci::app;
 using std::string;
 using std::vector;
 using namespace mpe;
+using namespace mowa::sgui;
 
 const static string kCommandNewBall = "BALL++";
-const static string kCommandLightsOut = "LIGHTSOUT";
+const static string kCommand3DSettings = "3D";
 
 /*
 
@@ -53,16 +54,13 @@ const static string kCommandLightsOut = "LIGHTSOUT";
 
  Behavior:
 
-    • Dragging the app windows around the screen will update their positions relative to the master
-      dimensions to simulate physical screens.
-
-    • Clicking the mouse in a Sync window adds balls to the scene.
+    • Clicking the mouse in a Sync window adds cubes to the scene.
 
     • Dragging the mouse will send messages to client 1, and 555 but not client 0.
 
-    • Clicking in the Async controller window will make the backgrounds black.
+    • Adjusting the params in the Async controller will update the 3D camera
 
-    • Pressing 'p' will pause the server.
+    • Pressing 'p' will pause/unpause the server.
 
  Notes:
 
@@ -85,7 +83,7 @@ public:
     // Update
     void        update();
     void        mpeFrameUpdate(long serverFrameNumber);
-    void        updateLocalViewportFromScreenPosition();
+    void        update3DSettings();
 
     // Draw
     void        draw();
@@ -97,7 +95,7 @@ public:
     void        mouseDrag(MouseEvent event);
     void        mouseUp(MouseEvent event);
     void        keyDown(KeyEvent event);
-
+    
     // MPE App
     void        mpeMessageReceived(const std::string & message, const int fromClientID);
     void        mpeReset();
@@ -110,15 +108,18 @@ private:
 
     MPEClient::Ptr  mClient;
 
-    bool            mDidMoveFrame;
     long            mServerFramesProcessed;
     Rand            mRand;
     vector<Ball>    mBalls;
-    Vec2i           mScreenSize;
-    Vec2i           mScreenPos;
-    bool            mLightsOut;
     string          mLastMessage;
-
+    
+    SimpleGUI       *mGUI;
+    LabelControl    *mLabelFOV;
+    LabelControl    *mLabelAspectRatio;
+    LabelControl    *mLabelCameraZ;
+    float           mFOV;
+    float           mCamZ;
+    float           mAspectRatio;
 };
 
 #pragma mark - Setup
@@ -133,6 +134,21 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
 void MPEBouncingBallApp::setup()
 {
     mClient = MPEClient::New(this, USE_THREADED);
+    
+    // 3D
+    mClient->setIsRendering3D(true);
+    mFOV = mClient->get3DFieldOfView();
+    mCamZ = mClient->get3DCameraZ();
+    mAspectRatio = mClient->get3DAspectRatio();
+    
+    // Params GUI
+    mGUI = new SimpleGUI(this);
+    mGUI->addParam("Field Of View", &mFOV, 1.f, 180.f, mFOV);
+    mLabelFOV = mGUI->addLabel("--");
+    mGUI->addParam("Camera Z", &mCamZ, -1500.f, 0.f, mCamZ);
+    mLabelCameraZ = mGUI->addLabel("--");
+    mGUI->addParam("Aspect Ratio", &mAspectRatio, 0.f, 2.f, mAspectRatio);
+    mLabelAspectRatio = mGUI->addLabel("--");
 
 #if !USE_VERSION_2
     if (mClient->isAsynchronous())
@@ -141,9 +157,6 @@ void MPEBouncingBallApp::setup()
         exit();
     }
 #endif
-
-    mDidMoveFrame = false;
-    mLightsOut = false;
 
 #if !USE_VERSION_2
     // MPE 1.0 doesn't send out a reset command when a connection is made.
@@ -190,9 +203,14 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
             console() << "Adding a ball to " << posNewBall << ". Is on screen? "
                       << mClient->isOnScreen(posNewBall) << std::endl;
         }
-        else if (command == kCommandLightsOut)
+        else if (command == kCommand3DSettings)
         {
-            mLightsOut = !mLightsOut;
+            mFOV = stof(tokens[1]);
+            mCamZ = stof(tokens[2]);
+            mAspectRatio = stof(tokens[3]);
+            mClient->set3DFieldOfView(mFOV);
+            mClient->set3DCameraZ(mCamZ);
+            mClient->set3DAspectRatio(mAspectRatio);
         }
     }
 
@@ -235,10 +253,10 @@ void MPEBouncingBallApp::addBallAtPosition(const Vec2f & posBall)
 
 void MPEBouncingBallApp::update()
 {
-    updateLocalViewportFromScreenPosition();
-
     if (mClient->isConnected())
     {
+        update3DSettings();
+        
         if (!mClient->isThreaded())
         {
             // NOTE:
@@ -276,28 +294,21 @@ void MPEBouncingBallApp::mpeFrameUpdate(long serverFrameNumber)
     }
 }
 
-// Using the window's position in the screen as the local
-// viewport to simulate multiple screens in space.
-
-void MPEBouncingBallApp::updateLocalViewportFromScreenPosition()
+void MPEBouncingBallApp::update3DSettings()
 {
-    // Moving the window simulates repositioning the screen.
-    Vec2i size = getWindowSize();
-    Vec2i pos = getWindowPos() - Vec2f(100, 100); // Add a margin to the master
-
-    if (mScreenSize != size || mScreenPos != pos)
+    mLabelFOV->setText(std::to_string(mClient->get3DFieldOfView()));
+    mLabelCameraZ->setText(std::to_string(mClient->get3DCameraZ()));
+    mLabelAspectRatio->setText(std::to_string(mClient->get3DAspectRatio()));
+    
+    // If the client values are different than the local values, send an update message
+    if (mClient->get3DFieldOfView() != mFOV ||
+        mClient->get3DCameraZ() != mCamZ ||
+        mClient->get3DAspectRatio() != mAspectRatio)
     {
-        if (mScreenSize != Vec2f::zero())
-        {
-            mDidMoveFrame = true;
-        }
-
-        // The position has changed.
-        // Update the renderable area.
-        mClient->setVisibleRect(ci::Rectf(pos.x, pos.y, pos.x + size.x, pos.y + size.y));
-        console() << "Visible Rect: " << mClient->getVisibleRect() << std::endl;
-        mScreenSize = size;
-        mScreenPos = pos;
+        mClient->sendMessage(kCommand3DSettings + "," +
+                             std::to_string(mFOV) + "," +
+                             std::to_string(mCamZ) + "," +
+                             std::to_string(mAspectRatio));
     }
 }
 
@@ -337,47 +348,33 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
 
     gl::clear(Color(0,0,0));
 
-    if (!mLightsOut)
+    // Paint the Master drawable region red if we're in step with the server, or magenta if our
+    // draw loop is ahead of the server.
+    // The App's loop will continue at the normal speed even if we're waiting for data from the
+    // server, we just don't update the state.
+    // A flickering background means the FPS is faster than the server data-rate.
+    if (isNewFrame)
     {
-        // Paint the Master drawable region red if we're in step with the server, or magenta if our
-        // draw loop is ahead of the server.
-        // The App's loop will continue at the normal speed even if we're waiting for data from the
-        // server, we just don't update the state.
-        // A flickering background means the FPS is faster than the server data-rate.
-        if (isNewFrame)
-        {
-            gl::color(Color(1, 0, 0));
-        }
-        else
-        {
-            gl::color(Color(1, 0, 1));
-        }
-
-        Vec2i masterSize = mClient->getMasterSize();
-        Rectf masterFrame = Rectf(0,0,masterSize.x,masterSize.y);
-        gl::drawSolidRect(masterFrame);
-    }
-
-    gl::color(0,0,0);
-    gl::drawString("Frame Num: " + std::to_string(mClient->getCurrentRenderFrame()),
-                   Vec2f(100, 100));
-    gl::drawString("FPS: " + std::to_string((int)getAverageFps()),
-                   Vec2f(100, 130));
-    gl::drawString("Updates Per Second: " + std::to_string((int)mClient->getUpdatesPerSecond()),
-                   Vec2f(100, 160));
-
-    float myX = mClient->getVisibleRect().x1;
-    float myY = mClient->getVisibleRect().y1;
-    if (!mDidMoveFrame)
-    {
-        gl::drawString("Drag the window to reposition the virtual screen.",
-                       Vec2f(myX + 20, myY + 20));
+        gl::color(Color(1, 0, 0));
     }
     else
     {
-        gl::drawString("X: " + std::to_string((int)myX) + ", y: " + std::to_string((int)myY),
-                       Vec2f(myX + 20, myY + 20));
+        gl::color(Color(1, 0, 1));
     }
+
+    Vec2i masterSize = mClient->getMasterSize();
+    Rectf masterFrame = Rectf(0,0,masterSize.x,masterSize.y);
+    gl::drawSolidRect(masterFrame);
+
+    gl::color(0,0,0);
+    gl::drawString("Client ID: " + std::to_string(CLIENT_ID),
+                   Vec2f(mClient->getVisibleRect().getX1() + 20, 20));
+    gl::drawString("FPS: " + std::to_string((int)getAverageFps()),
+                   Vec2f(mClient->getVisibleRect().getX1() + 20, 50));
+    gl::drawString("Frame Num: " + std::to_string(mClient->getCurrentRenderFrame()),
+                   Vec2f(mClient->getVisibleRect().getX1() + 20, 80));
+    gl::drawString("Updates Per Second: " + std::to_string((int)mClient->getUpdatesPerSecond()),
+                   Vec2f(mClient->getVisibleRect().getX1() + 20, 120));
 
     BOOST_FOREACH(Ball & ball, mBalls)
     {
@@ -387,21 +384,8 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
 
 void MPEBouncingBallApp::drawAsyncClient()
 {
-    if (mLightsOut)
-    {
-        gl::clear(Color(0,0,0));
-    }
-    else
-    {
-        gl::clear(Color(0,1,0));
-    }
-    gl::color(1,1,1);
-    gl::drawString("Async Lightswitch.", Vec2f(10, 20));
-
-    // NOTE: Async will only receive messages if the settings.xml is configured
-    // with asyncreceive = true
-    gl::drawString("Last Message: ", Vec2f(10, 40));
-    gl::drawString(mLastMessage, Vec2f(10, 55));
+    gl::clear(Color(0,1,0));
+    mGUI->draw();
 }
 
 #pragma mark - Input Events
@@ -411,11 +395,7 @@ void MPEBouncingBallApp::mouseDown(MouseEvent event)
     // Adding a new ball to the scene by sending out a message.
     if (mClient->isConnected())
     {
-        if (mClient->isAsynchronousClient())
-        {
-            mClient->sendMessage(kCommandLightsOut);
-        }
-        else
+        if (!mClient->isAsynchronousClient())
         {
             Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
             mClient->sendMessage(kCommandNewBall + "," +
@@ -441,13 +421,6 @@ void MPEBouncingBallApp::mouseDrag(MouseEvent event)
 
 void MPEBouncingBallApp::mouseUp(MouseEvent event)
 {
-    if (mClient->isConnected())
-    {
-        if (mClient->isAsynchronousClient())
-        {
-            mClient->sendMessage(kCommandLightsOut);
-        }
-    }
 }
 
 void MPEBouncingBallApp::keyDown(KeyEvent event)

@@ -6,11 +6,11 @@
 		<port>9002</port>
 	</server>
 	<local_dimensions>
-		<width>500</width>
-		<height>600</height>
+		<width>400</width>
+		<height>400</height>
 	</local_dimensions>
 	<local_location>
-		<x>500</x>
+		<x>400</x>
 		<y>0</y>
 	</local_location>
 	<master_dimensions>

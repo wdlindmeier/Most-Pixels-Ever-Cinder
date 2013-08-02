@@ -69,7 +69,10 @@ namespace mpe
         virtual void                setIsRendering3D(bool is3D) = 0;
         virtual void                set3DFieldOfView(float fov) = 0;
         virtual float               get3DFieldOfView() = 0;
-        virtual void                restore3DCamera() = 0;
+        virtual void                set3DCameraZ(float camZ) = 0;
+        virtual float               get3DCameraZ() = 0;
+        virtual void                set3DAspectRatio(float aspectRatio) = 0;
+        virtual float               get3DAspectRatio() = 0;
 
         // Hit testing
         virtual bool                isOnScreen(float x, float y) = 0;

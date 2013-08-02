@@ -19,7 +19,6 @@
 		844B6B3A5EE84A928C3D583A /* MPEBouncingBallApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 470883335B0049F0BF0CC756 /* MPEBouncingBallApp.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		A97B189017A19A9700409BB3 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9CD06D563A884CBDB7DB9358 /* CinderApp.icns */; };
-		A97B189117A19A9700409BB3 /* settings.1.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7D1798D91100BFA0BC /* settings.1.xml */; };
 		A97B189317A19A9700409BB3 /* MPEBouncingBallApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 470883335B0049F0BF0CC756 /* MPEBouncingBallApp.cpp */; };
 		A97B189417A19A9700409BB3 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E78E7556978B4B0F810B0C28 /* MPEClient.cpp */; };
 		A97B189517A19A9700409BB3 /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF68419D07B8428680CC8B7D /* TCPAsyncClient.cpp */; };
@@ -32,7 +31,6 @@
 		A97B189D17A19A9700409BB3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
 		A97B189E17A19A9700409BB3 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		A97B189F17A19A9700409BB3 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
-		A97B18A617A19AEF00409BB3 /* settings.555.xml in Resources */ = {isa = PBXBuildFile; fileRef = A97B18A517A19AEF00409BB3 /* settings.555.xml */; };
 		A9AA2B7F1798D91100BFA0BC /* settings.0.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7C1798D91100BFA0BC /* settings.0.xml */; };
 		A9AA2B841798D99900BFA0BC /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9CD06D563A884CBDB7DB9358 /* CinderApp.icns */; };
 		A9AA2B861798D99900BFA0BC /* settings.1.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7D1798D91100BFA0BC /* settings.1.xml */; };
@@ -48,6 +46,13 @@
 		A9AA2B951798D99900BFA0BC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
 		A9AA2B961798D99900BFA0BC /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		A9AA2B971798D99900BFA0BC /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		A9DC9D0C17AC124200E78153 /* pf_tempesta_seven.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9DC9D0917AC124200E78153 /* pf_tempesta_seven.ttf */; };
+		A9DC9D0D17AC124200E78153 /* pf_tempesta_seven.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9DC9D0917AC124200E78153 /* pf_tempesta_seven.ttf */; };
+		A9DC9D0E17AC124200E78153 /* pf_tempesta_seven.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9DC9D0917AC124200E78153 /* pf_tempesta_seven.ttf */; };
+		A9DC9D0F17AC124200E78153 /* SimpleGUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9DC9D0B17AC124200E78153 /* SimpleGUI.cpp */; };
+		A9DC9D1017AC124200E78153 /* SimpleGUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9DC9D0B17AC124200E78153 /* SimpleGUI.cpp */; };
+		A9DC9D1117AC124200E78153 /* SimpleGUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9DC9D0B17AC124200E78153 /* SimpleGUI.cpp */; };
+		A9DC9D1217AC1AB800E78153 /* settings.555.xml in Resources */ = {isa = PBXBuildFile; fileRef = A97B18A517A19AEF00409BB3 /* settings.555.xml */; };
 		F57E074386E94CBE904B9316 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E78E7556978B4B0F810B0C28 /* MPEClient.cpp */; };
 		FA258AF4AC364A1CB8100D47 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9CD06D563A884CBDB7DB9358 /* CinderApp.icns */; };
 /* End PBXBuildFile section */
@@ -82,6 +87,9 @@
 		A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBall1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9C7EE56179AEE370090C21F /* MPEProtocol2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocol2.hpp; path = ../../../include/MPEProtocol2.hpp; sourceTree = "<group>"; };
 		A9C7EE57179C95600090C21F /* MPEApp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEApp.hpp; path = ../../../include/MPEApp.hpp; sourceTree = "<group>"; };
+		A9DC9D0717AC124200E78153 /* SimpleGUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleGUI.h; sourceTree = "<group>"; };
+		A9DC9D0917AC124200E78153 /* pf_tempesta_seven.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = pf_tempesta_seven.ttf; sourceTree = "<group>"; };
+		A9DC9D0B17AC124200E78153 /* SimpleGUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleGUI.cpp; sourceTree = "<group>"; };
 		AF68419D07B8428680CC8B7D /* TCPAsyncClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPAsyncClient.cpp; path = ../../../src/TCPAsyncClient.cpp; sourceTree = "<group>"; };
 		D553A7FF89D04D6CA6EF3D37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E78E7556978B4B0F810B0C28 /* MPEClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClient.cpp; path = ../../../src/MPEClient.cpp; sourceTree = "<group>"; };
@@ -139,6 +147,7 @@
 		01B97315FEAEA392516A2CEA /* Blocks */ = {
 			isa = PBXGroup;
 			children = (
+				A9DC9D0517AC124200E78153 /* SimpleGUI */,
 				ABD19BF8F559448190010AFB /* Most Pixels Ever */,
 			);
 			name = Blocks;
@@ -263,6 +272,41 @@
 			path = ../assets;
 			sourceTree = "<group>";
 		};
+		A9DC9D0517AC124200E78153 /* SimpleGUI */ = {
+			isa = PBXGroup;
+			children = (
+				A9DC9D0617AC124200E78153 /* include */,
+				A9DC9D0817AC124200E78153 /* resources */,
+				A9DC9D0A17AC124200E78153 /* src */,
+			);
+			name = SimpleGUI;
+			path = ../blocks/SimpleGUI;
+			sourceTree = "<group>";
+		};
+		A9DC9D0617AC124200E78153 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				A9DC9D0717AC124200E78153 /* SimpleGUI.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		A9DC9D0817AC124200E78153 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				A9DC9D0917AC124200E78153 /* pf_tempesta_seven.ttf */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		A9DC9D0A17AC124200E78153 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				A9DC9D0B17AC124200E78153 /* SimpleGUI.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		ABD19BF8F559448190010AFB /* Most Pixels Ever */ = {
 			isa = PBXGroup;
 			children = (
@@ -362,7 +406,7 @@
 			files = (
 				FA258AF4AC364A1CB8100D47 /* CinderApp.icns in Resources */,
 				A9AA2B7F1798D91100BFA0BC /* settings.0.xml in Resources */,
-				A97B18A617A19AEF00409BB3 /* settings.555.xml in Resources */,
+				A9DC9D0C17AC124200E78153 /* pf_tempesta_seven.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,8 +414,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9DC9D1217AC1AB800E78153 /* settings.555.xml in Resources */,
 				A97B189017A19A9700409BB3 /* CinderApp.icns in Resources */,
-				A97B189117A19A9700409BB3 /* settings.1.xml in Resources */,
+				A9DC9D0E17AC124200E78153 /* pf_tempesta_seven.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,6 +426,7 @@
 			files = (
 				A9AA2B841798D99900BFA0BC /* CinderApp.icns in Resources */,
 				A9AA2B861798D99900BFA0BC /* settings.1.xml in Resources */,
+				A9DC9D0D17AC124200E78153 /* pf_tempesta_seven.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,6 +441,7 @@
 				F57E074386E94CBE904B9316 /* MPEClient.cpp in Sources */,
 				00A07804D24F487693114872 /* TCPAsyncClient.cpp in Sources */,
 				0C740D23CB6D439F9A2C0C73 /* TCPClient.cpp in Sources */,
+				A9DC9D0F17AC124200E78153 /* SimpleGUI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +453,7 @@
 				A97B189417A19A9700409BB3 /* MPEClient.cpp in Sources */,
 				A97B189517A19A9700409BB3 /* TCPAsyncClient.cpp in Sources */,
 				A97B189617A19A9700409BB3 /* TCPClient.cpp in Sources */,
+				A9DC9D1117AC124200E78153 /* SimpleGUI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +465,7 @@
 				A9AA2B8A1798D99900BFA0BC /* MPEClient.cpp in Sources */,
 				A9AA2B8B1798D99900BFA0BC /* TCPAsyncClient.cpp in Sources */,
 				A9AA2B8C1798D99900BFA0BC /* TCPClient.cpp in Sources */,
+				A9DC9D1017AC124200E78153 /* SimpleGUI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

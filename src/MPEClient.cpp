@@ -8,8 +8,6 @@
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lambda/lambda.hpp>
-#include <GLUT/GLUT.h>
-#include <OpenGL/OpenGL.h>
 
 #include "cinder/CinderResources.h"
 #include "cinder/gl/gl.h"
@@ -18,6 +16,9 @@
 #include "MPEClient.h"
 #include "MPEProtocol2.hpp"
 #include "TCPAsyncClient.h"
+#include "cinder/Camera.h"
+#include "cinder/Utilities.h"
+#include "cinder/app/App.h"
 
 using std::string;
 using std::vector;
@@ -40,9 +41,9 @@ protected:
     long                            mLastFrameConfirmed;
 
     // 3D Positioning
-    const float                     k3DMod = 0.1f; // What is this?
     float                           mFieldOfView;
     float                           mCameraZ;
+    float                           mAspectRatio;
 
     // Settings loaded from settings.xml
     int                             mPort;
@@ -58,6 +59,8 @@ protected:
 
     // A connection to the server.
     boost::shared_ptr<TCPClient> mTCPClient;
+    
+    ci::CameraPersp                 mCamera3D;
 
 public:
 
@@ -74,7 +77,10 @@ public:
     mLastFrameConfirmed(-1),
     mIsAsync(false),
     mAsyncReceivesData(false),
-    mClientName("")
+    mClientName(""),
+    mAspectRatio(1.0f),
+    mFieldOfView(25.0f),
+    mCameraZ(-880)
     {
         mApp = cinderApp;
         mProtocol = mApp->mpeProtocol();
@@ -278,51 +284,61 @@ public:
         float mWidth = mMasterSize.x;
         float mHeight = mMasterSize.y;
         float lWidth = mLocalViewportRect.getWidth();
-        float lHeight = mLocalViewportRect.getHeight();
         float xOffset = mLocalViewportRect.getX1();
-        float yOffset = mLocalViewportRect.getY1();
 
-        gluLookAt(mWidth/2.f, mHeight/2.f, mCameraZ,
-                  mWidth/2.f, mHeight/2.f, 0,
-                  0, 1, 0);
+        mCamera3D.setPerspective(mFieldOfView,
+                                 mAspectRatio,
+                                 1.0f, // near
+                                 10000.0f); // far
+        
+        Vec3f eye(mWidth/2.f, mHeight/2.f, mCameraZ);
+        Vec3f target(mWidth/2.f, mHeight/2.f, 0);
+        Vec3f up(0, -1, 0);
+        mCamera3D.lookAt(eye, target, up);
 
-        // Client frustum
-        float left   = (xOffset - mWidth/2)*k3DMod;
-        float right  = (xOffset + lWidth - mWidth/2)*k3DMod;
-        float top    = (yOffset - mHeight/2)*k3DMod;
-        float bottom = (yOffset + lHeight-mHeight/2)*k3DMod;
-        float near   = mCameraZ*k3DMod;
-        float far    = 10000.0f;
-        glFrustum(left, right,
-                  top, bottom,
-                  near, far);
+        int numClients = mWidth / lWidth;
+        float clientIdx = xOffset == 0 ? 0 : (lWidth / xOffset);
+        float centerClient = numClients / 2.0f;
+        float horizOffset = ((clientIdx + 0.5) - centerClient) * 2;
+        float vertOffset = 0.0f;
+        mCamera3D.setLensShift(horizOffset, vertOffset);
+        gl::setMatrices(mCamera3D);
     }
 
     void set3DFieldOfView(float fov)
     {
         mFieldOfView = fov;
-        mCameraZ = (mLocalViewportRect.getHeight() / 2.f) / tanf(M_PI * mFieldOfView/360.f);
     }
 
     float get3DFieldOfView()
     {
         return mFieldOfView;
     }
-
-    void restore3DCamera()
+    
+    void set3DCameraZ(float camZ)
     {
-        Vec2f viewSize = mLocalViewportRect.getSize();
-        gluLookAt(viewSize.x/2.f, viewSize.y/2.f, mCameraZ,
-                  viewSize.x/2.f, viewSize.y/2.f, 0,
-                  0, 1, 0);
-
-        glFrustum(-(viewSize.x/2.f)*k3DMod, (viewSize.y/2.f)*k3DMod,
-                  -(viewSize.x/2.f)*k3DMod, (viewSize.y/2.f)*k3DMod,
-                  mCameraZ*k3DMod, 10000.0f);
+        mCameraZ = camZ;
+    }
+    
+    float get3DCameraZ()
+    {
+        return mCameraZ;
+    }
+    
+    void set3DAspectRatio(float aspectRatio)
+    {
+        mAspectRatio = aspectRatio;
+    }
+    
+    float get3DAspectRatio()
+    {
+        return mAspectRatio;
     }
 
     #pragma mark - Hit Testing
 
+    // TODO: These should account for 3D
+    
     bool isOnScreen(const Vec2f & pos)
     {
         return isOnScreen(pos.x, pos.y);
@@ -447,9 +463,9 @@ private:
         console() << "Loading settings from " << settingsFilename << std::endl;
 
         // Make sure the settings file exists.
-        assert(boost::filesystem::exists(getAssetPath(settingsFilename)));
+        assert(boost::filesystem::exists(ci::app::App::getResourcePath(settingsFilename)));
 
-        XmlTree settingsDoc(loadAsset(settingsFilename));
+        XmlTree settingsDoc(loadResource(settingsFilename));
 
         try
         {
