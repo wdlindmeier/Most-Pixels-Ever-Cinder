@@ -19,5 +19,5 @@
 	</master_dimensions>
 	<go_fullscreen>false</go_fullscreen>
 	<offset_window>true</offset_window>
-	<debug>1</debug>
+    <debug>0</debug>
 </settings>

@@ -10,6 +10,7 @@
   	>
   	<supports os="msw" />
   	<supports os="macosx" />
+    <supports os="ios" />
     <includePath>include</includePath>
     <header>include/MPEApp.hpp</header>
     <header>include/MPEClient.h</header>

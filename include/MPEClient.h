@@ -82,8 +82,10 @@ namespace mpe
 
         // Connection
         virtual void                start() = 0;
+        virtual void                start(const std::string & hostname, const int port) = 0;
         virtual void                stop() = 0;
         virtual void                togglePause() = 0;
+        virtual void                resetAll() = 0;
         virtual bool                isConnected() = 0;
 
         // Loop

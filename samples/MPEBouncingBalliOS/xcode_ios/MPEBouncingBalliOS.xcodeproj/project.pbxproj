@@ -1,0 +1,673 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00748058165D41390024B57A /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 00748057165D41390024B57A /* assets */; };
+		0087D25512CD809F002CD69F /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0087D25412CD809F002CD69F /* CoreText.framework */; };
+		00CFDF6B1138442D0091E310 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CFDF6A1138442D0091E310 /* CoreGraphics.framework */; };
+		16B0171B08AF4F359F3AA521 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B504FA49AE8341A5BC9D76DC /* MPEClient.cpp */; };
+		1A83DA13866F4D40AA7DA7F2 /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD47C0B8C0C842BA8F243326 /* TCPAsyncClient.cpp */; };
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		1DC758B30B164B5DB44925E0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C8EABE18BC42C1BBE0C904 /* Default-568h@2x.png */; };
+		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
+		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		8DDDA3C394AC4D17BCF1A958 /* MPEBouncingBalliOSApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995CB5C1E4D341A7B8D57CF0 /* MPEBouncingBalliOSApp.mm */; };
+		A8DA21C1721441F0A13D7C48 /* CinderApp_ios.png in Resources */ = {isa = PBXBuildFile; fileRef = BAB2C8879720456B81F1BE05 /* CinderApp_ios.png */; };
+		A9BFBC5617AD742B00549159 /* MPEBouncingBalliOSApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995CB5C1E4D341A7B8D57CF0 /* MPEBouncingBalliOSApp.mm */; };
+		A9BFBC5717AD742B00549159 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B504FA49AE8341A5BC9D76DC /* MPEClient.cpp */; };
+		A9BFBC5817AD742B00549159 /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD47C0B8C0C842BA8F243326 /* TCPAsyncClient.cpp */; };
+		A9BFBC5917AD742B00549159 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E03C8AE74F6549A58B20AE8C /* TCPClient.cpp */; };
+		A9BFBC5B17AD742B00549159 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C725E000121DAC8F00FA186B /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A9BFBC5C17AD742B00549159 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C727C02B121B400300192073 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A9BFBC5D17AD742B00549159 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CFDF6A1138442D0091FFFF /* ImageIO.framework */; };
+		A9BFBC5E17AD742B00549159 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDDDF6A1138442D0091DDDD /* MobileCoreServices.framework */; };
+		A9BFBC5F17AD742B00549159 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		A9BFBC6017AD742B00549159 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		A9BFBC6117AD742B00549159 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
+		A9BFBC6217AD742B00549159 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		A9BFBC6317AD742B00549159 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CFDF6A1138442D0091E310 /* CoreGraphics.framework */; };
+		A9BFBC6417AD742B00549159 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C727C02D121B400300192073 /* CoreVideo.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A9BFBC6517AD742B00549159 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7FB19D5124BC0D70045AFD2 /* AudioToolbox.framework */; };
+		A9BFBC6617AD742B00549159 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0087D25412CD809F002CD69F /* CoreText.framework */; };
+		A9BFBC6817AD742B00549159 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 00748057165D41390024B57A /* assets */; };
+		A9BFBC6917AD742B00549159 /* CinderApp_ios.png in Resources */ = {isa = PBXBuildFile; fileRef = BAB2C8879720456B81F1BE05 /* CinderApp_ios.png */; };
+		A9BFBC6A17AD742B00549159 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C8EABE18BC42C1BBE0C904 /* Default-568h@2x.png */; };
+		A9BFBC7317AD750800549159 /* MPEAsyncViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9BFBC7117AD750800549159 /* MPEAsyncViewController.mm */; };
+		A9BFBC7417AD750800549159 /* MPEAsyncViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BFBC7217AD750800549159 /* MPEAsyncViewController.xib */; };
+		A9DC9C1F17AB41AC00E78153 /* MPEBouncingBalliOSApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995CB5C1E4D341A7B8D57CF0 /* MPEBouncingBalliOSApp.mm */; };
+		A9DC9C2017AB41AC00E78153 /* MPEClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B504FA49AE8341A5BC9D76DC /* MPEClient.cpp */; };
+		A9DC9C2117AB41AC00E78153 /* TCPAsyncClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD47C0B8C0C842BA8F243326 /* TCPAsyncClient.cpp */; };
+		A9DC9C2217AB41AC00E78153 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E03C8AE74F6549A58B20AE8C /* TCPClient.cpp */; };
+		A9DC9C2417AB41AC00E78153 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C725E000121DAC8F00FA186B /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A9DC9C2517AB41AC00E78153 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C727C02B121B400300192073 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A9DC9C2617AB41AC00E78153 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CFDF6A1138442D0091FFFF /* ImageIO.framework */; };
+		A9DC9C2717AB41AC00E78153 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDDDF6A1138442D0091DDDD /* MobileCoreServices.framework */; };
+		A9DC9C2817AB41AC00E78153 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		A9DC9C2917AB41AC00E78153 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		A9DC9C2A17AB41AC00E78153 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
+		A9DC9C2B17AB41AC00E78153 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		A9DC9C2C17AB41AC00E78153 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CFDF6A1138442D0091E310 /* CoreGraphics.framework */; };
+		A9DC9C2D17AB41AC00E78153 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C727C02D121B400300192073 /* CoreVideo.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A9DC9C2E17AB41AC00E78153 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7FB19D5124BC0D70045AFD2 /* AudioToolbox.framework */; };
+		A9DC9C2F17AB41AC00E78153 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0087D25412CD809F002CD69F /* CoreText.framework */; };
+		A9DC9C3117AB41AC00E78153 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 00748057165D41390024B57A /* assets */; };
+		A9DC9C3217AB41AC00E78153 /* CinderApp_ios.png in Resources */ = {isa = PBXBuildFile; fileRef = BAB2C8879720456B81F1BE05 /* CinderApp_ios.png */; };
+		A9DC9C3317AB41AC00E78153 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C8EABE18BC42C1BBE0C904 /* Default-568h@2x.png */; };
+		AACCD4D4F6EF4A8384AE2959 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E03C8AE74F6549A58B20AE8C /* TCPClient.cpp */; };
+		C725DFFE121DAC7F00FA186B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C727C02B121B400300192073 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		C725E001121DAC8F00FA186B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C725E000121DAC8F00FA186B /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		C725E001121DAC8FFFFA18FF /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CFDF6A1138442D0091FFFF /* ImageIO.framework */; };
+		C727C02E121B400300192073 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C727C02D121B400300192073 /* CoreVideo.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		C7FB19D6124BC0D70045AFD2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7FB19D5124BC0D70045AFD2 /* AudioToolbox.framework */; };
+		DDDDE001121DAC8FFFFADDDD /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDDDF6A1138442D0091DDDD /* MobileCoreServices.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00692BCF14FF149000D0A05E /* MPEBouncingBalliOS0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBalliOS0.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		00748057165D41390024B57A /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../assets; sourceTree = "<group>"; };
+		0087D25412CD809F002CD69F /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		00CFDF6A1138442D0091E310 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		00CFDF6A1138442D0091FFFF /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		188C6CE92F2246889D7475F9 /* MPEMessageHandler.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEMessageHandler.hpp; path = ../../../include/MPEMessageHandler.hpp; sourceTree = "<group>"; };
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2808CD81181F43C9A4DA56D4 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2FC99F5194FA4CBB8EF34F0C /* MPEProtocol.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol.hpp; path = ../../../include/MPEProtocol.hpp; sourceTree = "<group>"; };
+		56C8EABE18BC42C1BBE0C904 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		5EBEE3D21C3B4D4794F6E860 /* MPEBouncingBalliOS_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = MPEBouncingBalliOS_Prefix.pch; sourceTree = "<group>"; };
+		7092CAF5854847BC8DEB0FE2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		995CB5C1E4D341A7B8D57CF0 /* MPEBouncingBalliOSApp.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MPEBouncingBalliOSApp.mm; path = ../src/MPEBouncingBalliOSApp.mm; sourceTree = "<group>"; };
+		997692D89FEC44409370EF0E /* TCPAsyncClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCPAsyncClient.h; path = ../../../include/TCPAsyncClient.h; sourceTree = "<group>"; };
+		A594036D02EA4DC696161830 /* MPEClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../../../include/MPEClient.h; sourceTree = "<group>"; };
+		A79D4FBE8DC24EAB94C0E4C1 /* MPEApp.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEApp.hpp; path = ../../../include/MPEApp.hpp; sourceTree = "<group>"; };
+		A9BFBC6E17AD742B00549159 /* MPEBouncingBalliOSAsync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBalliOSAsync.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9BFBC6F17AD742B00549159 /* Info-Async.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-Async.plist"; path = "/Users/bill/Tools/cinder_master/blocks/Most-Pixels-Ever/samples/MPEBouncingBalliOS/xcode_ios/Info-Async.plist"; sourceTree = "<absolute>"; };
+		A9BFBC7017AD750800549159 /* MPEAsyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEAsyncViewController.h; sourceTree = "<group>"; };
+		A9BFBC7117AD750800549159 /* MPEAsyncViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPEAsyncViewController.mm; sourceTree = "<group>"; };
+		A9BFBC7217AD750800549159 /* MPEAsyncViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MPEAsyncViewController.xib; sourceTree = "<group>"; };
+		A9DC9C1C17AB408A00E78153 /* Ball.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ball.hpp; path = ../../MPEBouncingBall/include/Ball.hpp; sourceTree = "<group>"; };
+		A9DC9C3717AB41AC00E78153 /* MPEBouncingBalliOS1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBalliOS1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B504FA49AE8341A5BC9D76DC /* MPEClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClient.cpp; path = ../../../src/MPEClient.cpp; sourceTree = "<group>"; };
+		BAB2C8879720456B81F1BE05 /* CinderApp_ios.png */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = CinderApp_ios.png; path = ../resources/CinderApp_ios.png; sourceTree = "<group>"; };
+		C725E000121DAC8F00FA186B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C727C02B121B400300192073 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		C727C02D121B400300192073 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		C7FB19D5124BC0D70045AFD2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		DDDDDF6A1138442D0091DDDD /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		E03C8AE74F6549A58B20AE8C /* TCPClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPClient.cpp; path = ../../../src/TCPClient.cpp; sourceTree = "<group>"; };
+		E3EE655A8F2444758B4FDAF5 /* TCPClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../../../include/TCPClient.h; sourceTree = "<group>"; };
+		F2CD4FF764EB4EEA9EB00BFF /* MPEProtocol2.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol2.hpp; path = ../../../include/MPEProtocol2.hpp; sourceTree = "<group>"; };
+		FD47C0B8C0C842BA8F243326 /* TCPAsyncClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPAsyncClient.cpp; path = ../../../src/TCPAsyncClient.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		00692BCC14FF149000D0A05E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C725E001121DAC8F00FA186B /* AVFoundation.framework in Frameworks */,
+				C725DFFE121DAC7F00FA186B /* CoreMedia.framework in Frameworks */,
+				C725E001121DAC8FFFFA18FF /* ImageIO.framework in Frameworks */,
+				DDDDE001121DAC8FFFFADDDD /* MobileCoreServices.framework in Frameworks */,
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
+				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
+				00CFDF6B1138442D0091E310 /* CoreGraphics.framework in Frameworks */,
+				C727C02E121B400300192073 /* CoreVideo.framework in Frameworks */,
+				C7FB19D6124BC0D70045AFD2 /* AudioToolbox.framework in Frameworks */,
+				0087D25512CD809F002CD69F /* CoreText.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9BFBC5A17AD742B00549159 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9BFBC5B17AD742B00549159 /* AVFoundation.framework in Frameworks */,
+				A9BFBC5C17AD742B00549159 /* CoreMedia.framework in Frameworks */,
+				A9BFBC5D17AD742B00549159 /* ImageIO.framework in Frameworks */,
+				A9BFBC5E17AD742B00549159 /* MobileCoreServices.framework in Frameworks */,
+				A9BFBC5F17AD742B00549159 /* Foundation.framework in Frameworks */,
+				A9BFBC6017AD742B00549159 /* UIKit.framework in Frameworks */,
+				A9BFBC6117AD742B00549159 /* OpenGLES.framework in Frameworks */,
+				A9BFBC6217AD742B00549159 /* QuartzCore.framework in Frameworks */,
+				A9BFBC6317AD742B00549159 /* CoreGraphics.framework in Frameworks */,
+				A9BFBC6417AD742B00549159 /* CoreVideo.framework in Frameworks */,
+				A9BFBC6517AD742B00549159 /* AudioToolbox.framework in Frameworks */,
+				A9BFBC6617AD742B00549159 /* CoreText.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9DC9C2317AB41AC00E78153 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9DC9C2417AB41AC00E78153 /* AVFoundation.framework in Frameworks */,
+				A9DC9C2517AB41AC00E78153 /* CoreMedia.framework in Frameworks */,
+				A9DC9C2617AB41AC00E78153 /* ImageIO.framework in Frameworks */,
+				A9DC9C2717AB41AC00E78153 /* MobileCoreServices.framework in Frameworks */,
+				A9DC9C2817AB41AC00E78153 /* Foundation.framework in Frameworks */,
+				A9DC9C2917AB41AC00E78153 /* UIKit.framework in Frameworks */,
+				A9DC9C2A17AB41AC00E78153 /* OpenGLES.framework in Frameworks */,
+				A9DC9C2B17AB41AC00E78153 /* QuartzCore.framework in Frameworks */,
+				A9DC9C2C17AB41AC00E78153 /* CoreGraphics.framework in Frameworks */,
+				A9DC9C2D17AB41AC00E78153 /* CoreVideo.framework in Frameworks */,
+				A9DC9C2E17AB41AC00E78153 /* AudioToolbox.framework in Frameworks */,
+				A9DC9C2F17AB41AC00E78153 /* CoreText.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00692BC414FF149000D0A05E = {
+			isa = PBXGroup;
+			children = (
+				99692BD914FF149000DFFFFF /* Blocks */,
+				99692BD914FF149000D0A05F /* Headers */,
+				00692BD914FF149000D0A05E /* Source */,
+				00692BD914FF149000D0FFFF /* Resources */,
+				00692BD214FF149000D0A05E /* Frameworks */,
+				00692BD014FF149000D0A05E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		00692BD014FF149000D0A05E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				00692BCF14FF149000D0A05E /* MPEBouncingBalliOS0.app */,
+				A9DC9C3717AB41AC00E78153 /* MPEBouncingBalliOS1.app */,
+				A9BFBC6E17AD742B00549159 /* MPEBouncingBalliOSAsync.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		00692BD214FF149000D0A05E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C7FB19D5124BC0D70045AFD2 /* AudioToolbox.framework */,
+				C727C02B121B400300192073 /* CoreMedia.framework */,
+				C727C02D121B400300192073 /* CoreVideo.framework */,
+				28FD15070DC6FC5B0079059D /* QuartzCore.framework */,
+				28FD14FF0DC6FC520079059D /* OpenGLES.framework */,
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				00CFDF6A1138442D0091E310 /* CoreGraphics.framework */,
+				00CFDF6A1138442D0091FFFF /* ImageIO.framework */,
+				DDDDDF6A1138442D0091DDDD /* MobileCoreServices.framework */,
+				C725E000121DAC8F00FA186B /* AVFoundation.framework */,
+				0087D25412CD809F002CD69F /* CoreText.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		00692BD914FF149000D0A05E /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				995CB5C1E4D341A7B8D57CF0 /* MPEBouncingBalliOSApp.mm */,
+				A9BFBC7017AD750800549159 /* MPEAsyncViewController.h */,
+				A9BFBC7117AD750800549159 /* MPEAsyncViewController.mm */,
+				A9BFBC7217AD750800549159 /* MPEAsyncViewController.xib */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		00692BD914FF149000D0FFFF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				00748057165D41390024B57A /* assets */,
+				BAB2C8879720456B81F1BE05 /* CinderApp_ios.png */,
+				56C8EABE18BC42C1BBE0C904 /* Default-568h@2x.png */,
+				7092CAF5854847BC8DEB0FE2 /* Info.plist */,
+				A9BFBC6F17AD742B00549159 /* Info-Async.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		227EAF0C57464DF286B98A25 /* Most-Pixels-Ever */ = {
+			isa = PBXGroup;
+			children = (
+				3A91629D337B4630903DED0D /* include */,
+				252542A3ACDA4D98A04F4BC1 /* src */,
+			);
+			name = "Most-Pixels-Ever";
+			sourceTree = "<group>";
+		};
+		252542A3ACDA4D98A04F4BC1 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B504FA49AE8341A5BC9D76DC /* MPEClient.cpp */,
+				FD47C0B8C0C842BA8F243326 /* TCPAsyncClient.cpp */,
+				E03C8AE74F6549A58B20AE8C /* TCPClient.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		3A91629D337B4630903DED0D /* include */ = {
+			isa = PBXGroup;
+			children = (
+				A79D4FBE8DC24EAB94C0E4C1 /* MPEApp.hpp */,
+				A594036D02EA4DC696161830 /* MPEClient.h */,
+				188C6CE92F2246889D7475F9 /* MPEMessageHandler.hpp */,
+				2FC99F5194FA4CBB8EF34F0C /* MPEProtocol.hpp */,
+				F2CD4FF764EB4EEA9EB00BFF /* MPEProtocol2.hpp */,
+				997692D89FEC44409370EF0E /* TCPAsyncClient.h */,
+				E3EE655A8F2444758B4FDAF5 /* TCPClient.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		99692BD914FF149000D0A05F /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				A9DC9C1C17AB408A00E78153 /* Ball.hpp */,
+				2808CD81181F43C9A4DA56D4 /* Resources.h */,
+				5EBEE3D21C3B4D4794F6E860 /* MPEBouncingBalliOS_Prefix.pch */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		99692BD914FF149000DFFFFF /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				227EAF0C57464DF286B98A25 /* Most-Pixels-Ever */,
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00692BCE14FF149000D0A05E /* MPEBouncingBalliOS0 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00692BF514FF149000D0A05E /* Build configuration list for PBXNativeTarget "MPEBouncingBalliOS0" */;
+			buildPhases = (
+				00692BCB14FF149000D0A05E /* Sources */,
+				00692BCC14FF149000D0A05E /* Frameworks */,
+				00692BCD14FF149000D0A05E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPEBouncingBalliOS0;
+			productName = MPEBouncingBalliOS;
+			productReference = 00692BCF14FF149000D0A05E /* MPEBouncingBalliOS0.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A9BFBC5417AD742B00549159 /* MPEBouncingBalliOSAsync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9BFBC6B17AD742B00549159 /* Build configuration list for PBXNativeTarget "MPEBouncingBalliOSAsync" */;
+			buildPhases = (
+				A9BFBC5517AD742B00549159 /* Sources */,
+				A9BFBC5A17AD742B00549159 /* Frameworks */,
+				A9BFBC6717AD742B00549159 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPEBouncingBalliOSAsync;
+			productName = MPEBouncingBalliOS;
+			productReference = A9BFBC6E17AD742B00549159 /* MPEBouncingBalliOSAsync.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A9DC9C1D17AB41AC00E78153 /* MPEBouncingBalliOS1 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9DC9C3417AB41AC00E78153 /* Build configuration list for PBXNativeTarget "MPEBouncingBalliOS1" */;
+			buildPhases = (
+				A9DC9C1E17AB41AC00E78153 /* Sources */,
+				A9DC9C2317AB41AC00E78153 /* Frameworks */,
+				A9DC9C3017AB41AC00E78153 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPEBouncingBalliOS1;
+			productName = MPEBouncingBalliOS;
+			productReference = A9DC9C3717AB41AC00E78153 /* MPEBouncingBalliOS1.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		00692BC614FF149000D0A05E /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 00692BC914FF149000D0A05E /* Build configuration list for PBXProject "MPEBouncingBalliOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 00692BC414FF149000D0A05E;
+			productRefGroup = 00692BD014FF149000D0A05E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				00692BCE14FF149000D0A05E /* MPEBouncingBalliOS0 */,
+				A9DC9C1D17AB41AC00E78153 /* MPEBouncingBalliOS1 */,
+				A9BFBC5417AD742B00549159 /* MPEBouncingBalliOSAsync */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		00692BCD14FF149000D0A05E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00748058165D41390024B57A /* assets in Resources */,
+				A8DA21C1721441F0A13D7C48 /* CinderApp_ios.png in Resources */,
+				1DC758B30B164B5DB44925E0 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9BFBC6717AD742B00549159 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9BFBC6817AD742B00549159 /* assets in Resources */,
+				A9BFBC6917AD742B00549159 /* CinderApp_ios.png in Resources */,
+				A9BFBC6A17AD742B00549159 /* Default-568h@2x.png in Resources */,
+				A9BFBC7417AD750800549159 /* MPEAsyncViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9DC9C3017AB41AC00E78153 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9DC9C3117AB41AC00E78153 /* assets in Resources */,
+				A9DC9C3217AB41AC00E78153 /* CinderApp_ios.png in Resources */,
+				A9DC9C3317AB41AC00E78153 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		00692BCB14FF149000D0A05E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DDDA3C394AC4D17BCF1A958 /* MPEBouncingBalliOSApp.mm in Sources */,
+				16B0171B08AF4F359F3AA521 /* MPEClient.cpp in Sources */,
+				1A83DA13866F4D40AA7DA7F2 /* TCPAsyncClient.cpp in Sources */,
+				AACCD4D4F6EF4A8384AE2959 /* TCPClient.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9BFBC5517AD742B00549159 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9BFBC5617AD742B00549159 /* MPEBouncingBalliOSApp.mm in Sources */,
+				A9BFBC5717AD742B00549159 /* MPEClient.cpp in Sources */,
+				A9BFBC5817AD742B00549159 /* TCPAsyncClient.cpp in Sources */,
+				A9BFBC5917AD742B00549159 /* TCPClient.cpp in Sources */,
+				A9BFBC7317AD750800549159 /* MPEAsyncViewController.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9DC9C1E17AB41AC00E78153 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9DC9C1F17AB41AC00E78153 /* MPEBouncingBalliOSApp.mm in Sources */,
+				A9DC9C2017AB41AC00E78153 /* MPEClient.cpp in Sources */,
+				A9DC9C2117AB41AC00E78153 /* TCPAsyncClient.cpp in Sources */,
+				A9DC9C2217AB41AC00E78153 /* TCPClient.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		00692BF314FF149000D0A05E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CINDER_PATH = ../../../../..;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../include";
+			};
+			name = Debug;
+		};
+		00692BF414FF149000D0A05E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CINDER_PATH = ../../../../..;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../include";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		00692BF614FF149000D0A05E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"CLIENT_ID=0",
+				);
+				INFOPLIST_FILE = Info.plist;
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone_d.a\"",
+					"-lz",
+				);
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone-sim_d.a\"",
+					"-lz",
+				);
+				PRODUCT_NAME = MPEBouncingBalliOS0;
+				TARGETED_DEVICE_FAMILY = 2;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		00692BF714FF149000D0A05E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "CLIENT_ID=0";
+				INFOPLIST_FILE = Info.plist;
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone.a\"",
+					"-lz",
+				);
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone-sim.a\"",
+					"-lz",
+				);
+				PRODUCT_NAME = MPEBouncingBalliOS0;
+				TARGETED_DEVICE_FAMILY = 2;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		A9BFBC6C17AD742B00549159 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"CLIENT_ID=555",
+				);
+				INFOPLIST_FILE = "Info-Async.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone_d.a\"",
+					"-lz",
+				);
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone-sim_d.a\"",
+					"-lz",
+				);
+				PRODUCT_NAME = MPEBouncingBalliOSAsync;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A9BFBC6D17AD742B00549159 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "CLIENT_ID=555";
+				INFOPLIST_FILE = "Info-Async.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone.a\"",
+					"-lz",
+				);
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone-sim.a\"",
+					"-lz",
+				);
+				PRODUCT_NAME = MPEBouncingBalliOSAsync;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		A9DC9C3517AB41AC00E78153 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"CLIENT_ID=1",
+				);
+				INFOPLIST_FILE = Info.plist;
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone_d.a\"",
+					"-lz",
+				);
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone-sim_d.a\"",
+					"-lz",
+				);
+				PRODUCT_NAME = MPEBouncingBalliOS1;
+				TARGETED_DEVICE_FAMILY = 2;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A9DC9C3617AB41AC00E78153 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "CLIENT_ID=1";
+				INFOPLIST_FILE = Info.plist;
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone.a\"",
+					"-lz",
+				);
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = (
+					"\"$(CINDER_PATH)/lib/libcinder-iphone-sim.a\"",
+					"-lz",
+				);
+				PRODUCT_NAME = MPEBouncingBalliOS1;
+				TARGETED_DEVICE_FAMILY = 2;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		00692BC914FF149000D0A05E /* Build configuration list for PBXProject "MPEBouncingBalliOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00692BF314FF149000D0A05E /* Debug */,
+				00692BF414FF149000D0A05E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00692BF514FF149000D0A05E /* Build configuration list for PBXNativeTarget "MPEBouncingBalliOS0" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00692BF614FF149000D0A05E /* Debug */,
+				00692BF714FF149000D0A05E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9BFBC6B17AD742B00549159 /* Build configuration list for PBXNativeTarget "MPEBouncingBalliOSAsync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9BFBC6C17AD742B00549159 /* Debug */,
+				A9BFBC6D17AD742B00549159 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9DC9C3417AB41AC00E78153 /* Build configuration list for PBXNativeTarget "MPEBouncingBalliOS1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9DC9C3517AB41AC00E78153 /* Debug */,
+				A9DC9C3617AB41AC00E78153 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 00692BC614FF149000D0A05E /* Project object */;
+}
