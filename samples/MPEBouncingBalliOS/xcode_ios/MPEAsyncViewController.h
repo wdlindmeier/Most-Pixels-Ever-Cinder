@@ -9,11 +9,19 @@
 
 #import <UIKit/UIKit.h>
 
+static const float kInitialFOV = 52.0f;
+static const float kInitialCameraZ = -1050.0f;
+static const float kInitialAspectRatio = 0.75f;
+
 @interface MPEAsyncViewController : UIViewController
 
 @property (nonatomic, strong) IBOutlet UILabel * labelFOV;
 @property (nonatomic, strong) IBOutlet UILabel * labelAspectRatio;
 @property (nonatomic, strong) IBOutlet UILabel * labelCameraZ;
+
+@property (nonatomic, strong) IBOutlet UISlider * sliderFOV;
+@property (nonatomic, strong) IBOutlet UISlider * sliderAspectRatio;
+@property (nonatomic, strong) IBOutlet UISlider * sliderCameraZ;
 
 @property (nonatomic) std::function<void(float)> fovValueCallback;
 @property (nonatomic) std::function<void(float)> aspectRatioValueCallback;

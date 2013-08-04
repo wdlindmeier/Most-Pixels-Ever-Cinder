@@ -84,6 +84,9 @@ void MPEBouncingBalliOSApp::prepareSettings(Settings *settings)
         viewController.resetCallback = std::bind(&MPEBouncingBalliOSApp::resetPressed, this);
         settings->prepareWindow( Window::Format().rootViewController( viewController ) );
     }
+    mCamZ = kInitialCameraZ;
+    mFOV = kInitialFOV;
+    mAspectRatio = kInitialAspectRatio;
 }
 
 void MPEBouncingBalliOSApp::setup()
@@ -93,7 +96,10 @@ void MPEBouncingBalliOSApp::setup()
 
     mClient = MPEClient::New(this);
     mClient->setIsRendering3D(true);
-    setFrameRate(30.0f);
+    mClient->set3DAspectRatio(mAspectRatio);
+    mClient->set3DFieldOfView(mFOV);
+    mClient->set3DCameraZ(mCamZ);
+    setFrameRate(60.0f);
 }
 
 #pragma mark - UIControl callback
@@ -118,15 +124,21 @@ void MPEBouncingBalliOSApp::aspectRatioValueChanged(float value)
 
 void MPEBouncingBalliOSApp::send3DSettings()
 {
-    mClient->sendMessage(kCommand3DSettings + "," +
-                         std::to_string(mFOV) + "," +
-                         std::to_string(mCamZ) + "," +
-                         std::to_string(mAspectRatio));
+    if (mClient->isConnected())
+    {
+        mClient->sendMessage(kCommand3DSettings + "," +
+                             std::to_string(mFOV) + "," +
+                             std::to_string(mCamZ) + "," +
+                             std::to_string(mAspectRatio));
+    }
 }
 
 void MPEBouncingBalliOSApp::resetPressed()
 {
-    mClient->resetAll();
+    if (mClient->isConnected())
+    {
+        mClient->resetAll();
+    }
 }
 
 #pragma mark - Balls
@@ -134,7 +146,7 @@ void MPEBouncingBalliOSApp::resetPressed()
 void MPEBouncingBalliOSApp::addBallAtPosition(const Vec2f & posBall)
 {
     Vec2i sizeMaster = mClient->getMasterSize();
-    Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
+    Vec2f velBall = Vec2f(mRand.nextFloat(-10,10), mRand.nextFloat(-10,10));
     mBalls.push_back(Ball(posBall, velBall, sizeMaster));
 }
 
@@ -261,13 +273,16 @@ void MPEBouncingBalliOSApp::mpeMessageReceived(const std::string & message, cons
 
 void MPEBouncingBalliOSApp::touchesEnded(TouchEvent event)
 {
-    for (int i = 0; i < event.getTouches().size(); ++i )
+    if (mClient->isConnected())
     {
-        Vec2f pos = event.getTouches()[i].getPos() + mClient->getVisibleRect().getUpperLeft();
-        string message = kCommandNewBall + "," +
-                         std::to_string(pos.x) + "," +
-                         std::to_string(pos.y);
-        mClient->sendMessage(message);
+        for (int i = 0; i < event.getTouches().size(); ++i )
+        {
+            Vec2f pos = event.getTouches()[i].getPos() + mClient->getVisibleRect().getUpperLeft();
+            string message = kCommandNewBall + "," +
+                             std::to_string(pos.x) + "," +
+                             std::to_string(pos.y);
+            mClient->sendMessage(message);
+        }
     }
 }
 

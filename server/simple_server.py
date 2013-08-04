@@ -59,7 +59,8 @@ class MPEServer(Protocol):
 
     def connectionLost(self, reason):
         print "Client disconnected"
-        del MPEServer.clients[self.client_id]
+        if MPEServer.clients[self.client_id]:
+            del MPEServer.clients[self.client_id]
         if self.client_id in MPEServer.rendering_client_ids:
             MPEServer.rendering_client_ids.remove(self.client_id)
         if self.client_id in MPEServer.receiving_client_ids:

@@ -83,16 +83,17 @@
 		2FC99F5194FA4CBB8EF34F0C /* MPEProtocol.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol.hpp; path = ../../../include/MPEProtocol.hpp; sourceTree = "<group>"; };
 		56C8EABE18BC42C1BBE0C904 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5EBEE3D21C3B4D4794F6E860 /* MPEBouncingBalliOS_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = MPEBouncingBalliOS_Prefix.pch; sourceTree = "<group>"; };
-		7092CAF5854847BC8DEB0FE2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7092CAF5854847BC8DEB0FE2 /* Info1.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info1.plist; sourceTree = "<group>"; };
 		995CB5C1E4D341A7B8D57CF0 /* MPEBouncingBalliOSApp.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MPEBouncingBalliOSApp.mm; path = ../src/MPEBouncingBalliOSApp.mm; sourceTree = "<group>"; };
 		997692D89FEC44409370EF0E /* TCPAsyncClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCPAsyncClient.h; path = ../../../include/TCPAsyncClient.h; sourceTree = "<group>"; };
 		A594036D02EA4DC696161830 /* MPEClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPEClient.h; path = ../../../include/MPEClient.h; sourceTree = "<group>"; };
 		A79D4FBE8DC24EAB94C0E4C1 /* MPEApp.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEApp.hpp; path = ../../../include/MPEApp.hpp; sourceTree = "<group>"; };
 		A9BFBC6E17AD742B00549159 /* MPEBouncingBalliOSAsync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBalliOSAsync.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9BFBC6F17AD742B00549159 /* Info-Async.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-Async.plist"; path = "/Users/bill/Tools/cinder_master/blocks/Most-Pixels-Ever/samples/MPEBouncingBalliOS/xcode_ios/Info-Async.plist"; sourceTree = "<absolute>"; };
 		A9BFBC7017AD750800549159 /* MPEAsyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEAsyncViewController.h; sourceTree = "<group>"; };
 		A9BFBC7117AD750800549159 /* MPEAsyncViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPEAsyncViewController.mm; sourceTree = "<group>"; };
 		A9BFBC7217AD750800549159 /* MPEAsyncViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MPEAsyncViewController.xib; sourceTree = "<group>"; };
+		A9BFBC7517AF051700549159 /* Info0.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info0.plist; sourceTree = "<group>"; };
+		A9BFBC7717AF177800549159 /* InfoAsync.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoAsync.plist; sourceTree = "<group>"; };
 		A9DC9C1C17AB408A00E78153 /* Ball.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ball.hpp; path = ../../MPEBouncingBall/include/Ball.hpp; sourceTree = "<group>"; };
 		A9DC9C3717AB41AC00E78153 /* MPEBouncingBalliOS1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBalliOS1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B504FA49AE8341A5BC9D76DC /* MPEClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClient.cpp; path = ../../../src/MPEClient.cpp; sourceTree = "<group>"; };
@@ -227,8 +228,9 @@
 				00748057165D41390024B57A /* assets */,
 				BAB2C8879720456B81F1BE05 /* CinderApp_ios.png */,
 				56C8EABE18BC42C1BBE0C904 /* Default-568h@2x.png */,
-				7092CAF5854847BC8DEB0FE2 /* Info.plist */,
-				A9BFBC6F17AD742B00549159 /* Info-Async.plist */,
+				A9BFBC7517AF051700549159 /* Info0.plist */,
+				7092CAF5854847BC8DEB0FE2 /* Info1.plist */,
+				A9BFBC7717AF177800549159 /* InfoAsync.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -500,7 +502,7 @@
 					"$(inherited)",
 					"CLIENT_ID=0",
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = Info0.plist;
 				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
 					"\"$(CINDER_PATH)/lib/libcinder-iphone_d.a\"",
 					"-lz",
@@ -521,7 +523,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "CLIENT_ID=0";
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = Info0.plist;
 				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
 					"\"$(CINDER_PATH)/lib/libcinder-iphone.a\"",
 					"-lz",
@@ -545,7 +547,7 @@
 					"$(inherited)",
 					"CLIENT_ID=555",
 				);
-				INFOPLIST_FILE = "Info-Async.plist";
+				INFOPLIST_FILE = InfoAsync.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
 					"\"$(CINDER_PATH)/lib/libcinder-iphone_d.a\"",
@@ -567,7 +569,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "CLIENT_ID=555";
-				INFOPLIST_FILE = "Info-Async.plist";
+				INFOPLIST_FILE = InfoAsync.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
 					"\"$(CINDER_PATH)/lib/libcinder-iphone.a\"",
@@ -592,7 +594,7 @@
 					"$(inherited)",
 					"CLIENT_ID=1",
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = Info1.plist;
 				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
 					"\"$(CINDER_PATH)/lib/libcinder-iphone_d.a\"",
 					"-lz",
@@ -613,7 +615,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MPEBouncingBalliOS_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "CLIENT_ID=1";
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = Info1.plist;
 				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = (
 					"\"$(CINDER_PATH)/lib/libcinder-iphone.a\"",
 					"-lz",

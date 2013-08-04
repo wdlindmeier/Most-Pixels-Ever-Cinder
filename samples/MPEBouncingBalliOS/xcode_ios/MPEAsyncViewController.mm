@@ -26,36 +26,44 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.sliderCameraZ.value = kInitialCameraZ;
+    self.sliderAspectRatio.value = kInitialAspectRatio;
+    self.sliderFOV.value = kInitialFOV;
+    [self updateLabels];
+}
+
+- (void)updateLabels
+{
+    self.labelFOV.text = [NSString stringWithFormat:@"%0.2f", self.sliderFOV.value];
+    self.labelAspectRatio.text = [NSString stringWithFormat:@"%0.2f", self.sliderAspectRatio.value];
+    self.labelCameraZ.text = [NSString stringWithFormat:@"%0.2f", self.sliderCameraZ.value];
 }
 
 - (IBAction)sliderFOVChanged:(UISlider *)sender
 {
-    float newValue = 1.0f + (sender.value * 179.0f);
     if (_fovValueCallback)
     {
-        _fovValueCallback(newValue);
+        _fovValueCallback(sender.value);
     }
-    self.labelFOV.text = [NSString stringWithFormat:@"%0.2f", newValue];
+    [self updateLabels];
 }
 
 - (IBAction)sliderAspectRatioChanged:(UISlider *)sender
 {
-    float newValue = 0.f + (sender.value * 2.0f);
     if (_aspectRatioValueCallback)
     {
-        _aspectRatioValueCallback(newValue);
+        _aspectRatioValueCallback(sender.value);
     }
-    self.labelAspectRatio.text = [NSString stringWithFormat:@"%0.2f", newValue];
+    [self updateLabels];
 }
 
 - (IBAction)sliderCameraZChanged:(UISlider *)sender
 {
-    float newValue = -1500.0f + (sender.value * 1500.0f);
     if (_cameraZValueCallback)
     {
-        _cameraZValueCallback(newValue);
+        _cameraZValueCallback(sender.value);
     }
-    self.labelCameraZ.text = [NSString stringWithFormat:@"%0.2f", newValue];
+    [self updateLabels];
 }
 
 - (IBAction)buttonResetPressed:(id)sender
