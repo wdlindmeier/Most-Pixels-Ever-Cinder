@@ -5,6 +5,15 @@
 		<ip>127.0.0.1</ip>
 		<port>9002</port>
 	</server>
+    <local_location>
+		<x>820</x>
+		<y>120</y>
+	</local_location>
+    <local_dimensions>
+		<width>160</width>
+		<height>160</height>
+	</local_dimensions>
+    <offset_window>true</offset_window>
 	<asynchronous>true</asynchronous>
 	<asynchreceive>true</asynchreceive>
 </settings>

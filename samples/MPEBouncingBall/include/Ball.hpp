@@ -78,10 +78,6 @@ public:
 
     void draw()
     {
-        ci::gl::color(0, 0, 0);
-        ci::gl::lineWidth(1);
-        ci::gl::drawStrokedCircle(mPosition, mDiameter * 0.5, mDiameter);
-        ci::gl::color(100,100,100);
         ci::gl::drawCube(ci::Vec3f(mPosition, 5), ci::Vec3f(mDiameter,
                                                             mDiameter,
                                                             mDiameter));

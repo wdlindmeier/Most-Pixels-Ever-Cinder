@@ -80,7 +80,7 @@ namespace mpe
         mIsAsync(false),
         mAsyncReceivesData(false),
         mClientName(""),
-        mAspectRatio(1.0f),
+        mAspectRatio(getWindowAspectRatio()),
         mFieldOfView(25.0f),
         mCameraZ(-880)
         {
@@ -319,7 +319,7 @@ namespace mpe
             float centerView = xOffset + (lWidth * 0.5);
             float pxShift = centerMaster - centerView;
             float horizOffset = (pxShift / lWidth) * -2.0f;
-            
+
             float vertOffset = 0.0f;
             mCamera3D.setLensShift(horizOffset, vertOffset);
             gl::setMatrices(mCamera3D);

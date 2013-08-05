@@ -101,7 +101,7 @@
 		A9AA2B7C1798D91100BFA0BC /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
 		A9AA2B7D1798D91100BFA0BC /* settings.1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.1.xml; sourceTree = "<group>"; };
 		A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBall1.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9BFBC9017AF224800549159 /* MPEBouncingBall1 copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MPEBouncingBall1 copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9BFBC9017AF224800549159 /* MPEBouncingBall1 copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "MPEBouncingBall1 copy.app"; path = MPEBouncingBall2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9BFBC9217AF227C00549159 /* settings.2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.2.xml; sourceTree = "<group>"; };
 		A9C7EE56179AEE370090C21F /* MPEProtocol2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocol2.hpp; path = ../../../include/MPEProtocol2.hpp; sourceTree = "<group>"; };
 		A9C7EE57179C95600090C21F /* MPEApp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEApp.hpp; path = ../../../include/MPEApp.hpp; sourceTree = "<group>"; };

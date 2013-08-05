@@ -11,7 +11,7 @@
 
 static const float kInitialFOV = 52.0f;
 static const float kInitialCameraZ = -1050.0f;
-static const float kInitialAspectRatio = 0.75f;
+static const float kInitialAspectRatio = 0.75f; // iPad 768.0/1024.0
 
 @interface MPEAsyncViewController : UIViewController
 

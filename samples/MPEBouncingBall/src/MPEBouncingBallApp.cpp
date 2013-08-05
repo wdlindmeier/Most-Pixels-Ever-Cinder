@@ -10,6 +10,7 @@
 #include "Ball.hpp"
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
+#include "cinder/gl/TextureFont.h"
 #include "cinder/Rand.h"
 #include "MPEApp.hpp"
 #include "MPEClient.h"
@@ -96,7 +97,7 @@ public:
     void        mouseDrag(MouseEvent event);
     void        mouseUp(MouseEvent event);
     void        keyDown(KeyEvent event);
-    
+
     // MPE App
     void        mpeMessageReceived(const std::string & message, const int fromClientID);
     void        mpeReset();
@@ -107,20 +108,23 @@ public:
 
 private:
 
-    MPEClient::Ptr  mClient;
+    MPEClient::Ptr      mClient;
 
-    long            mServerFramesProcessed;
-    Rand            mRand;
-    vector<Ball>    mBalls;
-    string          mLastMessage;
-    
-    SimpleGUI       *mGUI;
-    LabelControl    *mLabelFOV;
-    LabelControl    *mLabelAspectRatio;
-    LabelControl    *mLabelCameraZ;
-    float           mFOV;
-    float           mCamZ;
-    float           mAspectRatio;
+    long                mServerFramesProcessed;
+    Rand                mRand;
+    vector<Ball>        mBalls;
+    string              mLastMessage;
+
+    SimpleGUI           *mGUI;
+    LabelControl        *mLabelFOV;
+    LabelControl        *mLabelAspectRatio;
+    LabelControl        *mLabelCameraZ;
+    float               mFOV;
+    float               mCamZ;
+    float               mAspectRatio;
+
+    Font				mFont;
+    gl::TextureFontRef	mTextureFont;
 };
 
 #pragma mark - Setup
@@ -135,13 +139,14 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
 void MPEBouncingBallApp::setup()
 {
     mClient = MPEClient::New(this, USE_THREADED);
-    
+
     // 3D
     mClient->setIsRendering3D(true);
+    mCamZ = -900.0f;
+    mClient->set3DCameraZ(mCamZ);
     mFOV = mClient->get3DFieldOfView();
-    mCamZ = mClient->get3DCameraZ();
     mAspectRatio = mClient->get3DAspectRatio();
-    
+
     // Params GUI
     mGUI = new SimpleGUI(this);
     mGUI->addParam("Field Of View", &mFOV, 1.f, 180.f, mFOV);
@@ -150,6 +155,9 @@ void MPEBouncingBallApp::setup()
     mLabelCameraZ = mGUI->addLabel("--");
     mGUI->addParam("Aspect Ratio", &mAspectRatio, 0.f, 2.f, mAspectRatio);
     mLabelAspectRatio = mGUI->addLabel("--");
+
+    mFont = Font( "Helvetica Bold", 12 );
+    mTextureFont = gl::TextureFont::create( mFont );
 
 #if !USE_VERSION_2
     if (mClient->isAsynchronous())
@@ -256,8 +264,11 @@ void MPEBouncingBallApp::update()
 {
     if (mClient->isConnected())
     {
-        update3DSettings();
-        
+        if (mClient->isAsynchronousClient())
+        {
+            update3DSettings();
+        }
+
         if (!mClient->isThreaded())
         {
             // NOTE:
@@ -300,7 +311,7 @@ void MPEBouncingBallApp::update3DSettings()
     mLabelFOV->setText(std::to_string(mClient->get3DFieldOfView()));
     mLabelCameraZ->setText(std::to_string(mClient->get3DCameraZ()));
     mLabelAspectRatio->setText(std::to_string(mClient->get3DAspectRatio()));
-    
+
     // If the client values are different than the local values, send an update message
     if (mClient->get3DFieldOfView() != mFOV ||
         mClient->get3DCameraZ() != mCamZ ||
@@ -349,43 +360,77 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
 
     gl::clear(Color(0,0,0));
 
-    // Paint the Master drawable region red if we're in step with the server, or magenta if our
+    // Paint the Master drawable region gray if we're in step with the server, or red if our
     // draw loop is ahead of the server.
     // The App's loop will continue at the normal speed even if we're waiting for data from the
     // server, we just don't update the state.
     // A flickering background means the FPS is faster than the server data-rate.
     if (isNewFrame)
     {
-        gl::color(Color(1, 0, 0));
+        gl::color(Color(0.8, 0.75, 0.75));
     }
     else
     {
-        gl::color(Color(1, 0, 1));
+        gl::color(Color(1, 0.25, 0.25));
     }
 
     Vec2i masterSize = mClient->getMasterSize();
     Rectf masterFrame = Rectf(0,0,masterSize.x,masterSize.y);
     gl::drawSolidRect(masterFrame);
 
-    gl::color(0,0,0);
-    gl::drawString("Client ID: " + std::to_string(CLIENT_ID),
-                   Vec2f(mClient->getVisibleRect().getX1() + 20, 20));
-    gl::drawString("FPS: " + std::to_string((int)getAverageFps()),
-                   Vec2f(mClient->getVisibleRect().getX1() + 20, 50));
-    gl::drawString("Frame Num: " + std::to_string(mClient->getCurrentRenderFrame()),
-                   Vec2f(mClient->getVisibleRect().getX1() + 20, 80));
-    gl::drawString("Updates Per Second: " + std::to_string((int)mClient->getUpdatesPerSecond()),
-                   Vec2f(mClient->getVisibleRect().getX1() + 20, 120));
+    gl::color(0.2,0.2,0.2);
+    gl::enableAlphaBlending();
+    std::ostringstream stringStream;
+    stringStream << "Client ID: " << std::to_string(CLIENT_ID) << std::endl;
+    stringStream << "FPS: " << std::to_string((int)getAverageFps()) << std::endl;
+    stringStream << "Frame Num: " << std::to_string(mClient->getCurrentRenderFrame()) << std::endl;
+    stringStream << "Updates Per Second: " << std::to_string((int)mClient->getUpdatesPerSecond());
+    string str = stringStream.str();
+    Vec2f stringSize = mTextureFont->measureStringWrapped(str, Rectf(0,0,400,400));
+    Vec2f stringOffset(40,40);
+    Vec2f rectOffset = mClient->getVisibleRect().getUpperLeft() + stringOffset;
+    gl::drawSolidRect(Rectf(rectOffset.x - 10,
+                            rectOffset.y - 10,
+                            rectOffset.x + 20 + stringSize.x,
+                            rectOffset.y + 20 + stringSize.y - mTextureFont->getAscent()));
+    gl::color(0.9,0.9,0.9);
+    mTextureFont->drawStringWrapped(str,
+                                    mClient->getVisibleRect(),
+                                    Vec2f(0, mTextureFont->getAscent()) + stringOffset);
+
+    gl::disableAlphaBlending();
+
+    glEnable (GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    const static GLfloat kMatAmbient[]		= { 0.6, 0.3, 0.4, 1.0 };
+    const static GLfloat kMatDiffuse[]		= { 0.5, 0.2, 0.15, 1.0 };
+    const static GLfloat kMatSpecular[]		= { 1.0, 1.0, 1.0, 1.0 };
+    const static GLfloat kMatEmission[]		= { 0.0, 0.1, 0.3, 0.0 };
+    const static GLfloat kMatShininess[]	= { 128.0 };
+    glMaterialfv( GL_FRONT, GL_DIFFUSE,	kMatDiffuse );
+    glMaterialfv( GL_FRONT, GL_AMBIENT,	kMatAmbient );
+    glMaterialfv( GL_FRONT, GL_SPECULAR, kMatSpecular );
+    glMaterialfv( GL_FRONT, GL_SHININESS, kMatShininess );
+    glMaterialfv( GL_FRONT, GL_EMISSION, kMatEmission );
+
+    GLfloat light_position[] = { mClient->getMasterSize().x * 0.5f, 0, mCamZ, 1.0 };
+    glLightfv( GL_LIGHT0, GL_POSITION, light_position );
 
     BOOST_FOREACH(Ball & ball, mBalls)
     {
         ball.draw();
     }
+
+    glDisable (GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
 }
 
 void MPEBouncingBallApp::drawAsyncClient()
 {
-    gl::clear(Color(0,1,0));
+    gl::clear(Color(0.2, 0.2, 0.2));
     mGUI->draw();
 }
 

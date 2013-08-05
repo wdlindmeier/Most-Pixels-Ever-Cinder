@@ -1,13 +1,23 @@
-#include "cinder/app/AppNative.h"
-#include "cinder/gl/gl.h"
-#include "cinder/Rand.h"
+//
+//  MPEBouncingBalliOSApp.mm
+//  Unknown Project
+//
+//  Copyright (c) 2013 William Lindmeier. All rights reserved.
+//
+
 #include <boost/foreach.hpp>
 #include <boost/lambda/lambda.hpp>
+
 #include "Ball.hpp"
+#include "cinder/app/AppNative.h"
+#include "cinder/gl/gl.h"
+#include "cinder/gl/TextureFont.h"
+#include "cinder/Rand.h"
 #include "MPEApp.hpp"
 #include "MPEClient.h"
 
 #import <UIKit/UIKit.h>
+
 #import "MPEAsyncViewController.h"
 
 using namespace ci;
@@ -22,54 +32,74 @@ using namespace mpe;
 const static string kCommandNewBall = "BALL++";
 const static string kCommand3DSettings = "3D";
 
+/*
+
+ MPEBouncingBalliOSApp:
+ A sample Cinder App that uses the Most Pixels Ever client on iOS devices.
+ Designed for a 2 iPad (sync) / 1 iPhone (async) configuration.
+
+ Usage:
+
+ 1) Start the server (one is located in server/ of the MPE Cinder block) by running:
+
+     $ python simple_server.py
+
+ 2) Update the settings.xml files with the IP address of the server.
+
+ 3) Build and run the clients in XCode. There are 2 iPad sync clients, and 1 iPhone async
+    controller that controls the 3D camera.
+
+ */
+
 class MPEBouncingBalliOSApp : public AppNative, public MPEApp
 {
-    
+
   public:
-    
+
     // Setup
     void            prepareSettings(Settings *settings);
     void            setup();
-    
+
     // Balls
     void            addBallAtPosition(const Vec2f & posBall);
-    
+
     // Update
     void            update();
     void            mpeFrameUpdate(long serverFrameNumber);
     void            send3DSettings();
-    
+
     // Draw
     void            draw();
     void            mpeFrameRender(bool isNewFrame);
-        
+
     // MPE App
     void            mpeMessageReceived(const std::string & message, const int fromClientID);
     void            mpeReset();
     std::string     mpeSettingsFilename();
-    
+
     // Touch
-    //void            touchesBegan(TouchEvent event);
-	//void            touchesMoved(TouchEvent event);
-	void            touchesEnded(TouchEvent event);
-    
+    void            touchesEnded(TouchEvent event);
+
     // UIKit Controls
     void            camZValueChanged(float value);
     void            fovValueChanged(float value);
     void            aspectRatioValueChanged(float value);
     void            resetPressed();
-    
+
   private:
-    
-    MPEClient::Ptr  mClient;
-    
-    Rand            mRand;
-    vector<Ball>    mBalls;
-    
-    float           mCamZ;
-    float           mFOV;
-    float           mAspectRatio;
-    
+
+    MPEClient::Ptr      mClient;
+
+    Rand                mRand;
+    vector<Ball>        mBalls;
+
+    float               mCamZ;
+    float               mFOV;
+    float               mAspectRatio;
+
+    Font				mFont;
+    gl::TextureFontRef	mTextureFont;
+
 };
 
 void MPEBouncingBalliOSApp::prepareSettings(Settings *settings)
@@ -91,8 +121,11 @@ void MPEBouncingBalliOSApp::prepareSettings(Settings *settings)
 
 void MPEBouncingBalliOSApp::setup()
 {
-    // Lil Obj-C++ to disable the screen sleep
+    // Disable the screen sleep
     [UIApplication sharedApplication].idleTimerDisabled = YES;
+
+    mFont = Font( "Helvetica Bold", 12 );
+    mTextureFont = gl::TextureFont::create( mFont );
 
     mClient = MPEClient::New(this);
     mClient->setIsRendering3D(true);
@@ -157,10 +190,10 @@ void MPEBouncingBalliOSApp::update()
     if (!mClient->isConnected() && getElapsedFrames() % 60 == 0)
     {
         console() << "sizeMaster: " << mClient->getMasterSize() << "\n";
-        
-        mClient->start("10.0.1.19", 9002);
+
+        mClient->start();
         mClient->setIsRendering3D(true);
-        
+
     }
 }
 
@@ -176,8 +209,8 @@ void MPEBouncingBalliOSApp::mpeFrameUpdate(long serverFrameNumber)
 
 void MPEBouncingBalliOSApp::draw()
 {
-    gl::clear(Color(0.5,0.5,0.5));
-    
+    gl::clear(Color(0,0,0));
+
     if (!mClient->isAsynchronousClient())
     {
         // There's no drawing to do for the Async client since it's a native NIB
@@ -185,39 +218,58 @@ void MPEBouncingBalliOSApp::draw()
     }
 }
 
-
 void MPEBouncingBalliOSApp::mpeFrameRender(bool isNewFrame)
 {
-    gl::clear(Color(0,0,0));
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (isNewFrame)
     {
-        gl::color(Color(1, 0, 0));
+        gl::color(Color(0.6, 0.525, 0.525));
     }
     else
     {
-        gl::color(Color(1, 0, 1));
+        gl::color(Color(1, 0.25, 0.25));
     }
-    
+
     Vec2i masterSize = mClient->getMasterSize();
     Rectf masterFrame = Rectf(0,0,masterSize.x,masterSize.y);
     gl::drawSolidRect(masterFrame);
-    
-    gl::color(0,0,0);
 
-    gl::drawString("Client ID: " + std::to_string(CLIENT_ID),
-                   Vec2f(mClient->getVisibleRect().getX1() + 20, 20));
-    gl::drawString("FPS: " + std::to_string((int)getAverageFps()),
-                   Vec2f(mClient->getVisibleRect().getX1() + 20, 50));
-    gl::drawString("Frame Num: " + std::to_string(mClient->getCurrentRenderFrame()),
-                   Vec2f(mClient->getVisibleRect().getX1() + 20, 80));
-    gl::drawString("Updates Per Second: " + std::to_string((int)mClient->getUpdatesPerSecond()),
-                   Vec2f(mClient->getVisibleRect().getX1() + 20, 120));
+    gl::color(0.2,0.2,0.2);
+    gl::enableAlphaBlending();
+    std::ostringstream stringStream;
+    stringStream << "Client ID: " << std::to_string(CLIENT_ID) << std::endl;
+    stringStream << "FPS: " << std::to_string((int)getAverageFps()) << std::endl;
+    stringStream << "Frame Num: " << std::to_string(mClient->getCurrentRenderFrame()) << std::endl;
+    stringStream << "Updates Per Second: " << std::to_string((int)mClient->getUpdatesPerSecond());
+    string str = stringStream.str();
+    Vec2f stringSize = mTextureFont->measureStringWrapped(str, Rectf(0,0,400,400));
+    Vec2f stringOffset(40,40);
+    Vec2f rectOffset = mClient->getVisibleRect().getUpperLeft() + stringOffset;
+    gl::drawSolidRect(Rectf(rectOffset.x - 10,
+                            rectOffset.y - 10,
+                            rectOffset.x + 20 + stringSize.x,
+                            rectOffset.y + 20 + stringSize.y - mTextureFont->getAscent()));
+    gl::color(0.9,0.9,0.9);
+    mTextureFont->drawStringWrapped(str,
+                                    mClient->getVisibleRect(),
+                                    Vec2f(0, mTextureFont->getAscent()) + stringOffset);
+
+    glEnable (GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    GLfloat light_position[] = { mClient->getMasterSize().x * 0.5f, 0, mCamZ, 1.0 };
+    glLightfv( GL_LIGHT0, GL_POSITION, light_position );
 
     BOOST_FOREACH(Ball & ball, mBalls)
     {
         ball.draw();
     }
+
+    glDisable (GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
 }
 
 #pragma mark - MPE App
@@ -225,13 +277,13 @@ void MPEBouncingBalliOSApp::mpeFrameRender(bool isNewFrame)
 void MPEBouncingBalliOSApp::mpeReset()
 {
     console() << "RESETTING\n";
-    
+
     // Set the random seed to a known value so all of the clients are using the same rand values.
     mRand.seed(1);
-    
+
     // Clear out the previous state
     mBalls.clear();
-    
+
     // Add the first ball
     Vec2i sizeMaster = mClient->getMasterSize();
     addBallAtPosition(Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y)));
@@ -246,7 +298,7 @@ std::string MPEBouncingBalliOSApp::mpeSettingsFilename()
 void MPEBouncingBalliOSApp::mpeMessageReceived(const std::string & message, const int fromClientID)
 {
     vector<string> tokens = split(message, ",");
-    
+
     if (tokens.size() > 0)
     {
         string command = tokens[0];
