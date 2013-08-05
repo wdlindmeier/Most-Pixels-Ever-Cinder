@@ -8,8 +8,8 @@ multiple screens.
 Read more about the project:
 https://github.com/shiffman/Most-Pixels-Ever
 
-The sample application running on 2 iPads:
-http://www.youtube.com/watch?v=yY4BJZgIvhc
+A video of the sample desktop application: http://www.youtube.com/watch?v=UshNhidsihU  
+A video of the sample iOS application running on 2 iPads: http://www.youtube.com/watch?v=yY4BJZgIvhc  
 
 ###Example Usage:
 
