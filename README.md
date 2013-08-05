@@ -1,12 +1,15 @@
 #Most-Pixels-Ever for Cinder
 
-A Cinder block client for Most Pixels Ever.
+A Cinder block client for Most Pixels Ever, supporting Mac, Windows and iOS.
 
 Most Pixels Ever is a framework that synchronizes frame-based applications across 
 multiple screens.
 
 Read more about the project:
 https://github.com/shiffman/Most-Pixels-Ever
+
+The sample application running on 2 iPads:
+http://www.youtube.com/watch?v=yY4BJZgIvhc
 
 ###Example Usage:
 
@@ -17,6 +20,9 @@ A basic MPE 2.0 server is included with the block. Run like so:
 `$ python server/simple_server.py`
 
 #####Your Cinder App
+
+Here's the basic setup required to integrate an MPE Client with your Cinder app. 
+A template can be found in the samples/ folder called MPEBasic.
 
 ```c++
 // Subclass your Cinder app from MPEApp
