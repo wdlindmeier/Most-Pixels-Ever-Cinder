@@ -49,16 +49,17 @@ const static string kCommand3DSettings = "3D";
        Passing in `--num-clients N` will wait to start the loop until N clients have connected.
        Otherwise, the server will reset the loop whenever a new client joins.
 
-    2) Build and run all 3 targets from XCode (or launch them from the build folder).
-       There are 2 Synchronous (i.e. frame rendering) clients and 1 Async controller.
+    2) Build and run all 4 targets from XCode (or launch them from the build folder).
+       There are 3 Synchronous (i.e. frame rendering) clients and 1 Async client
+       that controls the 3D camera.
 
  Behavior:
 
     • Clicking the mouse in a Sync window adds cubes to the scene.
 
-    • Dragging the mouse will send messages to client 1, and 555 but not client 0.
+    • Dragging the mouse will send messages to client 1, and 555 but not client 0 or 2.
 
-    • Adjusting the params in the Async controller will update the 3D camera
+    • Adjusting the params in the Async controller will update the 3D camera.
 
     • Pressing 'p' will pause/unpause the server.
 

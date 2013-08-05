@@ -20,7 +20,7 @@
 
 */
 
-const static int kDefaultRadius = 18;
+const static int kDefaultRadius = 30;
 
 class Ball
 {
@@ -82,9 +82,9 @@ public:
         ci::gl::lineWidth(1);
         ci::gl::drawStrokedCircle(mPosition, mDiameter * 0.5, mDiameter);
         ci::gl::color(100,100,100);
-        // TODO: REMOVE
-        //ci::gl::drawSolidCircle(mPosition, mDiameter * 0.5, mDiameter);
-        ci::gl::drawCube(ci::Vec3f(mPosition, 5), ci::Vec3f(mDiameter,mDiameter,mDiameter));
+        ci::gl::drawCube(ci::Vec3f(mPosition, 5), ci::Vec3f(mDiameter,
+                                                            mDiameter,
+                                                            mDiameter));
     }
 
 private:

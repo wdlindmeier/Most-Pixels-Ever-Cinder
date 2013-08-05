@@ -315,10 +315,11 @@ namespace mpe
             Vec3f up(0, -1, 0);
             mCamera3D.lookAt(eye, target, up);
 
-            int numClients = mWidth / lWidth;
-            float clientIdx = xOffset == 0 ? 0 : (lWidth / xOffset);
-            float centerClient = numClients / 2.0f;
-            float horizOffset = ((clientIdx + 0.5) - centerClient) * 2;
+            float centerMaster = mWidth / 2.0f;
+            float centerView = xOffset + (lWidth * 0.5);
+            float pxShift = centerMaster - centerView;
+            float horizOffset = (pxShift / lWidth) * -2.0f;
+            
             float vertOffset = 0.0f;
             mCamera3D.setLensShift(horizOffset, vertOffset);
             gl::setMatrices(mCamera3D);
