@@ -108,6 +108,10 @@
 						<float key="IBUIValue">52</float>
 						<float key="IBUIMinValue">1</float>
 						<float key="IBUIMaxValue">180</float>
+						<object class="NSColor" key="IBUIMinimumTrackTintColor" id="183954344">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4zMjEyNTM0MjE1IDAuMjMwOTI0OTU0NCAwLjQ0NjY4MTExMzEAA</bytes>
+						</object>
 					</object>
 					<object class="IBUILabel" id="831587084">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -167,6 +171,7 @@
 						<float key="IBUIValue">-1500</float>
 						<float key="IBUIMinValue">-3000</float>
 						<float key="IBUIMaxValue">0.0</float>
+						<reference key="IBUIMinimumTrackTintColor" ref="183954344"/>
 					</object>
 					<object class="IBUILabel" id="1033744105">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -225,6 +230,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<float key="IBUIValue">0.75</float>
 						<float key="IBUIMaxValue">2</float>
+						<reference key="IBUIMinimumTrackTintColor" ref="183954344"/>
 					</object>
 					<object class="IBUIButton" id="344584585">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -234,11 +240,14 @@
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<object class="NSColor" key="IBUIBackgroundColor">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MC44ODYwOTE0NjkAA</bytes>
+						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Reset</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor">
 							<int key="NSColorSpace">3</int>

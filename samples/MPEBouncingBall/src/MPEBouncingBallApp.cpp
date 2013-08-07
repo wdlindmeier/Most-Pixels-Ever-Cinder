@@ -86,6 +86,7 @@ public:
     void        update();
     void        mpeFrameUpdate(long serverFrameNumber);
     void        update3DSettings();
+    void        send3DSettings();
 
     // Draw
     void        draw();
@@ -190,6 +191,11 @@ void MPEBouncingBallApp::mpeReset()
     // Add the first ball
     Vec2i sizeMaster = mClient->getMasterSize();
     addBallAtPosition(Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y)));
+    
+    if (mClient->isAsynchronousClient())
+    {
+        send3DSettings();
+    }
 }
 
 std::string MPEBouncingBallApp::mpeSettingsFilename()
@@ -316,6 +322,14 @@ void MPEBouncingBallApp::update3DSettings()
     if (mClient->get3DFieldOfView() != mFOV ||
         mClient->get3DCameraZ() != mCamZ ||
         mClient->get3DAspectRatio() != mAspectRatio)
+    {
+        send3DSettings();
+    }
+}
+
+void MPEBouncingBallApp::send3DSettings()
+{
+    if (mClient->isConnected())
     {
         mClient->sendMessage(kCommand3DSettings + "," +
                              std::to_string(mFOV) + "," +

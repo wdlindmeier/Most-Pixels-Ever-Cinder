@@ -171,6 +171,7 @@ void MPEBouncingBalliOSApp::resetPressed()
     if (mClient->isConnected())
     {
         mClient->resetAll();
+        send3DSettings();
     }
 }
 
@@ -189,11 +190,7 @@ void MPEBouncingBalliOSApp::update()
 {
     if (!mClient->isConnected() && getElapsedFrames() % 60 == 0)
     {
-        console() << "sizeMaster: " << mClient->getMasterSize() << "\n";
-
         mClient->start();
-        mClient->setIsRendering3D(true);
-
     }
 }
 
@@ -287,6 +284,11 @@ void MPEBouncingBalliOSApp::mpeReset()
     // Add the first ball
     Vec2i sizeMaster = mClient->getMasterSize();
     addBallAtPosition(Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y)));
+    
+    if (mClient->isAsynchronousClient())
+    {
+        send3DSettings();
+    }
 }
 
 std::string MPEBouncingBalliOSApp::mpeSettingsFilename()
