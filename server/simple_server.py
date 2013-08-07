@@ -28,17 +28,17 @@ CMD_GO = "G"
 
 # Parse the command line arguments
 parser = argparse.ArgumentParser(description='Most Pixels Ever Server, conforms to protocol version 2.0')
-parser.add_argument('--num-clients', dest='num_clients', default=-1, help='The number of clients. The server won\'t start the draw loop until all of the clients are connected.')
+parser.add_argument('--screens', dest='screens', default=-1, help='The number of clients. The server won\'t start the draw loop until all of the clients are connected.')
 parser.add_argument('--port', dest='port_num', default=9002, help='The port number that the clients connect to.')
 parser.add_argument('--framerate', dest='framerate', default=60, help='The target framerate.')
 args = parser.parse_args()
 
 portnum = int(args.port_num)
-num_clients_required = int(args.num_clients)
+screens_required = int(args.screens)
 framerate = int(args.framerate)
 microseconds_per_frame = (1.0 / framerate) * 1000000
 framecount = 0
-num_clients_drawn = 0
+screens_drawn = 0
 is_paused = False
 last_frame_time = datetime.now()
 
@@ -71,7 +71,7 @@ class MPEServer(Protocol):
             MPEServer.sendNextFrame()
 
     def dataReceived(self, data):
-        global num_clients_drawn
+        global screens_drawn
         global framecount
         # There may be more than 1 message in the mix
         messages = data.split("\n")
@@ -91,7 +91,7 @@ class MPEServer(Protocol):
                 client = int(tokens[1])
                 frame_id = int(tokens[2])
                 if frame_id >= framecount:
-                    num_clients_drawn += 1
+                    screens_drawn += 1
                     if MPEServer.isNextFrameReady():
                         # all of the frames are drawn, send out the next frames
                         MPEServer.sendNextFrame()
@@ -160,7 +160,7 @@ class MPEServer(Protocol):
         global framecount
         global is_paused
         framecount = 0
-        num_clients_drawn = 0
+        screens_drawn = 0
         MPEServer.message_queue = []
         MPEServer.sendReset()
         if is_paused:
@@ -181,32 +181,31 @@ class MPEServer(Protocol):
 
     @staticmethod
     def handleClientAdd(client_id):
-        global num_clients
         global framecount
-        global num_clients_required
+        global screens_required
         print "Added client %i (%s)" % (client_id, MPEServer.clients[client_id].client_name)
         num_sync_clients = len(MPEServer.rendering_client_ids)
-        if num_clients_required == -1 or num_sync_clients == num_clients_required:
+        if screens_required == -1 or num_sync_clients == screens_required:
             # NOTE: We don't reset when an async client connects
             if client_id in MPEServer.rendering_client_ids:
                 MPEServer.reset()
-        elif num_sync_clients < num_clients_required:
-            print "Waiting for %i more clients." % (num_clients_required - num_sync_clients)
-        elif num_sync_clients > num_clients_required:
+        elif num_sync_clients < screens_required:
+            print "Waiting for %i more clients." % (screens_required - num_sync_clients)
+        elif num_sync_clients > screens_required:
             print "ERROR: More than MAX clients have connected."
 
     @staticmethod
     def isNextFrameReady():
-        global num_clients_drawn
-        global num_clients_required
+        global screens_drawn
+        global screens_required
         global is_paused
         num_sync_clients = len(MPEServer.rendering_client_ids)
-        return num_clients_drawn >= num_sync_clients and not is_paused and num_sync_clients >= num_clients_required
+        return screens_drawn >= num_sync_clients and not is_paused and num_sync_clients >= screens_required
 
     @staticmethod
     def sendNextFrame():
         global last_frame_time
-        global num_clients_drawn
+        global screens_drawn
         global framecount
         global is_paused
         global framerate
@@ -220,7 +219,7 @@ class MPEServer(Protocol):
         while delta.seconds < 1 and delta.microseconds < microseconds_per_frame:
             delta = datetime.now() - last_frame_time
 
-        num_clients_drawn = 0
+        screens_drawn = 0
         framecount += 1
         send_message = CMD_GO + "|%i" % framecount
         # Copy the clients so in case one disconnects during the loop
@@ -259,6 +258,6 @@ MPEServer.message_queue = []
 reactor.listenTCP(portnum, factory)
 print "MPE Server started on port %i" % portnum
 print "Running at max %i FPS" % framerate
-if num_clients_required > 0:
-    print "Waiting for %i clients." % num_clients_required
+if screens_required > 0:
+    print "Waiting for %i clients." % screens_required
 reactor.run()
