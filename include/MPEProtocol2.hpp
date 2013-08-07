@@ -138,6 +138,7 @@ namespace mpe
 
             if (comand == RESET_ALL)
             {
+                handler->setCurrentRenderFrame(0);
                 handler->receivedResetCommand();
             }
             else if (comand == NEXT_FRAME)

@@ -365,13 +365,21 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
     // The App's loop will continue at the normal speed even if we're waiting for data from the
     // server, we just don't update the state.
     // A flickering background means the FPS is faster than the server data-rate.
-    if (isNewFrame)
+    if (mClient->isConnected())
     {
-        gl::color(Color(0.8, 0.75, 0.75));
+        if (isNewFrame)
+        {
+            gl::color(Color(0.8, 0.75, 0.75));
+        }
+        else
+        {
+            gl::color(Color(1, 0.25, 0.25));
+        }
     }
     else
     {
-        gl::color(Color(1, 0.25, 0.25));
+        // Gray if we're not connected
+        gl::color(Color(0.5, 0.5, 0.5));
     }
 
     Vec2i masterSize = mClient->getMasterSize();

@@ -33,6 +33,10 @@ bool TCPClient::open(const std::string & hostname,
     tcp::resolver::iterator iterator = resolver.resolve(query);
     tcp::resolver::iterator end;
 
+    if (mIsConnected)
+    {
+        close();
+    }
     mIsConnected = false;
 
     boost::system::error_code error = boost::asio::error::host_not_found;

@@ -20,6 +20,8 @@ TCPClient(messageDelimeter)
 
 TCPAsyncClient::~TCPAsyncClient()
 {
+    mSocket.close();
+    mIOService.stop();
     mClientThread.detach();
 };
 
@@ -27,6 +29,11 @@ void TCPAsyncClient::open(const string & hostname,
                           const int port,
                           const OpenedCallback &callback)
 {
+    if (mIsConnected)
+    {
+        close();
+    }
+
     tcp::resolver resolver(mIOService);
     tcp::resolver::query query(hostname, std::to_string(port));
     tcp::resolver::iterator iterator = resolver.resolve(query);
@@ -36,7 +43,6 @@ void TCPAsyncClient::open(const string & hostname,
     boost::asio::async_connect(mSocket, iterator,
                                boost::bind(&TCPAsyncClient::handleConnect, this,
                                             boost::asio::placeholders::error));
-
     mClientThread = std::thread(boost::bind(&boost::asio::io_service::run,
                                             &mIOService));
 }
