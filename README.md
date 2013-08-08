@@ -14,7 +14,7 @@ A video of the sample iOS application running on 2 iPads: http://www.youtube.com
 
 A basic MPE 2.0 server is included with the block. Run like so:
 
-`$ python mpe-python-server/simple_server.py`
+`$ python mpe-python-server/mpe_server.py`
 
 #####Your Cinder App
 
