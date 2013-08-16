@@ -10,6 +10,9 @@ A video of the sample iOS application running on 2 iPads: http://www.youtube.com
 
 ###Example Usage:
 
+For step-by-step instructions on creating a MPE app with XCode, read the tutorial:  
+https://github.com/wdlindmeier/Most-Pixels-Ever-Cinder/wiki/MPE-Setup-Tutorial-for-Cinder
+
 #####The Server
 
 A basic MPE 2.0 server is included with the block. Run like so:
