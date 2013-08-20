@@ -193,7 +193,7 @@ namespace mpe
 
         void togglePause()
         {
-            boost::shared_ptr<MPEProtocol2> protocol = boost::dynamic_pointer_cast<MPEProtocol2>(mProtocol);
+            boost::shared_ptr<MPEProtocol> protocol = boost::dynamic_pointer_cast<MPEProtocol>(mProtocol);
             if (protocol != NULL)
             {
                 mTCPClient->write(protocol->togglePause());
@@ -206,7 +206,7 @@ namespace mpe
 
         void resetAll()
         {
-            boost::shared_ptr<MPEProtocol2> protocol = boost::dynamic_pointer_cast<MPEProtocol2>(mProtocol);
+            boost::shared_ptr<MPEProtocol> protocol = boost::dynamic_pointer_cast<MPEProtocol>(mProtocol);
             if (protocol != NULL)
             {
                 mTCPClient->write(protocol->resetAll());
@@ -395,7 +395,7 @@ namespace mpe
 
         void sendClientID()
         {
-            boost::shared_ptr<MPEProtocol2> protocol = boost::dynamic_pointer_cast<MPEProtocol2>(mProtocol);
+            boost::shared_ptr<MPEProtocol> protocol = boost::dynamic_pointer_cast<MPEProtocol>(mProtocol);
             if (protocol != NULL)
             {
                 if (mIsAsync)
@@ -425,7 +425,7 @@ namespace mpe
 
         void sendMessage(const std::string & message, const std::vector<int> & clientIds)
         {
-            boost::shared_ptr<MPEProtocol2> protocol = boost::dynamic_pointer_cast<MPEProtocol2>(mProtocol);
+            boost::shared_ptr<MPEProtocol> protocol = boost::dynamic_pointer_cast<MPEProtocol>(mProtocol);
             if (protocol != NULL)
             {
                 mTCPClient->write(protocol->broadcast(message, clientIds));
@@ -763,14 +763,14 @@ namespace mpe
     };
 }
 
-MPEClient::Ptr MPEClient::New(MPEApp *app, bool isThreaded)
+MPEClient::Ptr MPEClient::Create(MPEApp *app, bool isThreaded)
 {
     if (isThreaded)
     {
-        return MPEThreadedClient::Ptr(new MPEThreadedClient(app));
+        return MPEClientRef(new MPEThreadedClient(app));
     }
     else
     {
-        return MPENonThreadedClient::Ptr(new MPENonThreadedClient(app));
+        return MPEClientRef(new MPENonThreadedClient(app));
     }
 }

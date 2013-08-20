@@ -64,7 +64,7 @@ namespace mpe
         */
         virtual boost::shared_ptr<MPEProtocol> mpeProtocol()
         {
-            return boost::shared_ptr<MPEProtocol>(new MPEProtocol2());
+            return boost::shared_ptr<MPEProtocol>(new MPEProtocol());
         };
 
         /*

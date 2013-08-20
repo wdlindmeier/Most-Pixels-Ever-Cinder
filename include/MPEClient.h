@@ -25,7 +25,7 @@
  Once you've subclassed your Cinder App from MPEApp, you construct a client by passing
  it a pointer to your app like so:
 
- MPEClient::New(this); // <-- called from your Cinder app setup()
+ MPEClient::Create(this); // <-- called from your Cinder app setup()
 
  The client keeps track of the current frame that should be rendered (see
  MPEMessageHandler::getCurrentRenderFrame) and informs the server when it's complete. Once
@@ -35,19 +35,19 @@
 
 namespace mpe
 {
+    typedef boost::shared_ptr<class MPEClient> MPEClientRef;
+    
     class MPEClient : public MPEMessageHandler
     {
 
     public:
 
-        typedef boost::shared_ptr<MPEClient> Ptr;
-
-        static Ptr                  New(MPEApp *app, bool isThreaded = true);
-
                                     MPEClient() :
                                     MPEMessageHandler(){};
-
+        
                                     ~MPEClient(){};
+
+        static MPEClientRef         Create(MPEApp *app, bool isThreaded = true);
 
         // Misc Accessors
         virtual int                 getClientID() = 0;
