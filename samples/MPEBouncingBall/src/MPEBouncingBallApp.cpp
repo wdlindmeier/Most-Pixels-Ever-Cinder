@@ -22,10 +22,6 @@
 // Threaded is used by default. This switch is for demo purposes.
 #define USE_THREADED   1
 
-// Choose the protocol version. MPE 2.0 is the latest and greatest.
-// 2.0 is used by default. This switch is for demo purposes.
-#define USE_VERSION_2   1
-
 using namespace ci;
 using namespace ci::app;
 using std::string;
@@ -103,9 +99,6 @@ public:
     void        mpeMessageReceived(const std::string & message, const int fromClientID);
     void        mpeReset();
     std::string mpeSettingsFilename();
-#if !USE_VERSION_2
-    boost::shared_ptr<MPEProtocol> mpeProtocol();
-#endif
 
 private:
 
@@ -159,20 +152,6 @@ void MPEBouncingBallApp::setup()
 
     mFont = Font( "Helvetica Bold", 12 );
     mTextureFont = gl::TextureFont::create( mFont );
-
-#if !USE_VERSION_2
-    if (mClient->isAsynchronous())
-    {
-        console() << "ERROR: MPE Version 1 doesn't support Asynchronous clients." << endl;
-        exit();
-    }
-#endif
-
-#if !USE_VERSION_2
-    // MPE 1.0 doesn't send out a reset command when a connection is made.
-    // Doing it manually.
-    mpeReset();
-#endif
 }
 
 #pragma mark - MPE App
@@ -231,29 +210,9 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
 
     mLastMessage = message;
 
-#if USE_VERSION_2
-
     console() << mClient->getClientID() << ") Message from client #"
               << fromClientID << ": " << message << std::endl;
-
-#else
-
-    // MPE v 1 didn't support broadcast client IDs
-    console() << "Received message : " << message << std::endl;
-
-#endif
-
 }
-
-#if !USE_VERSION_2
-
-// If we want to use a non-default protocol, we override this function
-boost::shared_ptr<MPEProtocol> MPEBouncingBallApp::mpeProtocol()
-{
-    return boost::shared_ptr<MPEProtocol>(new MPEProtocol());
-}
-
-#endif
 
 #pragma mark - Balls
 

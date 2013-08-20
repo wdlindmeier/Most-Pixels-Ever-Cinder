@@ -1,5 +1,5 @@
 //
-//  MPEProtocol.hpp
+//  MPEProtocol2.hpp
 //  Unknown Project
 //
 //  Copyright (c) 2013 William Lindmeier. All rights reserved.
@@ -18,36 +18,28 @@
 #include "MPEMessageHandler.hpp"
 
 /*
-
+ 
  MPEProtocol:
  This class converts actions to/from strings that the server undertands.
  MPEProtocol can be subclassed to use with other servers, if it's ever updated / modified.
-
- The protocol below is MPE version 1, which is now depreciated.
-
-*/
+ 
+ */
 
 namespace mpe
 {
     const static std::string CONNECT_SYNCHRONOUS = "S";
     const static std::string DONE_RENDERING = "D";
     const static std::string DATA_MESSAGE = "T";
-    const static std::string NEXT_FRAME = "G"; // "Go and draw frame"
-    
+    const static std::string NEXT_FRAME = "G"; 
+    const static std::string CONNECT_ASYNCHRONOUS = "A";
+    const static std::string RESET_ALL = "R";
+    const static std::string TOGGLE_PAUSE = "P";
+
     class MPEProtocol
     {
-        
     public:
 
 #pragma mark - Outgoing Messages
-        
-        // Send the client ID once the connection has been made.
-        virtual std::string setClientID(const int clientID)
-        {
-            return CONNECT_SYNCHRONOUS +
-                   std::to_string(clientID) +
-                   outgoingMessageTerminus();
-        };
         
         virtual std::string cleanMessage(std::string message)
         {
@@ -74,26 +66,89 @@ namespace mpe
             return message;
         }
 
-        // Send an arbitrary string to every connected client.
-        virtual std::string broadcast(const std::string & msg)
+        virtual std::string setClientID(const int clientID)
         {
-            std::string sanitizedMessage = cleanMessage(msg);
-            return DATA_MESSAGE +
-                   sanitizedMessage +
+            return setClientID(clientID, "Rendering Client " + std::to_string(clientID));
+        };
+
+        virtual std::string setClientID(const int clientID, const std::string & name)
+        {
+            return CONNECT_SYNCHRONOUS +
+                   dataMessageDelimiter() +
+                   std::to_string(clientID) +
+                   dataMessageDelimiter() +
+                   name +
                    outgoingMessageTerminus();
         };
 
-        // Send with the client and frame ID when the frame render is complete.
+        virtual std::string setAsyncClientID(const int clientID)
+        {
+            return setAsyncClientID(clientID, "Non-Rendering Client " + std::to_string(clientID));
+        }
+
+        virtual std::string setAsyncClientID(const int clientID,
+                                             const std::string & clientName,
+                                             bool shouldReceiveDataMessages = false)
+        {
+            return CONNECT_ASYNCHRONOUS +
+                   dataMessageDelimiter() +
+                   std::to_string(clientID) +
+                   dataMessageDelimiter() +
+                   clientName +
+                   dataMessageDelimiter() +
+                   (shouldReceiveDataMessages ? "true" : "false") +
+                   outgoingMessageTerminus();
+        };
+
         virtual std::string renderIsComplete(int clientID, long frameNum)
         {
-            return DONE_RENDERING + "," +
-                   std::to_string(clientID) + "," +
-                   std::to_string(frameNum+1) +
+            return DONE_RENDERING +
+                   dataMessageDelimiter() +
+                   std::to_string(clientID) +
+                   dataMessageDelimiter() +
+                   std::to_string(frameNum) +
                    outgoingMessageTerminus();
+        };
+
+        virtual std::string resetAll()
+        {
+            return RESET_ALL +
+                   outgoingMessageTerminus();
+        };
+
+        virtual std::string togglePause()
+        {
+            return TOGGLE_PAUSE +
+                   outgoingMessageTerminus();
+        };
+
+        virtual std::string broadcast(const std::string & msg)
+        {
+            return broadcast(msg, std::vector<int>());
+        };
+
+        virtual std::string broadcast(const std::string & msg, const std::vector<int> & toClientIDs)
+        {
+            std::string sanitizedMessage = cleanMessage(msg);
+            std::string sendMessage = DATA_MESSAGE + dataMessageDelimiter() + sanitizedMessage;
+            for (int i = 0; i < toClientIDs.size(); ++i)
+            {
+                if (i == 0)
+                {
+                    sendMessage += dataMessageDelimiter();
+                }
+                else
+                {
+                    sendMessage += ",";
+                }
+                sendMessage += std::to_string(toClientIDs[i]);
+            }
+            sendMessage += outgoingMessageTerminus();
+            return sendMessage;
         };
 
 #pragma mark - Incoming Messages
-
+        
         // The TCP client listens to the socket until it reaches the delimiter,
         // at which point the string is parsed.
         virtual std::string incomingMessageDelimiter()
@@ -104,7 +159,7 @@ namespace mpe
 
         virtual std::string dataMessageDelimiter()
         {
-            const static std::string kDataMessageDelimiter = ":";
+            const static std::string kDataMessageDelimiter = "|";
             return kDataMessageDelimiter;
         }
         
@@ -117,50 +172,62 @@ namespace mpe
         virtual void parse(const std::string & serverMessage, MPEMessageHandler *handler)
         {
             // Example server messages:
-            // 1) IG,19919:blahblahblah
-            // 2) G,7
-            // 3) G,21:blah1:blah2:blah3
+            // 1) G|19919|fromID,blahblahblah
+            // 2) G|7
+            // 3) G|21|fromID,blah1234|fromID,blah210|fromID,blah345623232
             //
             // Format:
-            // [command],[frame count]:[data message(s)]...
+            // [command]|[frame count]|[data message(s)]...
             //
-            // • Commands are identified by 1-2 characters (e.g. 'G' or 'IG').
+            // • Command is always NEXT_FRAME ("G") in v.2
             //
-            // • Frame Count is the current frame tracked by the server.
-            //   This is the frame number that each client should be rendering.
+            // • Data Messages will start with the senders Client ID followed by a comma.
             //
-            // • Data Messages are arbitrary strings that contains information
-            //   from the other clients or server, separated by semicolons.
 
-            std::vector<std::string> messages = ci::split(serverMessage, dataMessageDelimiter());
-            std::string frame = messages[0];
+            std::vector<std::string> tokens = ci::split(serverMessage, dataMessageDelimiter());
+            std::string comand = tokens[0];
 
-            // Get the frame details
-            std::vector<std::string> frameInfo = ci::split(frame, ",");
-            std::string frameCommand = frameInfo[0];
-            std::string frameNum = frameInfo[1];
-
-            handler->setCurrentRenderFrame(stol(frameNum));
-
-            // Get any additional message that was passed along.
-            if (messages.size() > 1)
+            if (comand == RESET_ALL)
             {
-                // Send all of the messages, one by one.
-                for (int i=1;i<messages.size();i++)
-                {
-                    std::string dataMessage = messages[i];
-                    handler->receivedStringMessage(dataMessage);
-                }
+                handler->setCurrentRenderFrame(0);
+                handler->receivedResetCommand();
             }
-
-            if (frameCommand != NEXT_FRAME)
+            else if (comand == NEXT_FRAME)
             {
-                ci::app::console() << "ALERT: Don't know what to do with server message:" << std::endl;
-                ci::app::console() << serverMessage << std::endl;
+                std::string frameNum = tokens[1];
+                handler->setCurrentRenderFrame(stol(frameNum));
+
+                int numTokens = tokens.size();
+                if (numTokens > 2)
+                {
+                    // There are additional client messages
+                    for (int i=2;i<numTokens;i++)
+                    {
+                        // Iterate over the messages and send them out
+                        std::string dataMessage = tokens[i];
+                        size_t firstComma = dataMessage.find_first_of(",");
+                        if (firstComma != std::string::npos)
+                        {
+                            int clientID = stoi(dataMessage.substr(0, firstComma));
+                            std::string messageData = dataMessage.substr(firstComma+1);
+                            handler->receivedStringMessage(messageData, clientID);
+                        }
+                        else
+                        {
+                            ci::app::console() << "ERROR: Couldn't parse data message "
+                            << dataMessage << std::endl;
+                        }
+                    }
+                }
+
+                handler->setFrameIsReady(true);
+            }
+            else
+            {
+                ci::app::console() << "ALERT: Don't know what to do with server message: "
+                                   << serverMessage << std::endl;
                 return;
             }
-
-            handler->setFrameIsReady(true);
         }
     };
 }
