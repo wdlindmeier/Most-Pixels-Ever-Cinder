@@ -42,7 +42,7 @@ const static string kCommand3DSettings = "3D";
 
  1) Start the server (one is located in server/ of the MPE Cinder block) by running:
 
-     $ python simple_server.py
+     $ python mpe-python-server/mpe_server.py
 
  2) Update the settings.xml files with the IP address of the server.
 
@@ -88,7 +88,7 @@ class MPEBouncingBalliOSApp : public AppNative, public MPEApp
 
   private:
 
-    MPEClient::Ptr      mClient;
+    MPEClientRef        mClient;
 
     Rand                mRand;
     vector<Ball>        mBalls;
@@ -127,7 +127,7 @@ void MPEBouncingBalliOSApp::setup()
     mFont = Font( "Helvetica Bold", 12 );
     mTextureFont = gl::TextureFont::create( mFont );
 
-    mClient = MPEClient::New(this);
+    mClient = MPEClient::Create(this);
     mClient->setIsRendering3D(true);
     mClient->set3DAspectRatio(mAspectRatio);
     mClient->set3DFieldOfView(mFOV);

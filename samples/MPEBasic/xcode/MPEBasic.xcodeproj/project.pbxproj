@@ -44,7 +44,6 @@
 		A96E6591456A4BF3A018FFB9 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		A9BFBC5217AD69DC00549159 /* settings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.xml; sourceTree = "<group>"; };
 		B17009C05D6C4C37B78C4A93 /* TCPClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPClient.cpp; path = ../../../src/TCPClient.cpp; sourceTree = "<group>"; };
-		BA125E357FEF4BE0917CCDD5 /* MPEProtocol2.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol2.hpp; path = ../../../include/MPEProtocol2.hpp; sourceTree = "<group>"; };
 		C82D9879F98248D1B16459D0 /* MPEMessageHandler.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEMessageHandler.hpp; path = ../../../include/MPEMessageHandler.hpp; sourceTree = "<group>"; };
 		C9FCB52F53274D70BB6F2253 /* MPEClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEClient.cpp; path = ../../../src/MPEClient.cpp; sourceTree = "<group>"; };
 		CE68B28ED06041A7B1B53C46 /* MPEBasicApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MPEBasicApp.cpp; path = ../src/MPEBasicApp.cpp; sourceTree = "<group>"; };
@@ -95,7 +94,6 @@
 				9AD9086CA03945158899CAC8 /* MPEClient.h */,
 				C82D9879F98248D1B16459D0 /* MPEMessageHandler.hpp */,
 				99D3875AD38544C0B1561345 /* MPEProtocol.hpp */,
-				BA125E357FEF4BE0917CCDD5 /* MPEProtocol2.hpp */,
 				FAF4FCFE10C14286ADA4322F /* TCPAsyncClient.h */,
 				A7CF5BD82F424158BBEDA9C7 /* TCPClient.h */,
 			);

@@ -41,7 +41,7 @@ const static string kCommand3DSettings = "3D";
 
     1) Start the server (one is located in server/ of the MPE Cinder block) by running:
 
-            $ python simple_server.py
+            $ python mpe-python-server/mpe_server.py
 
        Passing in `--num-clients N` will wait to start the loop until N clients have connected.
        Otherwise, the server will reset the loop whenever a new client joins.
@@ -102,7 +102,7 @@ public:
 
 private:
 
-    MPEClient::Ptr      mClient;
+    MPEClientRef        mClient;
 
     long                mServerFramesProcessed;
     Rand                mRand;
@@ -132,7 +132,7 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
 
 void MPEBouncingBallApp::setup()
 {
-    mClient = MPEClient::New(this, USE_THREADED);
+    mClient = MPEClient::Create(this, USE_THREADED);
 
     // 3D
     mClient->setIsRendering3D(true);

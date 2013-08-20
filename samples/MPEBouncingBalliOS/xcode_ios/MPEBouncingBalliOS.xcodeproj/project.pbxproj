@@ -105,7 +105,6 @@
 		DDDDDF6A1138442D0091DDDD /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E03C8AE74F6549A58B20AE8C /* TCPClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPClient.cpp; path = ../../../src/TCPClient.cpp; sourceTree = "<group>"; };
 		E3EE655A8F2444758B4FDAF5 /* TCPClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../../../include/TCPClient.h; sourceTree = "<group>"; };
-		F2CD4FF764EB4EEA9EB00BFF /* MPEProtocol2.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol2.hpp; path = ../../../include/MPEProtocol2.hpp; sourceTree = "<group>"; };
 		FD47C0B8C0C842BA8F243326 /* TCPAsyncClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = TCPAsyncClient.cpp; path = ../../../src/TCPAsyncClient.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -261,7 +260,6 @@
 				A594036D02EA4DC696161830 /* MPEClient.h */,
 				188C6CE92F2246889D7475F9 /* MPEMessageHandler.hpp */,
 				2FC99F5194FA4CBB8EF34F0C /* MPEProtocol.hpp */,
-				F2CD4FF764EB4EEA9EB00BFF /* MPEProtocol2.hpp */,
 				997692D89FEC44409370EF0E /* TCPAsyncClient.h */,
 				E3EE655A8F2444758B4FDAF5 /* TCPClient.h */,
 			);

@@ -1,5 +1,5 @@
 //
-//  MPEProtocol2.hpp
+//  MPEProtocol.hpp
 //  Unknown Project
 //
 //  Copyright (c) 2013 William Lindmeier. All rights reserved.

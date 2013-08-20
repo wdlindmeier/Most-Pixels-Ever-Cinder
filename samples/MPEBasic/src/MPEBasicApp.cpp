@@ -20,12 +20,12 @@ public:
     void draw();
     void mpeFrameRender(bool isNewFrame);
     
-    MPEClient::Ptr mClient;
+    MPEClientRef mClient;
 };
 
 void MPEBasicApp::setup()
 {
-    mClient = MPEClient::New(this);
+    mClient = MPEClient::Create(this);
 }
 
 void MPEBasicApp::mpeReset()

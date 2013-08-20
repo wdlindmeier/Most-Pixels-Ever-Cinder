@@ -17,7 +17,7 @@
 #include "cinder/Vector.h"
 #include "cinder/Xml.h"
 #include "MPEClient.h"
-#include "MPEProtocol2.hpp"
+#include "MPEProtocol.hpp"
 #include "TCPAsyncClient.h"
 
 using std::string;
@@ -763,7 +763,7 @@ namespace mpe
     };
 }
 
-MPEClient::Ptr MPEClient::Create(MPEApp *app, bool isThreaded)
+MPEClientRef MPEClient::Create(MPEApp *app, bool isThreaded)
 {
     if (isThreaded)
     {

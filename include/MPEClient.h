@@ -14,7 +14,6 @@
 #include "MPEApp.hpp"
 #include "MPEMessageHandler.hpp"
 #include "MPEProtocol.hpp"
-#include "MPEProtocol2.hpp"
 #include "TCPClient.h"
 
 /*
