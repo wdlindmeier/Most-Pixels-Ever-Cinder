@@ -6,7 +6,7 @@
   	author="William Lindmeier"
     git="git://github.com/wdlindmeier/Most-Pixels-Ever-Cinder.git"
   	summary="Most Pixels Ever client for Cinder. MPE synchronizes the rendering of an application across multiple screens."
-    version="0.1"
+    version="1.0"
   	>
   	<supports os="msw" />
   	<supports os="macosx" />
