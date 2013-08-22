@@ -5,6 +5,8 @@
 //  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
+#define BOOST_BIND_NO_PLACEHOLDERS
+
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -686,8 +688,13 @@ namespace mpe
             mTCPClient = boost::shared_ptr<TCPAsyncClient>(new TCPAsyncClient(mProtocol->incomingMessageDelimiter()));
 
             boost::shared_ptr<TCPAsyncClient> client = boost::dynamic_pointer_cast<TCPAsyncClient>(mTCPClient);
-            client->setIncomingMessageCallback(boost::bind(&MPEThreadedClient::serverMessageReceived, this, _1));
-            client->open(mHostname, mPort, boost::bind(&MPEThreadedClient::tcpDidConnect, this, _1, _2));
+            client->setIncomingMessageCallback(boost::bind(&MPEThreadedClient::serverMessageReceived,
+                                                           this,
+                                                           boost::lambda::_1));
+            client->open(mHostname, mPort, boost::bind(&MPEThreadedClient::tcpDidConnect,
+                                                       this,
+                                                       boost::lambda::_1,
+                                                       boost::lambda::_2));
         }
 
     protected:
