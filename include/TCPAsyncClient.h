@@ -9,6 +9,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/thread/thread.hpp>
 #include <cstdlib>
 #include <deque>
