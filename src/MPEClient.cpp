@@ -491,14 +491,20 @@ namespace mpe
             // settings.xml file to the "copy bundle resources" build phase.
             bool settingsFileExists = false;
             fs::path loadPath;
-            fs::path resourcePath = ci::app::App::getResourcePath(settingsFilename);
             fs::path assetPath = getAssetPath(settingsFilename);
+
+            // TODO: Support Windows resources with loadResource
+            // http://libcinder.org/docs/v0.8.5/_cinder_resources.html
+#if defined( CINDER_COCOA )
+            fs::path resourcePath = ci::app::App::getResourcePath(settingsFilename);
             if (fs::exists(resourcePath))
             {
                 loadPath = resourcePath;
                 settingsFileExists = true;
             }
-            else if (fs::exists(assetPath))
+            else
+#endif
+            if (fs::exists(assetPath))
             {
                 loadPath = assetPath;
                 settingsFileExists = true;
