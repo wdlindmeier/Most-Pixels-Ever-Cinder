@@ -340,6 +340,11 @@ void MPEBouncingBalliOSApp::touchesEnded(TouchEvent event)
     }
 }
 
-// Woah. Changing RendererGl to RendererGl(0) vastly improves the framerate.
-// AA_NONE == Anti Aliasing None == 0
+// If you're deploying to iOS, set the Render antialiasing to 0 for a significant
+// performance improvement. This value defaults to 4 (AA_MSAA_4) on iOS and 16 (AA_MSAA_16)
+// on the Desktop.
+#if defined( CINDER_COCOA_TOUCH )
 CINDER_APP_NATIVE( MPEBouncingBalliOSApp, RendererGl(RendererGl::AA_NONE) )
+#else
+CINDER_APP_NATIVE( MPEBouncingBalliOSApp, RendererGl )
+#endif

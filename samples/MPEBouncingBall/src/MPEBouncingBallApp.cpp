@@ -463,4 +463,11 @@ void MPEBouncingBallApp::keyDown(KeyEvent event)
     }
 }
 
+// If you're deploying to iOS, set the Render antialiasing to 0 for a significant
+// performance improvement. This value defaults to 4 (AA_MSAA_4) on iOS and 16 (AA_MSAA_16)
+// on the Desktop.
+#if defined( CINDER_COCOA_TOUCH )
+CINDER_APP_NATIVE( MPEBouncingBallApp, RendererGl(RendererGl::AA_NONE) )
+#else
 CINDER_APP_NATIVE( MPEBouncingBallApp, RendererGl )
+#endif

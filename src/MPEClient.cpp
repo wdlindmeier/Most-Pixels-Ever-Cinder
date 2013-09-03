@@ -62,7 +62,7 @@ namespace mpe
         bool                            mAsyncReceivesData;
 
         // A connection to the server.
-        boost::shared_ptr<TCPClient> mTCPClient;
+        boost::shared_ptr<TCPClient>    mTCPClient;
 
         ci::CameraPersp                 mCamera3D;
 
