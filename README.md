@@ -123,8 +123,9 @@ void MyCinderApp::mpeMessageReceived(const std::string & message, const int from
                        << " sent broadcast message: " << message << std::endl;
 }
 
-// If you're deploying to iOS, set the Render antialiasing to 0 for a significant performance improvement.
-// This value defaults to 4 (AA_MSAA_4) on iOS and 16 (AA_MSAA_16) on Desktop.
+// If you're deploying to iOS, set the Render antialiasing to 0 for a significant 
+// performance improvement. This value defaults to 4 (AA_MSAA_4) on iOS and 16 (AA_MSAA_16) 
+// on the Desktop.
 #if defined( CINDER_COCOA_TOUCH )
 CINDER_APP_NATIVE( MyCinderApp, RendererGl(RendererGl::AA_NONE) )
 #else
