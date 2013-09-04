@@ -76,11 +76,21 @@ public:
         mPosition += mVelocity;
     }
 
-    void draw()
+    void draw(bool shouldRender3D)
     {
-        ci::gl::drawCube(ci::Vec3f(mPosition, 5), ci::Vec3f(mDiameter,
-                                                            mDiameter,
-                                                            mDiameter));
+        if (shouldRender3D)
+        {
+            ci::gl::drawCube(ci::Vec3f(mPosition, 5), ci::Vec3f(mDiameter,
+                                                                mDiameter,
+                                                                mDiameter));
+        }
+        else
+        {
+            ci::gl::drawSolidRect(ci::Rectf(mPosition.x - (mDiameter * 0.5),
+                                            mPosition.y - (mDiameter * 0.5),
+                                            mPosition.x + (mDiameter * 0.5),
+                                            mPosition.y + (mDiameter * 0.5)));
+        }
     }
 
 private:

@@ -31,6 +31,7 @@ using namespace mowa::sgui;
 
 const static string kCommandNewBall = "BALL++";
 const static string kCommand3DSettings = "3D";
+const static string kCommandRenderMode = "3DMODE";
 
 /*
 
@@ -94,6 +95,8 @@ public:
     void        mouseDrag(MouseEvent event);
     void        mouseUp(MouseEvent event);
     void        keyDown(KeyEvent event);
+    bool        buttonResetClicked(MouseEvent event);
+    bool        buttonRenderModeClicked(MouseEvent event);
 
     // MPE App
     void        mpeMessageReceived(const std::string & message, const int fromClientID);
@@ -113,6 +116,8 @@ private:
     LabelControl        *mLabelFOV;
     LabelControl        *mLabelAspectRatio;
     LabelControl        *mLabelCameraZ;
+    ButtonControl       *mButtonRender3D;
+    
     float               mFOV;
     float               mCamZ;
     float               mAspectRatio;
@@ -128,6 +133,17 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
     // NOTE: Initially making the window small to prove that
     // the settings.xml forces a resize.
     settings->setWindowSize(150, 150);
+
+    // NOTE: We're using the same .cpp file for both the Grid and non-Grid demo apps.
+    // If you change one of them, both projects will be affected.
+    // The Grid demo has a USE_GRID preprocessor macro.
+#ifdef USE_GRID
+    if (CLIENT_ID < 500)
+    {
+        settings->setBorderless();
+    }
+#endif
+    
 }
 
 void MPEBouncingBallApp::setup()
@@ -149,6 +165,14 @@ void MPEBouncingBallApp::setup()
     mLabelCameraZ = mGUI->addLabel("--");
     mGUI->addParam("Aspect Ratio", &mAspectRatio, 0.f, 2.f, mAspectRatio);
     mLabelAspectRatio = mGUI->addLabel("--");
+    ButtonControl *button = mGUI->addButton("Reset");
+    button->registerClick(std::bind(&MPEBouncingBallApp::buttonResetClicked,
+                                    this,
+                                    std::placeholders::_1));
+    mButtonRender3D = mGUI->addButton("Render Mode: 3D");
+    mButtonRender3D->registerClick(std::bind(&MPEBouncingBallApp::buttonRenderModeClicked,
+                                    this,
+                                    std::placeholders::_1));
 
     mFont = Font( "Helvetica Bold", 12 );
     mTextureFont = gl::TextureFont::create( mFont );
@@ -205,6 +229,13 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
             mClient->set3DFieldOfView(mFOV);
             mClient->set3DCameraZ(mCamZ);
             mClient->set3DAspectRatio(mAspectRatio);
+        }
+        else if (command == kCommandRenderMode)
+        {
+            bool render3D = stoi(tokens[1]);
+            console() << "Changing render mode. Is 3D? " << render3D << std::endl;
+            mClient->setIsRendering3D(render3D);
+            mButtonRender3D->name = render3D ? "Render Mode: 3D" : "Render Mode: 2D";
         }
     }
 
@@ -401,7 +432,7 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
 
     BOOST_FOREACH(Ball & ball, mBalls)
     {
-        ball.draw();
+        ball.draw(mClient->getIsRendering3D());
     }
 
     glDisable (GL_DEPTH_TEST);
@@ -416,6 +447,23 @@ void MPEBouncingBallApp::drawAsyncClient()
 }
 
 #pragma mark - Input Events
+
+bool MPEBouncingBallApp::buttonResetClicked(MouseEvent event)
+{
+    mClient->resetAll();
+    return true;
+}
+
+bool MPEBouncingBallApp::buttonRenderModeClicked(MouseEvent event)
+{
+    bool render3D = !mClient->getIsRendering3D();
+    if (mClient->isConnected())
+    {
+        mClient->sendMessage(kCommandRenderMode + "," +
+                             std::to_string((int)render3D));
+    }
+    return true;
+}
 
 void MPEBouncingBallApp::mouseDown(MouseEvent event)
 {

@@ -294,6 +294,8 @@ namespace mpe
         // 2D Positioning
         void positionViewport2D()
         {
+            gl::setMatricesWindow(mLocalViewportRect.getWidth(),
+                                  mLocalViewportRect.getHeight());
             glTranslatef(mLocalViewportRect.getX1() * -1,
                          mLocalViewportRect.getY1() * -1,
                          0);
@@ -305,7 +307,9 @@ namespace mpe
             float mWidth = mMasterSize.x;
             float mHeight = mMasterSize.y;
             float lWidth = mLocalViewportRect.getWidth();
+            float lHeight = mLocalViewportRect.getHeight();
             float xOffset = mLocalViewportRect.getX1();
+            float yOffset = mLocalViewportRect.getY1();
 
             mCamera3D.setPerspective(mFieldOfView,
                                      mAspectRatio,
@@ -317,12 +321,16 @@ namespace mpe
             Vec3f up(0, -1, 0);
             mCamera3D.lookAt(eye, target, up);
 
-            float centerMaster = mWidth / 2.0f;
-            float centerView = xOffset + (lWidth * 0.5);
-            float pxShift = centerMaster - centerView;
-            float horizOffset = (pxShift / lWidth) * -2.0f;
+            float horizCenterMaster = mWidth / 2.0f;
+            float horizCenterView = xOffset + (lWidth * 0.5);
+            float horizPxShift = horizCenterMaster - horizCenterView;
+            float horizOffset = (horizPxShift / lWidth) * -2.0f;
 
-            float vertOffset = 0.0f;
+            float vertCenterMaster = mHeight / 2.0f;
+            float vertCenterView = yOffset + (lHeight * 0.5);
+            float vertPxShift = vertCenterMaster - vertCenterView;
+            float vertOffset = (vertPxShift / lHeight) * 2.0f;
+
             mCamera3D.setLensShift(horizOffset, vertOffset);
             gl::setMatrices(mCamera3D);
         }

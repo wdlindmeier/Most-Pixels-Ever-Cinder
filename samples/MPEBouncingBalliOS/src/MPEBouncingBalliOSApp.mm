@@ -261,7 +261,7 @@ void MPEBouncingBalliOSApp::mpeFrameRender(bool isNewFrame)
 
     BOOST_FOREACH(Ball & ball, mBalls)
     {
-        ball.draw();
+        ball.draw(mClient->getIsRendering3D());
     }
 
     glDisable (GL_DEPTH_TEST);
