@@ -16,7 +16,6 @@
     <header>include/MPEClient.h</header>
     <header>include/MPEMessageHandler.hpp</header>
     <header>include/MPEProtocol.hpp</header>
-    <header>include/MPEProtocol2.hpp</header>
     <header>include/TCPAsyncClient.h</header>
     <header>include/TCPClient.h</header>
     <source>src/MPEClient.cpp</source>
@@ -24,4 +23,5 @@
     <source>src/TCPClient.cpp</source>
     <asset>assets/settings.xml</asset>
   </block>
+  <template>templates/MPEBasic/template.xml</template>
 </cinder>

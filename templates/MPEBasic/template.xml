@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cinder>
+<template name="Most Pixels Ever: Basic" parent="org.libcinder.apptemplates.basicopengl">
+	<requires>com.wdlindmeier.mpe</requires>
+	<source replaceContents="true" replaceName="true">src/_TBOX_PREFIX_App.cpp</source>
+	<asset>assets/settings.xml</asset>
+</template>
+</cinder>
