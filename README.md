@@ -5,6 +5,9 @@ A Cinder block client for Most Pixels Ever, supporting Mac, Windows and iOS.
 Most Pixels Ever is a framework that synchronizes frame-based applications across 
 multiple screens. Read more about the project: https://github.com/shiffman/Most-Pixels-Ever
 
+For simple video playback, consider using the Big Screens video player:  
+https://github.com/wdlindmeier/Big-Screens-Quicktime-Player
+
 A video of the sample desktop application: http://www.youtube.com/watch?v=UshNhidsihU  
 A video of the sample iOS application running on 2 iPads: http://www.youtube.com/watch?v=yY4BJZgIvhc  
 
