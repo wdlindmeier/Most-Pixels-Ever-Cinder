@@ -537,7 +537,7 @@ namespace mpe
             }
             catch (XmlTree::ExcChildNotFound e)
             {
-                // Ignore
+                // Assume false.
                 mIsAsync = false;
             }
 
@@ -552,6 +552,8 @@ namespace mpe
                 }
                 catch (XmlTree::ExcChildNotFound e)
                 {
+                    // Assume false.
+                    mAsyncReceivesData = false;
                 }
             }
 
@@ -620,7 +622,11 @@ namespace mpe
             }
             catch (XmlTree::ExcChildNotFound e)
             {
-                console() << "ERROR: Could not find local dimensions settings." << std::endl;
+                if (!mIsAsync)
+                {
+                    // Async controller doesn't need to know about the dimensions
+                    console() << "ERROR: Could not find local dimensions settings." << std::endl;
+                }
             }
 
             try
@@ -633,7 +639,11 @@ namespace mpe
             }
             catch (XmlTree::ExcChildNotFound e)
             {
-                console() << "ERROR: Could not find master dimensions settings" << std::endl;
+                if (!mIsAsync)
+                {
+                    // Async controller doesn't need to know about the dimensions
+                    console() << "ERROR: Could not find master dimensions settings" << std::endl;
+                }
             }
 
             try
@@ -648,7 +658,7 @@ namespace mpe
             }
             catch (XmlTree::ExcChildNotFound e)
             {
-                console() << "ERROR: Could not find master dimensions settings" << std::endl;
+                // Not required
             }
 
             try
@@ -663,7 +673,7 @@ namespace mpe
             }
             catch (XmlTree::ExcChildNotFound e)
             {
-                console() << "ERROR: Could not find master dimensions settings" << std::endl;
+                // Not required
             }
         }
     };
