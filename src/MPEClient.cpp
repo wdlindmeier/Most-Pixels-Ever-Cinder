@@ -261,6 +261,11 @@ namespace mpe
 
         virtual void draw()
         {
+            glEnable(GL_SCISSOR_TEST);
+            glScissor(0, 0,
+                      mLocalViewportRect.getWidth(),
+                      mLocalViewportRect.getHeight());
+            
             glPushMatrix();
 
             // Only show the area of the view we're interested in.
@@ -270,6 +275,8 @@ namespace mpe
             mApp->mpeFrameRender(mFrameIsReady);
 
             glPopMatrix();
+            
+            gl::disable(GL_SCISSOR_TEST);
 
             if (isConnected() && !mIsAsync)
             {
