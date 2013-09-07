@@ -24,8 +24,8 @@ A basic MPE 2.0 server is included with the block. Run like so:
 
 #####Your Cinder App
 
-Here's the basic setup required to integrate an MPE Client with your Cinder app. 
-A template can be found in the samples/ folder called MPEBasic.
+Here's the basic setup required to integrate an MPE Client with your Cinder app.  
+You can generate your project from this template using TinderBox.
 
 ```c++
 // Subclass your Cinder app from MPEApp
