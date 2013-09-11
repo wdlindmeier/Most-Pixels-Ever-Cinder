@@ -195,28 +195,12 @@ namespace mpe
 
         void togglePause()
         {
-            boost::shared_ptr<MPEProtocol> protocol = boost::dynamic_pointer_cast<MPEProtocol>(mProtocol);
-            if (protocol != NULL)
-            {
-                mTCPClient->write(protocol->togglePause());
-            }
-            else
-            {
-                console() << "WARNING: Pausing is not supported prior to MEP 2.0." << std::endl;
-            }
+            mTCPClient->write(protocol->togglePause());
         }
 
         void resetAll()
         {
-            boost::shared_ptr<MPEProtocol> protocol = boost::dynamic_pointer_cast<MPEProtocol>(mProtocol);
-            if (protocol != NULL)
-            {
-                mTCPClient->write(protocol->resetAll());
-            }
-            else
-            {
-                console() << "WARNING: Reset is not supported prior to MEP 2.0." << std::endl;
-            }
+            mTCPClient->write(protocol->resetAll());
         }
 
         bool isConnected()
@@ -412,24 +396,15 @@ namespace mpe
 
         void sendClientID()
         {
-            boost::shared_ptr<MPEProtocol> protocol = boost::dynamic_pointer_cast<MPEProtocol>(mProtocol);
-            if (protocol != NULL)
+            if (mIsAsync)
             {
-                if (mIsAsync)
-                {
-                    mTCPClient->write(protocol->setAsyncClientID(mClientID,
-                                                                 mClientName,
-                                                                 mAsyncReceivesData));
-                }
-                else
-                {
-                    mTCPClient->write(protocol->setClientID(mClientID, mClientName));
-                }
+                mTCPClient->write(protocol->setAsyncClientID(mClientID,
+                                                             mClientName,
+                                                             mAsyncReceivesData));
             }
             else
             {
-                // NOTE: MPE V.1 doesn't accept names.
-                mTCPClient->write(mProtocol->setClientID(mClientID));
+                mTCPClient->write(protocol->setClientID(mClientID, mClientName));
             }
         }
 
@@ -442,17 +417,7 @@ namespace mpe
 
         void sendMessage(const std::string & message, const std::vector<int> & clientIds)
         {
-            boost::shared_ptr<MPEProtocol> protocol = boost::dynamic_pointer_cast<MPEProtocol>(mProtocol);
-            if (protocol != NULL)
-            {
-                mTCPClient->write(protocol->broadcast(message, clientIds));
-            }
-            else
-            {
-                console() << "WARNING: Sending data to specific clients is not supported prior to MEP 2.0."
-                          << std::endl << "Sending to all clients instead." << std::endl;
-                sendMessage(message);
-            }
+            mTCPClient->write(protocol->broadcast(message, clientIds));
         }
 
     protected:
