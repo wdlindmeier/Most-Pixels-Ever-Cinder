@@ -7,6 +7,7 @@
 
 #include <boost/foreach.hpp>
 
+#include "Resources.h"
 #include "Ball.hpp"
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
@@ -101,7 +102,7 @@ public:
     // MPE App
     void        mpeMessageReceived(const std::string & message, const int fromClientID);
     void        mpeReset();
-    std::string mpeSettingsFilename();
+    DataSourceRef mpeSettingsFile();
 
 private:
 
@@ -201,10 +202,10 @@ void MPEBouncingBallApp::mpeReset()
     }
 }
 
-std::string MPEBouncingBallApp::mpeSettingsFilename()
+DataSourceRef MPEBouncingBallApp::mpeSettingsFile()
 {
     // CLIENT_ID is a preprocessor macro defined in the Target build settings
-    return "settings." + std::to_string(CLIENT_ID) + ".xml";
+    return loadResource(SETTINGS_RESOURCE(CLIENT_ID));
 }
 
 void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const int fromClientID)

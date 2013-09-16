@@ -68,11 +68,14 @@ namespace mpe
         };
 
         /*
-         The name of the Settings xml file found in assets/
+         A reference to the settings XML file (either an asset or a resource).
+         If you're app bundles the settings file as a resource,
+         use loadResource() instead.
         */
-        virtual std::string mpeSettingsFilename()
+        virtual ci::DataSourceRef mpeSettingsFile()
         {
-            return "settings.xml";
+            return ci::app::loadAsset("settings.xml");
         }
+
     };
 }

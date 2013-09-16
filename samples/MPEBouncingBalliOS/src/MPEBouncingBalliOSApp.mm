@@ -6,7 +6,10 @@
 //
 
 #include <boost/foreach.hpp>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused"
 #include <boost/lambda/lambda.hpp>
+#pragma clang diagnostic pop
 
 #include "Ball.hpp"
 #include "cinder/app/AppNative.h"
@@ -75,7 +78,7 @@ class MPEBouncingBalliOSApp : public AppNative, public MPEApp
     // MPE App
     void            mpeMessageReceived(const std::string & message, const int fromClientID);
     void            mpeReset();
-    std::string     mpeSettingsFilename();
+    DataSourceRef   mpeSettingsFile();
 
     // Touch
     void            touchesEnded(TouchEvent event);
@@ -291,10 +294,10 @@ void MPEBouncingBalliOSApp::mpeReset()
     }
 }
 
-std::string MPEBouncingBalliOSApp::mpeSettingsFilename()
+DataSourceRef MPEBouncingBalliOSApp::mpeSettingsFile()
 {
     // CLIENT_ID is a preprocessor macro defined in the Target build settings
-    return "assets/settings." + std::to_string(CLIENT_ID) + ".xml";
+    return loadResource("assets/settings."+std::to_string(CLIENT_ID)+".xml");
 }
 
 void MPEBouncingBalliOSApp::mpeMessageReceived(const std::string & message, const int fromClientID)

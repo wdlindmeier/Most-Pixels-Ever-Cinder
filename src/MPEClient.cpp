@@ -9,8 +9,10 @@
 
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused"
 #include <boost/lambda/lambda.hpp>
-
+#pragma clang diagnostic pop
 #include "cinder/app/App.h"
 #include "cinder/Camera.h"
 #include "cinder/CinderResources.h"
@@ -88,7 +90,7 @@ namespace mpe
         {
             mApp = cinderApp;
             mProtocol = mApp->mpeProtocol();
-            loadSettings(mApp->mpeSettingsFilename());
+            loadSettings(mApp->mpeSettingsFile());
         }
 
         ~MPENonThreadedClient(){ stop(); }
@@ -195,12 +197,12 @@ namespace mpe
 
         void togglePause()
         {
-            mTCPClient->write(protocol->togglePause());
+            mTCPClient->write(mProtocol->togglePause());
         }
 
         void resetAll()
         {
-            mTCPClient->write(protocol->resetAll());
+            mTCPClient->write(mProtocol->resetAll());
         }
 
         bool isConnected()
@@ -398,13 +400,13 @@ namespace mpe
         {
             if (mIsAsync)
             {
-                mTCPClient->write(protocol->setAsyncClientID(mClientID,
-                                                             mClientName,
-                                                             mAsyncReceivesData));
+                mTCPClient->write(mProtocol->setAsyncClientID(mClientID,
+                                                              mClientName,
+                                                              mAsyncReceivesData));
             }
             else
             {
-                mTCPClient->write(protocol->setClientID(mClientID, mClientName));
+                mTCPClient->write(mProtocol->setClientID(mClientID, mClientName));
             }
         }
 
@@ -417,7 +419,7 @@ namespace mpe
 
         void sendMessage(const std::string & message, const std::vector<int> & clientIds)
         {
-            mTCPClient->write(protocol->broadcast(message, clientIds));
+            mTCPClient->write(mProtocol->broadcast(message, clientIds));
         }
 
     protected:
@@ -460,38 +462,9 @@ namespace mpe
 
     private:
 
-        void loadSettings(string settingsFilename)
+        void loadSettings(DataSourceRef settingsXMLFile)
         {
-            console() << "Loading settings from " << settingsFilename << std::endl;
-
-            // The settings file must exist as a resource or an asset.
-            // IMPORTANT NOTE: If the application was copied to another machine
-            // the settings file should be a /resource/ since assets aren't
-            // copied with the application bundle. This can be done by adding your
-            // settings.xml file to the "copy bundle resources" build phase.
-            bool settingsFileExists = false;
-            fs::path loadPath;
-            fs::path assetPath = getAssetPath(settingsFilename);
-
-            // TODO: Support Windows resources with loadResource
-            // http://libcinder.org/docs/v0.8.5/_cinder_resources.html
-#if defined( CINDER_COCOA )
-            fs::path resourcePath = ci::app::App::getResourcePath(settingsFilename);
-            if (fs::exists(resourcePath))
-            {
-                loadPath = resourcePath;
-                settingsFileExists = true;
-            }
-            else
-#endif
-            if (fs::exists(assetPath))
-            {
-                loadPath = assetPath;
-                settingsFileExists = true;
-            }
-            assert(settingsFileExists);
-
-            XmlTree settingsDoc(loadFile(loadPath));
+            XmlTree settingsDoc(settingsXMLFile);
 
             try
             {

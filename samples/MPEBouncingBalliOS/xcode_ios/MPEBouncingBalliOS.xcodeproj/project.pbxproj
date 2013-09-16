@@ -77,7 +77,6 @@
 		188C6CE92F2246889D7475F9 /* MPEMessageHandler.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEMessageHandler.hpp; path = ../../../include/MPEMessageHandler.hpp; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		2808CD81181F43C9A4DA56D4 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2FC99F5194FA4CBB8EF34F0C /* MPEProtocol.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = MPEProtocol.hpp; path = ../../../include/MPEProtocol.hpp; sourceTree = "<group>"; };
@@ -270,7 +269,6 @@
 			isa = PBXGroup;
 			children = (
 				A9DC9C1C17AB408A00E78153 /* Ball.hpp */,
-				2808CD81181F43C9A4DA56D4 /* Resources.h */,
 				5EBEE3D21C3B4D4794F6E860 /* MPEBouncingBalliOS_Prefix.pch */,
 			);
 			name = Headers;

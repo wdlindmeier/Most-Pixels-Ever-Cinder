@@ -1,9 +1,7 @@
 #pragma once
 #include "cinder/CinderResources.h"
 
-//#define RES_MY_RES			CINDER_RESOURCE( ../resources/, image_name.png, 128, IMAGE )
-
-
+#define SETTINGS_RESOURCE(client) CINDER_RESOURCE( ../assets/, settings.client.xml, 128, XML )
 
 
 
