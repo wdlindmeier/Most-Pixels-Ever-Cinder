@@ -54,7 +54,7 @@ class MyCinderApp : public AppNative, public MPEApp
 void MyCinderApp::setup()
 {
     // By default, the client is be configured using assets/settings.xml.
-    // The settings filename is changed by overriding MPEApp::mpeSettingsFilename(). 
+    // The settings filename is changed by overriding MPEApp::mpeSettingsFile(). 
     // Each client needs a unique settings file.
     // Pass a pointer to an MPEApp (e.g. MyCinderApp) into the client constructor.
     
