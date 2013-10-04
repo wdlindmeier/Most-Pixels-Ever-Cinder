@@ -38,6 +38,8 @@ namespace mpe
     class MPEProtocol
     {
     public:
+        
+        virtual ~MPEProtocol(){};
 
 #pragma mark - Outgoing Messages
         

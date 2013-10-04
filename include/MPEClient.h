@@ -44,7 +44,7 @@ namespace mpe
                                     MPEClient() :
                                     MPEMessageHandler(){};
         
-                                    ~MPEClient(){};
+        virtual                     ~MPEClient(){};
 
         static MPEClientRef         Create(MPEApp *app, bool isThreaded = true);
 

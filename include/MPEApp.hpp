@@ -23,6 +23,8 @@ namespace mpe
     {
 
     public:
+        
+        virtual ~MPEApp(){};
 
         /*
          REQUIRED

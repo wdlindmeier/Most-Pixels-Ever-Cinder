@@ -29,6 +29,7 @@ namespace mpe
         mTimeLastMessage(0),
         mUpdateSampleInterval(5)
         {};
+        virtual ~MPEMessageHandler(){};
 
         // The current frame that each client is rendering.
         // This is the only MPEMessageHandler function that the App should ever call.

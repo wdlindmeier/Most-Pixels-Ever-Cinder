@@ -30,7 +30,7 @@ namespace mpe
     public:
 
         TCPClient(const std::string & messageDelimeter);
-        ~TCPClient() {};
+        virtual ~TCPClient() {};
         virtual bool                    open(const std::string & hostname, const int port);
         virtual void                    close();
         virtual bool                    isConnected(){ return mIsConnected; }
