@@ -52,6 +52,8 @@ namespace mpe
         virtual int                 getClientID() = 0;
         virtual bool                isThreaded() = 0;
         virtual std::string         getClientName() = 0;
+        virtual bool                getIsScissorEnabled() = 0;
+        virtual void                setIsScissorEnabled(const bool isEnabled) = 0;
 
         // Async vs Sync
         // async == doesn't sync frames with other clients
