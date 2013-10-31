@@ -56,8 +56,8 @@ SimpleGUI::SimpleGUI(App* app) {
 }
 	
 void SimpleGUI::init(App* app) {	
-	textFont = Font(loadResource("pf_tempesta_seven.ttf"), 8);
-	//textFont = Font("Arial", 12);
+	//textFont = Font(loadResource("pf_tempesta_seven.ttf"), 8);
+	textFont = Font("Arial", 12);
 	selectedControl = NULL;
     // NOTE: Updated to use signals / slots
     /*

@@ -118,7 +118,7 @@ private:
     LabelControl        *mLabelAspectRatio;
     LabelControl        *mLabelCameraZ;
     ButtonControl       *mButtonRender3D;
-    
+
     float               mFOV;
     float               mCamZ;
     float               mAspectRatio;
@@ -158,7 +158,6 @@ void MPEBouncingBallApp::setup()
     mFOV = mClient->get3DFieldOfView();
     mAspectRatio = mClient->get3DAspectRatio();
 
-    // Params GUI
     mGUI = new SimpleGUI(this);
     mGUI->addParam("Field Of View", &mFOV, 1.f, 180.f, mFOV);
     mLabelFOV = mGUI->addLabel("--");
@@ -174,7 +173,7 @@ void MPEBouncingBallApp::setup()
     mButtonRender3D->registerClick(std::bind(&MPEBouncingBallApp::buttonRenderModeClicked,
                                     this,
                                     std::placeholders::_1));
-
+    
     mFont = Font( "Helvetica Bold", 12 );
     mTextureFont = gl::TextureFont::create( mFont );
 }
@@ -305,10 +304,11 @@ void MPEBouncingBallApp::mpeFrameUpdate(long serverFrameNumber)
 
 void MPEBouncingBallApp::update3DSettings()
 {
+    /*
     mLabelFOV->setText(std::to_string(mClient->get3DFieldOfView()));
     mLabelCameraZ->setText(std::to_string(mClient->get3DCameraZ()));
     mLabelAspectRatio->setText(std::to_string(mClient->get3DAspectRatio()));
-
+    */
     // If the client values are different than the local values, send an update message
     if (mClient->get3DFieldOfView() != mFOV ||
         mClient->get3DCameraZ() != mCamZ ||
