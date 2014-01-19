@@ -100,7 +100,7 @@
 		A9AA2B7C1798D91100BFA0BC /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
 		A9AA2B7D1798D91100BFA0BC /* settings.1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.1.xml; sourceTree = "<group>"; };
 		A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBall1.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9BFBC9017AF224800549159 /* MPEBouncingBall1 copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "MPEBouncingBall1 copy.app"; path = MPEBouncingBall2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9BFBC9017AF224800549159 /* MPEBouncingBall2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBall2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9BFBC9217AF227C00549159 /* settings.2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.2.xml; sourceTree = "<group>"; };
 		A9C7EE56179AEE370090C21F /* MPEProtocol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEProtocol.hpp; path = ../../../include/MPEProtocol.hpp; sourceTree = "<group>"; };
 		A9C7EE57179C95600090C21F /* MPEApp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MPEApp.hpp; path = ../../../include/MPEApp.hpp; sourceTree = "<group>"; };
@@ -233,7 +233,7 @@
 				8D1107320486CEB800E47090 /* MPEBouncingBall0.app */,
 				A9AA2B9B1798D99900BFA0BC /* MPEBouncingBall1.app */,
 				A97B18A317A19A9700409BB3 /* MPEBouncingBallAsync.app */,
-				A9BFBC9017AF224800549159 /* MPEBouncingBall1 copy.app */,
+				A9BFBC9017AF224800549159 /* MPEBouncingBall2.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -421,7 +421,7 @@
 			name = MPEBouncingBall2;
 			productInstallPath = "$(HOME)/Applications";
 			productName = MPEBouncingBall;
-			productReference = A9BFBC9017AF224800549159 /* MPEBouncingBall1 copy.app */;
+			productReference = A9BFBC9017AF224800549159 /* MPEBouncingBall2.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -429,6 +429,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MPEBouncingBall" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
