@@ -90,9 +90,9 @@ void MyCinderApp::mpeReset()
     mRand.seed(1);
     // This will create the same "random" position each reset because the 
     // seed is hardcoded to 1.
-    Vec2i sizeMaster = mClient->getMasterSize();
-    mBall.position = Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y))
-    mBall.velocity = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
+    ivec2 sizeMaster = mClient->getMasterSize();
+    mBall.position = vec2(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y))
+    mBall.velocity = vec2(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
 }
 
 void MyCinderApp::mpeFrameUpdate(long serverFrameNumber)
@@ -123,12 +123,6 @@ void MyCinderApp::mpeMessageReceived(const std::string & message, const int from
                        << " sent broadcast message: " << message << std::endl;
 }
 
-// If you're deploying to iOS, set the RendererGl antialiasing to 0 for a significant 
-// performance improvement. This value defaults to 4 (AA_MSAA_4) on iOS and 16 (AA_MSAA_16) 
-// on the Desktop.
-#if defined( CINDER_COCOA_TOUCH )
-CINDER_APP_NATIVE( MyCinderApp, RendererGl(RendererGl::AA_NONE) )
-#else
 CINDER_APP_NATIVE( MyCinderApp, RendererGl )
-#endif
+
 ```
