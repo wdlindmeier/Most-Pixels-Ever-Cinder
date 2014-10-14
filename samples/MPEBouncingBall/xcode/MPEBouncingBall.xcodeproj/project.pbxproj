@@ -31,6 +31,14 @@
 		A97B189D17A19A9700409BB3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
 		A97B189E17A19A9700409BB3 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		A97B189F17A19A9700409BB3 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		A9A3324719ECBE2B00B0CFAD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3324619ECBE2B00B0CFAD /* AVFoundation.framework */; };
+		A9A3324819ECBE2F00B0CFAD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3324619ECBE2B00B0CFAD /* AVFoundation.framework */; };
+		A9A3324919ECBE3500B0CFAD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3324619ECBE2B00B0CFAD /* AVFoundation.framework */; };
+		A9A3324A19ECBE3B00B0CFAD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3324619ECBE2B00B0CFAD /* AVFoundation.framework */; };
+		A9A3325219ECBE8B00B0CFAD /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3325119ECBE8B00B0CFAD /* CoreMedia.framework */; };
+		A9A3325519ECBEBF00B0CFAD /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3325119ECBE8B00B0CFAD /* CoreMedia.framework */; };
+		A9A3325619ECBEC300B0CFAD /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3325119ECBE8B00B0CFAD /* CoreMedia.framework */; };
+		A9A3325719ECBEC800B0CFAD /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3325119ECBE8B00B0CFAD /* CoreMedia.framework */; };
 		A9AA2B7F1798D91100BFA0BC /* settings.0.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7C1798D91100BFA0BC /* settings.0.xml */; };
 		A9AA2B841798D99900BFA0BC /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9CD06D563A884CBDB7DB9358 /* CinderApp.icns */; };
 		A9AA2B861798D99900BFA0BC /* settings.1.xml in Resources */ = {isa = PBXBuildFile; fileRef = A9AA2B7D1798D91100BFA0BC /* settings.1.xml */; };
@@ -96,6 +104,8 @@
 		9CD06D563A884CBDB7DB9358 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		A97B18A317A19A9700409BB3 /* MPEBouncingBallAsync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPEBouncingBallAsync.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A97B18A517A19AEF00409BB3 /* settings.555.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.555.xml; sourceTree = "<group>"; };
+		A9A3324619ECBE2B00B0CFAD /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		A9A3325119ECBE8B00B0CFAD /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		A9AA2B7A1798D86300BFA0BC /* Ball.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ball.hpp; path = ../include/Ball.hpp; sourceTree = "<group>"; };
 		A9AA2B7C1798D91100BFA0BC /* settings.0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.0.xml; sourceTree = "<group>"; };
 		A9AA2B7D1798D91100BFA0BC /* settings.1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.1.xml; sourceTree = "<group>"; };
@@ -117,6 +127,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9A3325719ECBEC800B0CFAD /* CoreMedia.framework in Frameworks */,
+				A9A3324719ECBE2B00B0CFAD /* AVFoundation.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
 				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
@@ -132,6 +144,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9A3325219ECBE8B00B0CFAD /* CoreMedia.framework in Frameworks */,
+				A9A3324A19ECBE3B00B0CFAD /* AVFoundation.framework in Frameworks */,
 				A97B189817A19A9700409BB3 /* Cocoa.framework in Frameworks */,
 				A97B189917A19A9700409BB3 /* OpenGL.framework in Frameworks */,
 				A97B189A17A19A9700409BB3 /* CoreVideo.framework in Frameworks */,
@@ -147,6 +161,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9A3325619ECBEC300B0CFAD /* CoreMedia.framework in Frameworks */,
+				A9A3324819ECBE2F00B0CFAD /* AVFoundation.framework in Frameworks */,
 				A9AA2B901798D99900BFA0BC /* Cocoa.framework in Frameworks */,
 				A9AA2B911798D99900BFA0BC /* OpenGL.framework in Frameworks */,
 				A9AA2B921798D99900BFA0BC /* CoreVideo.framework in Frameworks */,
@@ -162,6 +178,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9A3325519ECBEBF00B0CFAD /* CoreMedia.framework in Frameworks */,
+				A9A3324919ECBE3500B0CFAD /* AVFoundation.framework in Frameworks */,
 				A9BFBC8517AF224800549159 /* Cocoa.framework in Frameworks */,
 				A9BFBC8617AF224800549159 /* OpenGL.framework in Frameworks */,
 				A9BFBC8717AF224800549159 /* CoreVideo.framework in Frameworks */,
@@ -206,6 +224,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A9A3325119ECBE8B00B0CFAD /* CoreMedia.framework */,
+				A9A3324619ECBE2B00B0CFAD /* AVFoundation.framework */,
 				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
 				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
 				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
@@ -752,7 +772,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
 				CINDER_PATH = ../../../../..;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -760,6 +779,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../include";
 			};
@@ -769,7 +789,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
 				CINDER_PATH = ../../../../..;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -777,6 +796,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../../include";
 			};

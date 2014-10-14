@@ -57,7 +57,7 @@ namespace mpe
         std::string                     mHostname;
         bool                            mIsStarted;
         ci::Rectf                       mLocalViewportRect;
-        ci::Vec2i                       mMasterSize;
+        ci::ivec2                       mMasterSize;
         int                             mClientID;
         bool                            mIsDebug;
         bool                            mIsAsync;
@@ -85,7 +85,7 @@ namespace mpe
         mIsAsync(false),
         mAsyncReceivesData(false),
         mClientName(""),
-        mIsScissorEnabled(true),
+        mIsScissorEnabled(false),
         mAspectRatio(getWindowAspectRatio()),
         mFieldOfView(25.0f),
         mCameraZ(-880)
@@ -134,7 +134,7 @@ namespace mpe
             mLocalViewportRect = rect;
         }
 
-        ci::Vec2i getMasterSize()
+        ci::ivec2 getMasterSize()
         {
             return mMasterSize;
         }
@@ -267,15 +267,16 @@ namespace mpe
                           mLocalViewportRect.getHeight());
             }
             
-            glPushMatrix();
+            {
+                gl::ScopedMatrices mat;
 
-            // Only show the area of the view we're interested in.
-            positionViewport();
+                // Only show the area of the view we're interested in.
+                positionViewport();
 
-            // Tell the app to draw.
-            mApp->mpeFrameRender(mFrameIsReady);
-
-            glPopMatrix();
+                // Tell the app to draw.
+                mApp->mpeFrameRender(mFrameIsReady);
+                
+            }
             
             gl::disable(GL_SCISSOR_TEST);
 
@@ -304,9 +305,9 @@ namespace mpe
         {
             gl::setMatricesWindow(mLocalViewportRect.getWidth(),
                                   mLocalViewportRect.getHeight());
-            glTranslatef(mLocalViewportRect.getX1() * -1,
-                         mLocalViewportRect.getY1() * -1,
-                         0);
+            gl::translate(mLocalViewportRect.getX1() * -1,
+                          mLocalViewportRect.getY1() * -1,
+                          0);
         }
 
         // 3D Positioning
@@ -324,9 +325,9 @@ namespace mpe
                                      1.0f, // near
                                      10000.0f); // far
 
-            Vec3f eye(mWidth/2.f, mHeight/2.f, mCameraZ);
-            Vec3f target(mWidth/2.f, mHeight/2.f, 0);
-            Vec3f up(0, -1, 0);
+            vec3 eye(mWidth/2.f, mHeight/2.f, mCameraZ);
+            vec3 target(mWidth/2.f, mHeight/2.f, 0);
+            vec3 up(0, -1, 0);
             mCamera3D.lookAt(eye, target, up);
 
             float horizCenterMaster = mWidth / 2.0f;
@@ -377,7 +378,7 @@ namespace mpe
 
         // TODO: These should account for 3D
 
-        bool isOnScreen(const Vec2f & pos)
+        bool isOnScreen(const vec2 & pos)
         {
             return isOnScreen(pos.x, pos.y);
         }
@@ -588,7 +589,7 @@ namespace mpe
                 XmlTree heightNode = settingsDoc.getChild( "settings/master_dimensions/height" );
                 int width = widthNode.getValue<int>();
                 int height = heightNode.getValue<int>();
-                mMasterSize = Vec2i(width, height);
+                mMasterSize = ivec2(width, height);
             }
             catch (XmlTree::ExcChildNotFound e)
             {
@@ -621,7 +622,7 @@ namespace mpe
                 std::transform(boolStr.begin(), boolStr.end(), boolStr.begin(), ::tolower);
                 if (boolStr == "true")
                 {
-                    ci::app::setWindowPos(Vec2i(mLocalViewportRect.x1, mLocalViewportRect.y1));
+                    ci::app::setWindowPos(ivec2(mLocalViewportRect.x1, mLocalViewportRect.y1));
                 }
             }
             catch (XmlTree::ExcChildNotFound e)

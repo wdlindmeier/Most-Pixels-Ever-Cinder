@@ -28,9 +28,9 @@ class Ball
 public:
 
     Ball(){};
-    Ball(const ci::Vec2f & randPosition,
-         const ci::Vec2f & randVelocity,
-         const ci::Vec2i & sizeClient) :
+    Ball(const ci::vec2 & randPosition,
+         const ci::vec2 & randVelocity,
+         const ci::ivec2 & sizeClient) :
     mPosition(ci::math<float>::clamp(randPosition.x, kDefaultRadius, sizeClient.x - kDefaultRadius),
               ci::math<float>::clamp(randPosition.y, kDefaultRadius, sizeClient.y - kDefaultRadius)),
     mVelocity(randVelocity),
@@ -80,9 +80,9 @@ public:
     {
         if (shouldRender3D)
         {
-            ci::gl::drawCube(ci::Vec3f(mPosition, 5), ci::Vec3f(mDiameter,
-                                                                mDiameter,
-                                                                mDiameter));
+            ci::gl::drawColorCube(ci::vec3(mPosition, 5), ci::vec3(mDiameter,
+                                                                   mDiameter,
+                                                                   mDiameter));
         }
         else
         {
@@ -95,9 +95,9 @@ public:
 
 private:
 
-    ci::Vec2f mPosition;
-    ci::Vec2f mVelocity;
-    ci::Vec2i mSizeClient;
+    ci::vec2 mPosition;
+    ci::vec2 mVelocity;
+    ci::ivec2 mSizeClient;
     std::vector<std::string> mTestVector;
     float mDiameter;
 

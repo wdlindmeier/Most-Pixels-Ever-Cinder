@@ -11,11 +11,11 @@
 	</local_dimensions>
 	<local_location>
 		<x>400</x>
-		<y>0</y>
+		<y>20</y>
 	</local_location>
 	<master_dimensions>
 		<width>800</width>
-		<height>800</height>
+		<height>820</height>
 	</master_dimensions>
 	<go_fullscreen>false</go_fullscreen>
     <offset_window>true</offset_window>

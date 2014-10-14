@@ -5,11 +5,10 @@
 //  Copyright (c) 2013 William Lindmeier. All rights reserved.
 //
 
-#include <boost/foreach.hpp>
-
 #include "Resources.h"
 #include "Ball.hpp"
 #include "cinder/app/AppNative.h"
+#include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/TextureFont.h"
 #include "cinder/Rand.h"
@@ -78,7 +77,7 @@ public:
     void        setup();
 
     // Balls
-    void        addBallAtPosition(const Vec2f & posBall);
+    void        addBallAtPosition(const vec2 & posBall);
 
     // Update
     void        update();
@@ -192,8 +191,8 @@ void MPEBouncingBallApp::mpeReset()
     mBalls.clear();
 
     // Add the first ball
-    Vec2i sizeMaster = mClient->getMasterSize();
-    addBallAtPosition(Vec2f(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y)));
+    ivec2 sizeMaster = mClient->getMasterSize();
+    addBallAtPosition(vec2(mRand.nextFloat(sizeMaster.x), mRand.nextFloat(sizeMaster.y)));
     
     if (mClient->isAsynchronousClient())
     {
@@ -216,7 +215,7 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
         string command = tokens[0];
         if (command == kCommandNewBall)
         {
-            Vec2f posNewBall = Vec2f(stoi(tokens[1]),stoi(tokens[2]));
+            vec2 posNewBall = vec2(stoi(tokens[1]),stoi(tokens[2]));
             addBallAtPosition(posNewBall);
             console() << "Adding a ball to " << posNewBall << ". Is on screen? "
                       << mClient->isOnScreen(posNewBall) << std::endl;
@@ -247,10 +246,10 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
 
 #pragma mark - Balls
 
-void MPEBouncingBallApp::addBallAtPosition(const Vec2f & posBall)
+void MPEBouncingBallApp::addBallAtPosition(const vec2 & posBall)
 {
-    Vec2i sizeMaster = mClient->getMasterSize();
-    Vec2f velBall = Vec2f(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
+    ivec2 sizeMaster = mClient->getMasterSize();
+    vec2 velBall = vec2(mRand.nextFloat(-5,5), mRand.nextFloat(-5,5));
     mBalls.push_back(Ball(posBall, velBall, sizeMaster));
 }
 
@@ -294,7 +293,7 @@ void MPEBouncingBallApp::mpeFrameUpdate(long serverFrameNumber)
     // This loop forces the app to get up-to-speed if it disconnects and then re-connects.
     while (mServerFramesProcessed < serverFrameNumber)
     {
-        BOOST_FOREACH(Ball & ball, mBalls)
+        for( Ball & ball : mBalls )
         {
             ball.calc();
         }
@@ -387,7 +386,7 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
         gl::color(Color(0.5, 0.5, 0.5));
     }
 
-    Vec2i masterSize = mClient->getMasterSize();
+    ivec2 masterSize = mClient->getMasterSize();
     Rectf masterFrame = Rectf(0,0,masterSize.x,masterSize.y);
     gl::drawSolidRect(masterFrame);
 
@@ -399,9 +398,9 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
     stringStream << "Frame Num: " << std::to_string(mClient->getCurrentRenderFrame()) << std::endl;
     stringStream << "Updates Per Second: " << std::to_string((int)mClient->getUpdatesPerSecond());
     string str = stringStream.str();
-    Vec2f stringSize = mTextureFont->measureStringWrapped(str, Rectf(0,0,400,400));
-    Vec2f stringOffset(40,40);
-    Vec2f rectOffset = mClient->getVisibleRect().getUpperLeft() + stringOffset;
+    vec2 stringSize = mTextureFont->measureStringWrapped(str, Rectf(0,0,400,400));
+    vec2 stringOffset(40,40);
+    vec2 rectOffset = mClient->getVisibleRect().getUpperLeft() + stringOffset;
     gl::drawSolidRect(Rectf(rectOffset.x - 10,
                             rectOffset.y - 10,
                             rectOffset.x + 20 + stringSize.x,
@@ -409,36 +408,19 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
     gl::color(0.9,0.9,0.9);
     mTextureFont->drawStringWrapped(str,
                                     mClient->getVisibleRect(),
-                                    Vec2f(0, mTextureFont->getAscent()) + stringOffset);
+                                    vec2(0, mTextureFont->getAscent()) + stringOffset);
 
     gl::disableAlphaBlending();
 
     glEnable (GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
 
-    const static GLfloat kMatAmbient[]		= { 0.6, 0.3, 0.4, 1.0 };
-    const static GLfloat kMatDiffuse[]		= { 0.5, 0.2, 0.15, 1.0 };
-    const static GLfloat kMatSpecular[]		= { 1.0, 1.0, 1.0, 1.0 };
-    const static GLfloat kMatEmission[]		= { 0.0, 0.1, 0.3, 0.0 };
-    const static GLfloat kMatShininess[]	= { 128.0 };
-    glMaterialfv( GL_FRONT, GL_DIFFUSE,	kMatDiffuse );
-    glMaterialfv( GL_FRONT, GL_AMBIENT,	kMatAmbient );
-    glMaterialfv( GL_FRONT, GL_SPECULAR, kMatSpecular );
-    glMaterialfv( GL_FRONT, GL_SHININESS, kMatShininess );
-    glMaterialfv( GL_FRONT, GL_EMISSION, kMatEmission );
-
-    GLfloat light_position[] = { mClient->getMasterSize().x * 0.5f, 0, mCamZ, 1.0 };
-    glLightfv( GL_LIGHT0, GL_POSITION, light_position );
-
-    BOOST_FOREACH(Ball & ball, mBalls)
+    for( Ball & ball : mBalls )
     {
-        ball.draw(mClient->getIsRendering3D());
+        ball.draw( mClient->getIsRendering3D() );
     }
 
     glDisable (GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-    glDisable(GL_LIGHT0);
+
 }
 
 void MPEBouncingBallApp::drawAsyncClient()
@@ -473,7 +455,7 @@ void MPEBouncingBallApp::mouseDown(MouseEvent event)
     {
         if (!mClient->isAsynchronousClient())
         {
-            Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
+            ivec2 pos = event.getPos() + ivec2(mClient->getVisibleRect().getUpperLeft());
             mClient->sendMessage(kCommandNewBall + "," +
                                  std::to_string(pos.x) + "," +
                                  std::to_string(pos.y));
@@ -487,7 +469,7 @@ void MPEBouncingBallApp::mouseDrag(MouseEvent event)
     {
         if (!mClient->isAsynchronousClient())
         {
-            Vec2i pos = event.getPos() + mClient->getVisibleRect().getUpperLeft();
+            ivec2 pos = event.getPos() + ivec2(mClient->getVisibleRect().getUpperLeft());
             // For testing purposes. Only send drag data to client 1.
             vector<int> toClientIDs = {1,555};
             mClient->sendMessage(std::to_string(pos.x) + "," + std::to_string(pos.y), toClientIDs);

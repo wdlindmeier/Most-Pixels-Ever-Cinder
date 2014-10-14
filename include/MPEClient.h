@@ -63,7 +63,7 @@ namespace mpe
         // Screen Dimensions
         virtual ci::Rectf           getVisibleRect() = 0;
         virtual void                setVisibleRect(const ci::Rectf & rect) = 0;
-        virtual ci::Vec2i           getMasterSize() = 0;
+        virtual ci::ivec2           getMasterSize() = 0;
 
         // 3D Rendering
         virtual bool                getIsRendering3D() = 0;
@@ -77,7 +77,7 @@ namespace mpe
 
         // Hit testing
         virtual bool                isOnScreen(float x, float y) = 0;
-        virtual bool                isOnScreen(const ci::Vec2f & pos) = 0;
+        virtual bool                isOnScreen(const ci::vec2 & pos) = 0;
         virtual bool                isOnScreen(float x, float y, float w, float h) = 0;
         virtual bool                isOnScreen(const ci::Rectf & rect) = 0;
 
