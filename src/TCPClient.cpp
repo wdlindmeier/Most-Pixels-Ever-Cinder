@@ -6,6 +6,7 @@
 //
 
 #include "cinder/CinderMath.h"
+#include "cinder/Log.h"
 #include "TCPClient.h"
 
 using namespace ci;
@@ -13,7 +14,6 @@ using namespace mpe;
 using std::string;
 using std::vector;
 using namespace boost::asio::ip;
-using cinder::app::console;
 
 TCPClient::TCPClient(const std::string & messageDelimeter) :
 mMessageDelimiter(messageDelimeter),
@@ -77,7 +77,7 @@ string TCPClient::read(bool & isDataAvailable)
         // function will (sometimes) exit with the boost::asio::error::eof error.
         if (error)
         {
-            console() << "ERROR: " << error.message() << std::endl;
+            CI_LOG_E( error.message() );
             close();
             return message;
         }
@@ -105,15 +105,15 @@ void TCPClient::write(const string & msg)
     size_t len = mSocket.write_some(boost::asio::buffer(msg), error);
     if (error)
     {
-        console() << "ERROR: Couldn't write. " << error.message() << "\n";
+        CI_LOG_E( "Couldn't write. " << error.message() );
     }
     else if (len == 0)
     {
-        console() << "ALERT: Wrote 0 bytes.\n";
+        CI_LOG_W( "Wrote 0 bytes." );
     }
     else if (len < msg.length())
     {
-        console() << "ALERT: Only sent " << len << " of " << msg.length() << " message bytes." << std::endl;
+        CI_LOG_W( "Only sent " << len << " of " << msg.length() << " message bytes." );
     }
 }
 

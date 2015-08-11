@@ -22,7 +22,7 @@
 		<key>336B32518C4C0CFE04EB7504BEEB62B1F6F3EDB8</key>
 		<string>../../../../..</string>
 		<key>AD4B458D0D225ED63FAE0155615993B7D3ECE020</key>
-		<string>../../../../../../..</string>
+		<string>../../../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/wdlindmeier/Most-Pixels-Ever-Cinder.git</string>
@@ -38,7 +38,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>AD4B458D0D225ED63FAE0155615993B7D3ECE020</string>
 			<key>IDESourceControlWCCName</key>
-			<string>..</string>
+			<string></string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>

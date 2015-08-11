@@ -16,6 +16,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/gl/TextureFont.h"
 #include "cinder/Rand.h"
+#include "cinder/Log.h"
 #include "MPEApp.hpp"
 #include "MPEClient.h"
 
@@ -269,7 +270,7 @@ void MPEBouncingBalliOSApp::mpeFrameRender(bool isNewFrame)
 
 void MPEBouncingBalliOSApp::mpeReset()
 {
-    console() << "RESETTING\n";
+    CI_LOG_I( "RESETTING" );
 
     // Set the random seed to a known value so all of the clients are using the same rand values.
     mRand.seed(1);
@@ -304,8 +305,8 @@ void MPEBouncingBalliOSApp::mpeMessageReceived(const std::string & message, cons
         {
             vec2 posNewBall = vec2(stoi(tokens[1]),stoi(tokens[2]));
             addBallAtPosition(posNewBall);
-            console() << "Adding a ball to " << posNewBall << ". Is on screen? "
-                      << mClient->isOnScreen(posNewBall) << std::endl;
+            CI_LOG_I( "Adding a ball to " << posNewBall << ". Is on screen? "
+                       << mClient->isOnScreen(posNewBall) );
         }
         else if (command == kCommand3DSettings)
         {

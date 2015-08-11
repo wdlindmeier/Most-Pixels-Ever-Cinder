@@ -20,6 +20,7 @@
 #include "cinder/Utilities.h"
 #include "cinder/Vector.h"
 #include "cinder/Xml.h"
+#include "cinder/Log.h"
 #include "MPEClient.h"
 #include "MPEProtocol.hpp"
 #include "TCPAsyncClient.h"
@@ -189,8 +190,8 @@ namespace mpe
         {
             if (mIsDebug)
             {
-                console() << "Established synchronous connection to server: "
-                          << mHostname << ":" << mPort << std::endl;
+                CI_LOG_I( "Established synchronous connection to server: "
+                          << mHostname << ":" << mPort );
             }
             sendClientID();
         }
@@ -518,7 +519,7 @@ namespace mpe
             }
             catch (XmlTree::ExcChildNotFound e)
             {
-                console() << "ERROR: Could not find client ID." << std::endl;
+                CI_LOG_E( "Could not find client ID." );
             }
 
             try
@@ -556,7 +557,7 @@ namespace mpe
             }
             catch (XmlTree::ExcChildNotFound e)
             {
-                console() << "ERROR: Could not find server and port settings." << std::endl;
+                CI_LOG_E( "Could not find server and port settings." );
             }
 
             try
@@ -579,7 +580,7 @@ namespace mpe
                 if (!mIsAsync)
                 {
                     // Async controller doesn't need to know about the dimensions
-                    console() << "ERROR: Could not find local dimensions settings." << std::endl;
+                    CI_LOG_E( "Could not find local dimensions settings." );
                 }
             }
 
@@ -596,7 +597,7 @@ namespace mpe
                 if (!mIsAsync)
                 {
                     // Async controller doesn't need to know about the dimensions
-                    console() << "ERROR: Could not find master dimensions settings" << std::endl;
+                    CI_LOG_E( "Could not find master dimensions settings." );
                 }
             }
 
@@ -690,8 +691,8 @@ namespace mpe
             {
                 if (mIsDebug)
                 {
-                    console() << "Established async connection to server: "
-                    << mHostname << ":" << mPort << std::endl;
+                    CI_LOG_I("Established async connection to server: "
+                             << mHostname << ":" << mPort );
                 }
                 sendClientID();
             }
@@ -739,7 +740,7 @@ namespace mpe
                 if (!DidAlertAsyncNoEffect)
                 {
                     // Frame events are called as messages are received from the server.
-                    console() << "**INFO: Calling update() has no effect in the threaded client." << std::endl;
+                    CI_LOG_I( "Calling update() has no effect in the threaded client." );
                     DidAlertAsyncNoEffect = true;
                 }
             }

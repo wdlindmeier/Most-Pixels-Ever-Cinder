@@ -10,7 +10,6 @@
 
 using namespace mpe;
 using std::string;
-using ci::app::console;
 using namespace boost::asio::ip;
 
 TCPAsyncClient::TCPAsyncClient(const std::string & messageDelimeter) :

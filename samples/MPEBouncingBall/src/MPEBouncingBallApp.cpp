@@ -15,6 +15,7 @@
 #include "MPEApp.hpp"
 #include "MPEClient.h"
 #include "cinder/params/Params.h"
+#include "cinder/Log.h"
 
 // Choose the threading mode.
 // Generally Threaded is the way to go, but if find your app crashing
@@ -170,7 +171,7 @@ void MPEBouncingBallApp::setup()
 
 void MPEBouncingBallApp::mpeReset()
 {
-    console() << "RESETTING\n";
+    CI_LOG_I( "RESETTING" );
 
     // Set the random seed to a known value so all of the clients are using the same rand values.
     mRand.seed(1);
@@ -206,8 +207,8 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
         {
             vec2 posNewBall = vec2(stoi(tokens[1]),stoi(tokens[2]));
             addBallAtPosition(posNewBall);
-            console() << "Adding a ball to " << posNewBall << ". Is on screen? "
-                      << mClient->isOnScreen(posNewBall) << std::endl;
+            CI_LOG_I( "Adding a ball to " << posNewBall << ". Is on screen? "
+                        << mClient->isOnScreen(posNewBall) );
         }
         else if (command == kCommand3DSettings)
         {
@@ -221,15 +222,15 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
         else if (command == kCommandRenderMode)
         {
             bool render3D = stoi(tokens[1]);
-            console() << "Changing render mode. Is 3D? " << render3D << std::endl;
+            CI_LOG_I( "Changing render mode. Is 3D? " << render3D );
             mClient->setIsRendering3D(render3D);
         }
     }
 
     mLastMessage = message;
 
-    console() << mClient->getClientID() << ") Message from client #"
-              << fromClientID << ": " << message << std::endl;
+    CI_LOG_I( mClient->getClientID() << ") Message from client #"
+              << fromClientID << ": " << message );
 }
 
 #pragma mark - Balls

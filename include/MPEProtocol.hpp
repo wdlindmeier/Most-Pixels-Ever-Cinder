@@ -14,6 +14,7 @@
 #include <string>
 
 #include "cinder/Rect.h"
+#include "cinder/Log.h"
 #include "cinder/Utilities.h"
 #include "MPEMessageHandler.hpp"
 
@@ -48,9 +49,9 @@ namespace mpe
             // Make sure the delimiter isn't in the message
             if (message.find(dataMessageDelimiter()) != std::string::npos)
             {
-                ci::app::console() << "WARNING: '" << dataMessageDelimiter()
-                << "' are not allowed in broadcast messages."
-                << " Replacing with an underscore." << std::endl;
+                CI_LOG_W( dataMessageDelimiter()
+                         << "' are not allowed in broadcast messages."
+                         << " Replacing with an underscore." );
                 std::replace(message.begin(), message.end(), dataMessageDelimiter().at(0), '_');
             }
             if (message.find(outgoingMessageTerminus()) != std::string::npos)
@@ -60,9 +61,9 @@ namespace mpe
                 {
                     termID = "'" + outgoingMessageTerminus() + "'";
                 }
-                ci::app::console() << "WARNING: " << termID
-                << " are not allowed in broadcast messages."
-                << " Replacing with an underscore." << std::endl;
+                CI_LOG_W( termID
+                         << " are not allowed in broadcast messages."
+                         << " Replacing with an underscore." );
                 std::replace(message.begin(), message.end(), dataMessageDelimiter().at(0), '_');
             }
             return message;
@@ -216,8 +217,8 @@ namespace mpe
                         }
                         else
                         {
-                            ci::app::console() << "ERROR: Couldn't parse data message "
-                            << dataMessage << std::endl;
+                            CI_LOG_E( "Couldn't parse data message "
+                                     << dataMessage );
                         }
                     }
                 }
@@ -226,8 +227,8 @@ namespace mpe
             }
             else
             {
-                ci::app::console() << "ALERT: Don't know what to do with server message: "
-                                   << serverMessage << std::endl;
+                CI_LOG_W("Don't know what to do with server message: "
+                         << serverMessage );
                 return;
             }
         }
