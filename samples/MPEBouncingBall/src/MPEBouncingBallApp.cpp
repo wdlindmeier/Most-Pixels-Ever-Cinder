@@ -146,7 +146,7 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
 
 void MPEBouncingBallApp::setup()
 {
-    mClient = MPEClient::Create(this, USE_THREADED);
+    mClient = MPEClient::create(this, USE_THREADED);
 
     // 3D
     mClient->setIsRendering3D(true);
