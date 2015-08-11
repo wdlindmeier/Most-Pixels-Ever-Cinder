@@ -756,7 +756,7 @@ namespace mpe
     };
 }
 
-MPEClientRef MPEClient::Create(MPEApp *app, bool isThreaded)
+MPEClientRef MPEClient::create(MPEApp *app, bool isThreaded)
 {
     if (isThreaded)
     {

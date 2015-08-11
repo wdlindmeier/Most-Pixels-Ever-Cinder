@@ -131,7 +131,7 @@ void MPEBouncingBalliOSApp::setup()
     mFont = Font( "Helvetica Bold", 12 );
     mTextureFont = gl::TextureFont::create( mFont );
 
-    mClient = MPEClient::Create(this);
+    mClient = MPEClient::create(this);
     mClient->setIsRendering3D(true);
     mClient->set3DAspectRatio(mAspectRatio);
     mClient->set3DFieldOfView(mFOV);

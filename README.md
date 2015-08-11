@@ -27,7 +27,7 @@ You can generate your project from this template using TinderBox.
 ```c++
 // Subclass your Cinder app from MPEApp
 
-class MyCinderApp : public AppNative, public MPEApp
+class MyCinderApp : public App, public MPEApp
 {
     public:      
     
@@ -55,7 +55,7 @@ void MyCinderApp::setup()
     // Each client needs a unique settings file.
     // Pass a pointer to an MPEApp (e.g. MyCinderApp) into the client constructor.
     
-    mClient = MPEClient::Create(this);
+    mClient = MPEClient::create(this);
 }
 
 void MyCinderApp::update()
@@ -123,6 +123,6 @@ void MyCinderApp::mpeMessageReceived(const std::string & message, const int from
                        << " sent broadcast message: " << message << std::endl;
 }
 
-CINDER_APP_NATIVE( MyCinderApp, RendererGl )
+CINDER_APP( MyCinderApp, RendererGl )
 
 ```
