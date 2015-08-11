@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>30223D0B-5E20-49CD-BDAC-1CA3EEBEB946</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MPEBouncingBalliOS</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>336B32518C4C0CFE04EB7504BEEB62B1F6F3EDB8</key>
+		<string>https://github.com/wdlindmeier/Most-Pixels-Ever-Cinder.git</string>
+		<key>AD4B458D0D225ED63FAE0155615993B7D3ECE020</key>
+		<string>git://github.com/cinder/Cinder.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>samples/MPEBouncingBalliOS/xcode_ios/MPEBouncingBalliOS.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>336B32518C4C0CFE04EB7504BEEB62B1F6F3EDB8</key>
+		<string>../../../../..</string>
+		<key>AD4B458D0D225ED63FAE0155615993B7D3ECE020</key>
+		<string>../../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/wdlindmeier/Most-Pixels-Ever-Cinder.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>336B32518C4C0CFE04EB7504BEEB62B1F6F3EDB8</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AD4B458D0D225ED63FAE0155615993B7D3ECE020</string>
+			<key>IDESourceControlWCCName</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>336B32518C4C0CFE04EB7504BEEB62B1F6F3EDB8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Most-Pixels-Ever-Cinder</string>
+		</dict>
+	</array>
+</dict>
+</plist>

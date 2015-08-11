@@ -11,7 +11,7 @@
 #pragma clang diagnostic pop
 
 #include "Ball.hpp"
-#include "cinder/app/AppNative.h"
+#include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/TextureFont.h"
@@ -54,7 +54,7 @@ const static string kCommand3DSettings = "3D";
 
  */
 
-class MPEBouncingBalliOSApp : public AppNative, public MPEApp
+class MPEBouncingBalliOSApp : public App, public MPEApp
 {
 
   public:
@@ -336,4 +336,4 @@ void MPEBouncingBalliOSApp::touchesEnded(TouchEvent event)
     }
 }
 
-CINDER_APP_NATIVE( MPEBouncingBalliOSApp, RendererGl )
+CINDER_APP( MPEBouncingBalliOSApp, RendererGl )

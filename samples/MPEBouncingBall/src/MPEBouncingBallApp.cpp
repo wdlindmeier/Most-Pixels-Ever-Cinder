@@ -7,14 +7,14 @@
 
 #include "Resources.h"
 #include "Ball.hpp"
-#include "cinder/app/AppNative.h"
+#include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/TextureFont.h"
 #include "cinder/Rand.h"
 #include "MPEApp.hpp"
 #include "MPEClient.h"
-#include "SimpleGUI.h"
+#include "cinder/params/Params.h"
 
 // Choose the threading mode.
 // Generally Threaded is the way to go, but if find your app crashing
@@ -27,7 +27,6 @@ using namespace ci::app;
 using std::string;
 using std::vector;
 using namespace mpe;
-using namespace mowa::sgui;
 
 const static string kCommandNewBall = "BALL++";
 const static string kCommand3DSettings = "3D";
@@ -68,12 +67,12 @@ const static string kCommandRenderMode = "3DMODE";
 
 */
 
-class MPEBouncingBallApp : public AppNative, public MPEApp
+class MPEBouncingBallApp : public App, public MPEApp
 {
 public:
 
     // Setup
-    void        prepareSettings(Settings *settings);
+    static void prepareSettings(Settings *settings);
     void        setup();
 
     // Balls
@@ -95,8 +94,8 @@ public:
     void        mouseDrag(MouseEvent event);
     void        mouseUp(MouseEvent event);
     void        keyDown(KeyEvent event);
-    bool        buttonResetClicked(MouseEvent event);
-    bool        buttonRenderModeClicked(MouseEvent event);
+    bool        buttonResetClicked();
+    bool        buttonRenderModeClicked();
 
     // MPE App
     void        mpeMessageReceived(const std::string & message, const int fromClientID);
@@ -112,11 +111,7 @@ private:
     vector<Ball>        mBalls;
     string              mLastMessage;
 
-    SimpleGUI           *mGUI;
-    LabelControl        *mLabelFOV;
-    LabelControl        *mLabelAspectRatio;
-    LabelControl        *mLabelCameraZ;
-    ButtonControl       *mButtonRender3D;
+    params::InterfaceGlRef mParams;
 
     float               mFOV;
     float               mCamZ;
@@ -133,6 +128,8 @@ void MPEBouncingBallApp::prepareSettings(Settings *settings)
     // NOTE: Initially making the window small to prove that
     // the settings.xml forces a resize.
     settings->setWindowSize(150, 150);
+    
+    settings->setHighDensityDisplayEnabled(true);
 
     // NOTE: We're using the same .cpp file for both the Grid and non-Grid demo apps.
     // If you change one of them, both projects will be affected.
@@ -156,23 +153,15 @@ void MPEBouncingBallApp::setup()
     mClient->set3DCameraZ(mCamZ);
     mFOV = mClient->get3DFieldOfView();
     mAspectRatio = mClient->get3DAspectRatio();
-
-    mGUI = new SimpleGUI(this);
-    mGUI->addParam("Field Of View", &mFOV, 1.f, 180.f, mFOV);
-    mLabelFOV = mGUI->addLabel("--");
-    mGUI->addParam("Camera Z", &mCamZ, -1500.f, 0.f, mCamZ);
-    mLabelCameraZ = mGUI->addLabel("--");
-    mGUI->addParam("Aspect Ratio", &mAspectRatio, 0.f, 2.f, mAspectRatio);
-    mLabelAspectRatio = mGUI->addLabel("--");
-    ButtonControl *button = mGUI->addButton("Reset");
-    button->registerClick(std::bind(&MPEBouncingBallApp::buttonResetClicked,
-                                    this,
-                                    std::placeholders::_1));
-    mButtonRender3D = mGUI->addButton("Render Mode: 3D");
-    mButtonRender3D->registerClick(std::bind(&MPEBouncingBallApp::buttonRenderModeClicked,
-                                    this,
-                                    std::placeholders::_1));
     
+    mParams = params::InterfaceGl::create("Camera Params", vec2(getWindowSize()) * getWindowContentScale());
+    mParams->setPosition(ivec2(0,0));
+    mParams->addParam("Field of View", &mFOV).min(1.f).max(180.f).step(0.5);
+    mParams->addParam("Camera Z", &mCamZ).min(-1500.f).max(0.f);
+    mParams->addParam("Aspect Ratio", &mAspectRatio).min(0.f).max(2.f);
+    mParams->addButton("Reset", [&](){ this->buttonResetClicked(); } );
+    mParams->addButton("Render Mode (2D/3D)", [&](){ this->buttonRenderModeClicked(); } );
+
     mFont = Font( "Helvetica Bold", 12 );
     mTextureFont = gl::TextureFont::create( mFont );
 }
@@ -234,7 +223,6 @@ void MPEBouncingBallApp::mpeMessageReceived(const std::string & message, const i
             bool render3D = stoi(tokens[1]);
             console() << "Changing render mode. Is 3D? " << render3D << std::endl;
             mClient->setIsRendering3D(render3D);
-            mButtonRender3D->name = render3D ? "Render Mode: 3D" : "Render Mode: 2D";
         }
     }
 
@@ -303,11 +291,6 @@ void MPEBouncingBallApp::mpeFrameUpdate(long serverFrameNumber)
 
 void MPEBouncingBallApp::update3DSettings()
 {
-    /*
-    mLabelFOV->setText(std::to_string(mClient->get3DFieldOfView()));
-    mLabelCameraZ->setText(std::to_string(mClient->get3DCameraZ()));
-    mLabelAspectRatio->setText(std::to_string(mClient->get3DAspectRatio()));
-    */
     // If the client values are different than the local values, send an update message
     if (mClient->get3DFieldOfView() != mFOV ||
         mClient->get3DCameraZ() != mCamZ ||
@@ -426,18 +409,18 @@ void MPEBouncingBallApp::mpeFrameRender(bool isNewFrame)
 void MPEBouncingBallApp::drawAsyncClient()
 {
     gl::clear(Color(0.2, 0.2, 0.2));
-    mGUI->draw();
+    mParams->draw();
 }
 
 #pragma mark - Input Events
 
-bool MPEBouncingBallApp::buttonResetClicked(MouseEvent event)
+bool MPEBouncingBallApp::buttonResetClicked()
 {
     mClient->resetAll();
     return true;
 }
 
-bool MPEBouncingBallApp::buttonRenderModeClicked(MouseEvent event)
+bool MPEBouncingBallApp::buttonRenderModeClicked()
 {
     bool render3D = !mClient->getIsRendering3D();
     if (mClient->isConnected())
@@ -498,7 +481,7 @@ void MPEBouncingBallApp::keyDown(KeyEvent event)
 // performance improvement. This value defaults to 4 (AA_MSAA_4) on iOS and 16 (AA_MSAA_16)
 // on the Desktop.
 #if defined( CINDER_COCOA_TOUCH )
-CINDER_APP_NATIVE( MPEBouncingBallApp, RendererGl(RendererGl::AA_NONE) )
+CINDER_APP( MPEBouncingBallApp, RendererGl(RendererGl::Options().msaa(0)), MPEBouncingBallApp::prepareSettings )
 #else
-CINDER_APP_NATIVE( MPEBouncingBallApp, RendererGl )
+CINDER_APP( MPEBouncingBallApp, RendererGl(RendererGl::Options().msaa(8)), MPEBouncingBallApp::prepareSettings )
 #endif
